@@ -1,508 +1,342 @@
-# 리액트 프로젝트 생성
+# Router
 
-## 1. 프로젝트 생성법
+- 라우터는 URI 경로를 동기화 하여 화면의 전환,흐름을 제어한다.
+- URI 구성
+  : Protocol (http, https, ftp, smtp)
+  : URL (도메인)
+  : Port (3000 번 리액트, 3306 번 데이터베이스, 8080 번 웹서버)
+  : Path (파일의 경로)
+  : Query String (?쿼리명=값&쿼리명=값)
+- 예) http://localhost:3000/todo/login?id=hong&pass=1234
 
-- 단계 1. 반드시 프로젝트 폴더 만들어준다.
-- 단계 2. 프로젝트명은 반드시 소문자로 구성
-- 단계 3. npx 는 소스를 다운받지 않고 임시저장공간에서 처리하고 삭제
-  : 개인 학습용 프로젝트( JS 진행 )
-  `npx create-react-app ./`
+## 1.라우터를 먼저 고려해야함.
 
-  : 협업 및 현장 개발 프로젝트 (TS 권장)
-  `npx create-react-app ./ --template typescript`
+- 일반적으로 웹서비스 기획이후에 화면구성을 도출
+- 화면구성에 맞게 화면흐름이 정의
+- 화면흐름에 맞는 경로를 작성
 
-## 2. 기본 작업 순서
+## 2.라우터 구조 샘플.
 
-### 2.1. /public 폴더에 www 폴더 생성 후 퍼블리싱 작업 권장
+- 회사 웹사이트 제작
+  : 회사소개 (대표님, 연혁, 파트너, 위치)
+  : 제품소개 (제품목록, 제품 상세내용, 제품 등록, 제품 수정, 제품 삭제)
 
-: /public/www/image 폴더
-: /public/www/css 폴더
-: /public/www/js 폴더
-: /public/www/asset 폴더
-: /public/www/index.html
+- 라우터의 Path를 고민한다.
+  : /company
+  : /company/ceo
+  : /company/history
+  : /company/partner
+  : /company/location
 
-### 2.2. React JS 버전 또는 TS 버전 작업
+  : /good
+  : /good/번호
+  : /good/delete/번호
+  : /good/modify/번호
 
-- JS 주의 사항
-  : 일반 js 파일은 소문자.js
-  : 리액트(컴포넌트) js 파일은 Pascal형태.js
-  : 간헐적으로 컴포넌트를 Pascal형태.jsx 로 된 파일도 인정
+## 3. 프로젝트 소스 폴더 및 파일 구조
 
-- TS 주의 사항(반드시 확장자 구분)
-  : 일반 ts 파일은 소문자.ts
-  : 리액트(컴포넌트) ts 파일은 Pascal형태.tsx
+- src/pages/company/Index.js
+- src/pages/company/Ceo.js
+- src/pages/company/History.js
+- src/pages/company/Partner.js
+- src/pages/company/Location.js
 
-- 만약 리액트에서 활용하는 파일이라면 모두 /src 폴더 내에 배치한다.
+- src/pages/good/Index.js
+- src/pages/good/Detail.js
+- src/pages/good/Modify.js
+- src/pages/good/Delete.js
 
-## 3. 프로젝트 구조 및 파일의 이해
+## 4. react-router-dom 활용
 
-### 3.1. node_modules 폴더
+### 4.1. 적용 단계
 
-- 다운로드 받은 js 파일들이 저장되는 장소
-- 용량이 엄청 큽니다.
-- npm install 라이브러리 실행시 node_modules 에 저장됨.
-- yarn install 라이브러리 실행시 node_modules 에 저장됨.
-- 정말 주의해야 하는 것은 npm / yarn 을 혼합해서 사용하면 안됨.
-- node_modules 는 용량이 커서 깃허브 또는 파일로 전달하지 않음.
-- 프로젝트를 공유하는 경우는 node_modules 는 `npm install` 로 대체
-- 실수로 소스가 문제시는 node_modules 폴더 및 package-lock.json 삭제
-- package.json 은 npm 설치의 기준이 되므로 절대 삭제 금지
+- BrowserRouter > Routes > Route
+  : Router 는 BrowserRouter 사용하면 됨.
 
-### 3.2. public 폴더
+### 4.2. BrowserRouter 적용
 
-- `npm run build` 명령시 public 폴더는 그대로 저장됨.
-- `npm run build` 명령시 src 폴더는 압축해서 저장됨.
-  : src 폴더 안쪽의 내용은 webpack(압축,최적화) 의 대상이 됩니다.
-  : src 폴더 안쪽의 js 파일은 최신 버전이므로 Babel 을 통해 이전 버전으로 수정
-- favicon.ico (즐겨찾기, 웹브라우저 아이콘)
-  : https://realfavicongenerator.net/
-- index.html
-  : 최초 웹브라우저 실행 파일
-  : 파일명 수정 금지
-- logo~.png 은 바로가기 및 휴대폰에 바탕화면 저장시 활용
-  : 파일명은 동일하게 유지하는게 편하다.
-- manifest.json 은 모바일 기기에 실행에 대한 정보
-  : 아래는 수정을 좀 해요
-  ```json
-  "short_name": "React App",
-  "name": "Create React App Sample"
-  ```
-- robots.txt
-  : 네이버, 구글 검색엔진에 노출되는 정보 및 범위 기재
-  : 네이버 서치 어드바이저, 구글 검색 등록시 진행
+- 기준은 App.js 에 적용
 
-- 없지만 있어야 하는 파일이 sitemap.xml 입니다.
+  ```js
+  import { BrowserRouter } from "react-router-dom";
+  import "./App.css";
 
-### 3.3. src 폴더
+  function App() {
+    return <BrowserRouter>...</BrowserRouter>;
+  }
 
-- webpack(번들링 도구) 과 babel(번역도구) 에 대상이 됩니다.
-- App.css
-  : App 컴포넌트 css
-- App.test.tsx
-  : TDD 에 활용되는 파일(Test Driven Develope)
-  : 테스트주도개발 방식에 활용되는 파일
-  : 처음에는 삭제의 대상파일
-- App.tsx
-  : 첫화면용 컴포넌트파일
-- index.css
-  : 앱 전체에 css 기본 파일
-- index.tsx
-  : 첫화면용 파일
-  : 파일명은 index.js 로 변경은 가능함.
-- logo.svg
-  : 삭제
-- react-app-env.d.ts
-  : 리액트 프로젝트에서 타입스크립트 쓰는 경우 필수 파일
-- reportWebVitals.ts
-  : 구글에서 성능의 상태를 시각적으로 보여줌.
-  : 삭제
-- setupTests.ts
-  : TDD 셋팅
-  : 삭제
-
-### 3.4. src 폴더/기타파일
-
-#### 3.4.1. `.gitignore`
-
-- 깃허브에 업로드 금지내용 작성
-
-#### 3.4.2. package-lock.json
-
-- node_modules 내부의 각 파일들이 연결되는 의존성 내용 기재
-- 새로 설치 즉 `npm install` 시 삭제 추천
-
-#### 3.4.3. README.md
-
-- md 확장자는 markdonw 의 줄임말
-- markdown 문법으로 작성된 문서
-- 설명서/안내서 파일
-
-#### 3.4.4. package.json
-
-- 프로젝트 환경 설정 파일
-- dependencies 항목은 build 시 소스에 포함되는 js
-- devDependencies 항목은 build 시 소스에 포함안됨
-- scripts 항목은 npm 또는 yarn 실행시 간단한 명령어
-
-#### 3.4.5. tsconfig.json
-
-- 타입스크립트의 실행 환경 설정
-
-## 4. 파일 정리 (추천)
-
-### 4.1. public/index.html 수정 권장
-
-- 주석 제거
-- lang 속성 변경
-- title 내용 수정
-
-```html
-<!doctype html>
-<html lang="ko">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <title>리액트 학습</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-  </body>
-</html>
-```
-
-### 4.2. src/index.tsx 수정 권장
-
-- reportWebVitals 제거
-- reportWebVitals(); 제거
-- React.StrictMode 제거
-
-  ```tsx
-  import React from "react";
-  import ReactDOM from "react-dom/client";
-  import "./index.css";
-  import App from "./App";
-
-  const root = ReactDOM.createRoot(
-    document.getElementById("root") as HTMLElement,
-  );
-  root.render(
-    <>
-      <App />
-    </>,
-  );
+  export default App;
   ```
 
-### 4.3. src/ 파일 제거 (권장)
+### 4.3. Routes 적용
 
-- App.test.tsx 삭제
-- logo.svg 삭제
-- reportWebVitals.ts 삭제
-- setupTests.ts 삭제
-
-### 4.4. test 를 위해서 App.tsx 수정
-
-```tsx
-import React from "react";
+```js
+import { BrowserRouter, Routes } from "react-router-dom";
 import "./App.css";
 
 function App() {
-  return <>안녕하세요.</>;
+  return (
+    <BrowserRouter>
+      <Routes></Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;
 ```
 
-### 4.5. test 를 위해서 App.css 수정
+### 4.4. Route 들 작성
 
-- 내용만 삭제
-
-### 4.6. test 를 위해서
-
-- index.tsx
-  : 확장자를 js 로 수정
+- 기본 Route 패스 구성
 
   ```js
-  import React from "react";
-  import ReactDOM from "react-dom/client";
-  import "./index.css";
-  import App from "./App";
-  // ts 에서는 데이터 종류를 구별한다.
-  // as 는 강제로 타입지정
-  // const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
+  import { BrowserRouter, Route, Routes } from "react-router-dom";
+  import "./App.css";
 
-  // js 버전
-  const root = ReactDOM.createRoot(document.getElementById("root"));
+  function App() {
+    return (
+      <BrowserRouter>
+        <Routes>
+          <Route path="/company"></Route>
+          <Route path="/company/ceo"></Route>
+          <Route path="/company/history"></Route>
+          <Route path="/company/partner"></Route>
+          <Route path="/company/location"></Route>
+          <Route path="/good"></Route>
+          <Route path="/good/번호"></Route>
+          <Route path="/good/delete/번호"></Route>
+          <Route path="/good/modify/번호"></Route>
+        </Routes>
+      </BrowserRouter>
+    );
+  }
 
-  root.render(
-    <>
-      <App />
-    </>,
+  export default App;
+  ```
+
+- 보여줄 컴퍼넌트 또는 JSX 배치
+
+  ```js
+  import { BrowserRouter, Route, Routes } from "react-router-dom";
+  import "./App.css";
+
+  function App() {
+    return (
+      <BrowserRouter>
+        <Routes>
+          <Route path="/company" element={<h1>회사첫 페이지</h1>}></Route>
+          <Route path="/company/ceo" element={<h1>대표 페이지</h1>}></Route>
+          <Route path="/company/history" element={<h1>연혁 페이지</h1>}></Route>
+          <Route
+            path="/company/partner"
+            element={<h1>파트너 페이지</h1>}
+          ></Route>
+          <Route
+            path="/company/location"
+            element={<h1>위치 페이지</h1>}
+          ></Route>
+          <Route path="/good" element={<h1>제품첫 페이지</h1>}></Route>
+          <Route path="/good/번호" element={<h1>각제품 페이지</h1>}></Route>
+          <Route
+            path="/good/delete/번호"
+            element={<h1>제품삭제 페이지</h1>}
+          ></Route>
+          <Route
+            path="/good/modify/번호"
+            element={<h1>제품수정 페이지</h1>}
+          ></Route>
+        </Routes>
+      </BrowserRouter>
+    );
+  }
+
+  export default App;
+  ```
+
+### 4.5. 중첩 Route 활용
+
+```js
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "./App.css";
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/company">
+          <Route path="/ceo"></Route>
+          <Route path="/history"></Route>
+          <Route path="/partner"></Route>
+          <Route path="/location"></Route>
+        </Route>
+
+        <Route path="/good">
+          <Route path="/번호"></Route>
+          <Route path="/delete/번호"></Route>
+          <Route path="/modify/번호"></Route>
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
-  ```
-
-- App.tsx
-  : 확장자를 js 로 수정
-
-### 4.7. package.json 에서 불필요 라이브러리 제거
-
-- dependencies 항목에서 TDD 라이브러 제거
-
-```json
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.2",
-```
-
-- package.json 최종 내용
-
-```json
-{
-  "name": "react-lecture",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@types/node": "^16.18.97",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-scripts": "5.0.1",
-    "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": ["react-app", "react-app/jest"]
-  },
-  "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^7.11.0",
-    "@typescript-eslint/parser": "^7.11.0",
-    "eslint": "^8.57.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-react": "^7.34.2",
-    "prettier": "^3.2.5"
-  }
 }
+
+export default App;
 ```
 
-### 4.8. test
+### 4.6. 없는 path 로 접근한 경우 Route 활용
 
-- `npm run start`
+```js
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "./App.css";
 
-## 5. 코딩 컨벤션 셋팅
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/company">
+          <Route path="/ceo"></Route>
+          <Route path="/history"></Route>
+          <Route path="/partner"></Route>
+          <Route path="/location"></Route>
+        </Route>
 
-### 5.1. ESLint
+        <Route path="/good">
+          <Route path="/번호"></Route>
+          <Route path="/delete/번호"></Route>
+          <Route path="/modify/번호"></Route>
+        </Route>
 
-- 코딩 규칙, 에러 및 가이드 역할
-- 추후 rules 항목을 팀에 맞게 설정
-- 전제 조건은 VSCode 에 eslint 플러그인 설치후
-- 아주 중요함, TypeScript 최신버전이 React 에 지원되지 않는다.
-  : `npm install eslint-plugin-react@latest --save-dev`
-  : `npm install eslint@8 --save-dev`
-  : `npm install @typescript-eslint/parser@^7.11.0 --save-dev`
-  : `npm install @typescript-eslint/eslint-plugin --save-dev`
+        {/* 잘못된 경로 */}
+        <Route path="*" element={<h1>잘못된 경로입니다.</h1>}></Route>
+      </Routes>
+    </BrowserRouter>
+  );
+}
 
-- 아래의 구문은 사용하지 않는게 좋을 거 같아요.
-  : 버전문제, 파일 생성 문제
-  : `npx eslint --init`
+export default App;
+```
 
-- `.eslintrc.js` 파일 생성
+### 4.7. 기본 주소 즉 / 경로 Route 활용
 
-  ```js
-  module.exports = {
-    env: {
-      browser: true,
-      es2021: true,
-    },
-    extends: [
-      "eslint:recommended",
-      "plugin:@typescript-eslint/recommended",
-      "plugin:react/recommended",
-    ],
-    overrides: [
-      {
-        env: {
-          node: true,
-        },
-        files: [".eslintrc.{js,cjs}"],
-        parserOptions: {
-          sourceType: "script",
-        },
-      },
-    ],
-    parser: "@typescript-eslint/parser",
-    parserOptions: {
-      ecmaVersion: "latest",
-      sourceType: "module",
-    },
-    plugins: ["@typescript-eslint", "react"],
-    rules: {},
-  };
-  ```
+```js
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "./App.css";
 
-### 5.2. Prettier
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* 루트경로 */}
+        <Route path="/"></Route>
 
-- 문서포맷 설정
-- `npm install --save-dev --exact prettier`
-- `.prettierrc.json` 파일 생성
-  ```json
-  {
-    "singleQuote": false,
-    "semi": true,
-    "useTabs": false,
-    "tabWidth": 2,
-    "trailingComma": "all",
-    "printWidth": 80,
-    "arrowParens": "avoid",
-    "endOfLine": "auto"
-  }
-  ```
+        <Route path="/company">
+          <Route path="/ceo"></Route>
+          <Route path="/history"></Route>
+          <Route path="/partner"></Route>
+          <Route path="/location"></Route>
+        </Route>
 
-### 5.3. ESLint 에 Prettier 설정
+        <Route path="/good">
+          <Route path="/번호"></Route>
+          <Route path="/delete/번호"></Route>
+          <Route path="/modify/번호"></Route>
+        </Route>
 
-- `npm install eslint-config-prettier --save-dev`
-- `.eslintrc.js` 파일 내용 수정
+        {/* 잘못된 경로 */}
+        <Route path="*" element={<h1>잘못된 경로입니다.</h1>}></Route>
+      </Routes>
+    </BrowserRouter>
+  );
+}
 
-  ```js
-  module.exports = {
-    env: {
-      browser: true,
-      es2021: true,
-    },
-    extends: [
-      "eslint:recommended",
-      "plugin:@typescript-eslint/recommended",
-      "plugin:react/recommended",
-      "prettier",
-    ],
-    overrides: [
-      {
-        env: {
-          node: true,
-        },
-        files: [".eslintrc.{js,cjs}"],
-        parserOptions: {
-          sourceType: "script",
-        },
-      },
-    ],
-    parser: "@typescript-eslint/parser",
-    parserOptions: {
-      ecmaVersion: "latest",
-      sourceType: "module",
-    },
-    plugins: ["@typescript-eslint", "react"],
-    rules: {},
-  };
-  ```
+export default App;
+```
 
-### 5.4. test
+### 4.8. 중첩 Route 의 기본 페이지 출력 활용
 
-- `App.js`
-  : eslint 잘되는지 테스트
-  : prettier 잘되는지 테스트
+```js
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "./App.css";
 
-- .eslintre.js 에 rules 를 추가
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* 루트경로 */}
+        <Route path="/"></Route>
 
-  ```js
-  module.exports = {
-    env: {
-      browser: true,
-      es2021: true,
-    },
-    extends: [
-      "eslint:recommended",
-      "plugin:@typescript-eslint/recommended",
-      "plugin:react/recommended",
-      "prettier",
-    ],
-    overrides: [
-      {
-        env: {
-          node: true,
-        },
-        files: [".eslintrc.{js,cjs}"],
-        parserOptions: {
-          sourceType: "script",
-        },
-      },
-    ],
-    parser: "@typescript-eslint/parser",
-    parserOptions: {
-      ecmaVersion: "latest",
-      sourceType: "module",
-    },
-    plugins: ["@typescript-eslint", "react"],
-    rules: {
-      "react/react-in-jsx-scope": "off",
-    },
-  };
-  ```
+        <Route path="/company">
+          {/* 패스 상 기본페이지 */}
+          <Route index></Route>
 
-## 6. 필수 라이브러리 설치
+          <Route path="/ceo"></Route>
+          <Route path="/history"></Route>
+          <Route path="/partner"></Route>
+          <Route path="/location"></Route>
+        </Route>
 
-### 6.1. dependencies 에 설치
+        <Route path="/good">
+          {/* 패스 상 기본페이지 */}
+          <Route index></Route>
 
-- `npm install 라이브러리명`
-- `npm install 라이브러리명@버전`
+          <Route path="/번호"></Route>
+          <Route path="/delete/번호"></Route>
+          <Route path="/modify/번호"></Route>
+        </Route>
 
-### 6.2.devDependencies 에 설치
+        {/* 잘못된 경로 */}
+        <Route path="*" element={<h1>잘못된 경로입니다.</h1>}></Route>
+      </Routes>
+    </BrowserRouter>
+  );
+}
 
-- `npm install 라이브러리명 --save-dev`
-- `npm install 라이브러리명@버전 --save-dev`
+export default App;
+```
 
-### 6.3.라이브러리 설치시 TS 버전을 확인필요
+### 4.9. 공통 레이아웃 적용하기
 
-- https://www.npmjs.com/
-- 라이브러리 검색시 TS 아이콘이 있는지 본다.
-  : 만약 TS 아이콘이 없으면 @types/d.ts 파일을 고민해야 한다.
-- 라이브러리 검색 후 Weekly Downloads 숫자를 본다.
-- 예) emotion, axios 등
+```js
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "./App.css";
 
-### 6.4.데이터 연동을 위한 라이브러리 설치
+function App() {
+  return (
+    <BrowserRouter>
+      {/* 공통레이아웃 적용 */}
+      <div className="wrap">
+        <header className="header"></header>
+        <Routes>
+          {/* 루트경로 */}
+          <Route path="/"></Route>
 
-- axios 를 선택
-- https://axios-http.com/kr/docs/api_intro
-- `npm install axios`
-- `npm install @types/axios`
+          <Route path="/company">
+            {/* 패스 상 기본페이지 */}
+            <Route index></Route>
 
-### 6.5.css-in-js 연동을 위한 라이브러리 설치
+            <Route path="/ceo"></Route>
+            <Route path="/history"></Route>
+            <Route path="/partner"></Route>
+            <Route path="/location"></Route>
+          </Route>
 
-- styled components
-  : https://styled-components.com/
+          <Route path="/good">
+            {/* 패스 상 기본페이지 */}
+            <Route index></Route>
 
-- emotion
-  : https://emotion.sh/docs/introduction
-  : `npm install @emotion/react @emotion/styled`
+            <Route path="/번호"></Route>
+            <Route path="/delete/번호"></Route>
+            <Route path="/modify/번호"></Route>
+          </Route>
 
-### 6.6.Router를 위한 라이브러리 설치
+          {/* 잘못된 경로 */}
+          <Route path="*" element={<h1>잘못된 경로입니다.</h1>}></Route>
+        </Routes>
+        <footer className="header"></footer>
+      </div>
+    </BrowserRouter>
+  );
+}
 
-- Router 란 주소 즉, Path 를 말함.
-- https://reactrouter.com/en/main
-- 주의 사항
-  : 리액트 버전에 따라서 다르다.
-  : react-router-dom 버전에 따라서 다르다.
-- `npm install react-router-dom`
-- `npm install @types/react-router-dom`
-
-### 6.7.슬라이드를 위한 라이브러리 설치(선택)
-
-- Swiper
-  : https://swiperjs.com/react
-  : `npm install swiper`
-
-- Slick(별도 TS 지원 필요)
-  : https://kenwheeler.github.io/slick/
-  : `npm install react-slick slick-carousel`
-
-### 6.8.딩벳아이콘을 위한 라이브러리 설치(선택)
-
-- fontawesome
-  : https://fontawesome.com/
-  : `npm install @fortawesome/react-fontawesome @fortawesome/free-solid-svg-icons @fortawesome/fontawesome-svg-core`
-- react-icons
-  : https://react-icons.github.io/react-icons/
-  : `npm install react-icons`
+export default App;
+```
