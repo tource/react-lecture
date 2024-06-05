@@ -10,6 +10,80 @@ const Schedule = () => {
     margin: "0 auto",
   };
 
+  // 사용자가 API 로 전달하기 기능
+  const scheduleDelete = _pk => {
+    alert(`삭제해요. 스케쥴 번호 ${_pk}`);
+  };
+  // 날짜의 범위 초기값
+  const initRange = {
+    start: "2024-06-01",
+    end: "2024-06-07",
+  };
+  // 화면에 출력할 날짜 sate 관리
+  // react-calendar 에서는 JS의 Date 객체를 사용합니다.
+  // 단지 우리가 moment 로 글자를 변환해서 보여줄 뿐
+  const [selectedRange, setSelectedRange] = useState([
+    new Date(initRange.start),
+    new Date(initRange.end),
+  ]);
+  // Range 를 사용하는 경우의 날짜 꾸미기
+  const tileClassNameRange = ({ date }) => {
+    // console.log(date);
+    const checkDay = moment(date).format("YYYY-MM-DD");
+    // 범위 안에 있는가의 변수를 찾자, 결과로 true와 false 리턴한다.
+    // 배열을 대상으로 매개변수로 요소를 전달하고
+    // 요소를 전달받아서 함수를 실행하도록 하는
+    // 고차함수의 일종입니다.
+    const isRange = allData.some(
+      item => checkDay >= item.startday && checkDay <= item.endday,
+    );
+    if (isRange) {
+      return "sun";
+    }
+
+    // const checkDay = moment(date).format("YYYY-MM-DD");
+    // if (checkDay >= initRange.start && checkDay <= initRange.end) {
+    //   // CSS 적용하기
+    //   return "sun";
+    // }
+  };
+  // Range 를 사용하는 경우의 내용출력하기
+  const tileContentRange = ({ date }) => {
+    const checkDay = moment(date).format("YYYY-MM-DD");
+    // 만약  checkDay : 2024-06-01
+    // 1. 배열의 각 요소를 찾는다.
+    // 2. 찾은 요소의 값을 이용한다.
+    const dayResults = allData.filter(item => {
+      return checkDay >= item.startday && checkDay <= item.endday;
+    });
+    // console.log("필터링 된 내용 : ", dayResults);
+    if (dayResults.length > 0) {
+      return (
+        <div>
+          {dayResults.map(dayResult => (
+            <div key={dayResult.pk}>
+              <h2>{dayResult.title}</h2>
+              <div>
+                <button
+                  onClick={() => {
+                    scheduleDelete(dayResult.pk);
+                  }}
+                ></button>
+              </div>
+              <div>
+                <img
+                  src={dayResult.img}
+                  alt={dayResult.title}
+                  style={{ width: "10px", height: "10px" }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+  };
+
   // 날짜 요일 출력
   const weekName = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
   const formatShortWeekday = (locale, date) => {
@@ -41,28 +115,32 @@ const Schedule = () => {
       pk: 0,
       title: "점심먹기",
       text: "내용 1",
-      day: "2024-06-04",
+      startday: "2024-06-01",
+      endday: "2024-06-04",
       img: "/logo192.png",
     },
     {
       pk: 1,
       title: "영화보기",
       text: "내용 2",
-      day: "2024-05-31",
+      startday: "2024-05-01",
+      endday: "2024-06-04",
       img: "/logo192.png",
     },
     {
       pk: 2,
       title: "책읽기",
       text: "내용 3",
-      day: "2024-06-17",
+      startday: "2024-06-05",
+      endday: "2024-06-07",
       img: "/logo192.png",
     },
     {
       pk: 3,
       title: "그림그리기",
       text: "내용 4",
-      day: "2024-06-29",
+      startday: "2024-06-09",
+      endday: "2024-06-15",
       img: "/logo192.png",
     },
   ];
@@ -142,11 +220,15 @@ const Schedule = () => {
         <Calendar
           calendarType="gregory"
           formatShortWeekday={formatShortWeekday}
-          tileClassName={tileClassName}
-          tileContent={tileContent}
+          // tileClassName={tileClassName}
+          // tileContent={tileContent}
           formatDay={formatDay}
           onClickDay={onClickDay}
-          value={clickDay}
+          // value={clickDay}
+          selectRange={true}
+          value={selectedRange}
+          tileClassName={tileClassNameRange}
+          tileContent={tileContentRange}
         ></Calendar>
       </div>
     </div>
