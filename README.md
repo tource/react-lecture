@@ -15,9 +15,9 @@
   : https://momentjs.com/
   : `npm install moment --save`
 
-- dayjs
+- dayjs (참고만)
   : 주로 Ant-design 에서 활용
-  : https://day.js.org/docs/
+  : https://day.js.org/docs/en/installation/node-js
   : `npm install dayjs`
 
 ## 3. 캘린더 컴포넌트 페이지 만들기
@@ -87,93 +87,33 @@ export default Schedule;
 ### 5.1. 캘린더의 날짜 출력을 US 달력으로 변경하고 글자 변경 적용
 
 ```js
-import Calendar from "react-calendar";
-// import "react-calendar/dist/Calendar.css";
-import "../css/calendar.css";
-import { locale } from "moment";
-
-const Schedule = () => {
-  const scWrap = {
-    width: "80%",
-    margin: "0 auto",
-  };
-
-  // 날짜 요일 출력
-  const weekName = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
-  const formatShortWeekday = (locale, date) => {
-    const idx = date.getDay();
-    return weekName[idx];
-  };
-
-  return (
-    <div>
-      <h1>캘린더출력</h1>
-      <div style={scWrap}>
-        <Calendar
-          calendarType="gregory"
-          formatShortWeekday={formatShortWeekday}
-        ></Calendar>
-      </div>
-    </div>
-  );
+// 날짜 요일 출력
+const weekName = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+const formatShortWeekday = (locale, date) => {
+  const idx = date.getDay();
+  return weekName[idx];
 };
-
-export default Schedule;
 ```
 
 ### 5.2. 캘린더의 특정날짜에 사용자 클래스 적용하기
 
 ```js
-import Calendar from "react-calendar";
-// import "react-calendar/dist/Calendar.css";
-import "../css/calendar.css";
-import { locale } from "moment";
-
-const Schedule = () => {
-  const scWrap = {
-    width: "80%",
-    margin: "0 auto",
-  };
-
-  // 날짜 요일 출력
-  const weekName = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
-  const formatShortWeekday = (locale, date) => {
-    const idx = date.getDay();
-    return weekName[idx];
-  };
-
-  // 특정 날짜 클래스 적용하기
-  const tileClassName = ({ date }) => {
-    // date.getDay()는 요일을 리턴함
-    // 0 은 일요일
-    // console.log(date.getDay());
-    const day = date.getDay();
-    let classNames = "";
-    if (day === 2) {
-      // 화요일인 경우 샘플
-      classNames += "rain";
-    } else if (day === 4) {
-      // 목요일
-      classNames += "sun";
-    }
-    return classNames;
-  };
-
-  return (
-    <div>
-      <h1>캘린더출력</h1>
-      <div style={scWrap}>
-        <Calendar
-          calendarType="gregory"
-          formatShortWeekday={formatShortWeekday}
-          tileClassName={tileClassName}
-        ></Calendar>
-      </div>
-    </div>
-  );
+// 특정 날짜 클래스 적용하기
+const tileClassName = ({ date }) => {
+  // date.getDay()는 요일을 리턴함
+  // 0 은 일요일
+  console.log(date.getDay());
+  const day = date.getDay();
+  let classNames = "";
+  if (day === 2) {
+    // 화요일인 경우 샘플
+    classNames += "rain";
+  } else if (day === 4) {
+    // 목요일
+    classNames += "sun";
+  }
+  return classNames;
 };
-
-export default Schedule;
 ```
 
 ### 5.3. 캘린더의 외부 API 를 이용한 특정 내용 출력하기
