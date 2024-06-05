@@ -6,12 +6,14 @@ import Footer from "./components/layout/Footer";
 // Index 라는 이름 충돌로 변경함
 import Home from "./pages/Index";
 import Compony from "./pages/company/Index";
+import GoodDeatil from "./pages/good/Detail";
 import Ceo from "./pages/company/Ceo";
 import History from "./pages/company/History";
 import Partner from "./pages/company/Partner";
 import Good from "./pages/good/Good";
-import Detail from "./pages/good/Detail";
 import { useState } from "react";
+import Schedule from "./pages/Schedule";
+import NotFound from "./pages/NotFound";
 
 function App() {
   // 복잡한 데이터
@@ -20,9 +22,9 @@ function App() {
     { name: "LG전자", link: "http://" },
     { name: "그린컴퓨터", link: "http://" },
   ];
-
-  // 로그인 안된경우
+  // 로그인 안된 경우
   const [isLogin, setIsLogin] = useState(true);
+
   return (
     <BrowserRouter>
       {/* 공통레이아웃 적용 */}
@@ -58,14 +60,16 @@ function App() {
           <Route path="/good" element={<Good></Good>}>
             <Route
               path=":id"
-              element={<Detail title={"좋은 회사"}></Detail>}
+              element={<GoodDeatil title={"좋은 회사"}></GoodDeatil>}
             ></Route>
             <Route path="delete/:id" element={<h1>제품 삭제</h1>}></Route>
             <Route path="modify/:id" element={<h1>제품 수정</h1>}></Route>
           </Route>
 
+          <Route path="/schedule" element={<Schedule />}></Route>
+
           {/* 잘못된 경로 */}
-          <Route path="*" element={<h1>잘못된 경로입니다.</h1>}></Route>
+          <Route path="*" element={<NotFound />}></Route>
         </Routes>
         <Footer></Footer>
       </div>

@@ -1,31 +1,81 @@
-import { Link } from "react-router-dom";
-
+import { NavLink } from "react-router-dom";
+import "../../css/header.css";
 const Header = ({ children }) => {
+  // js 자리
+  // 현재 패스와 같은 경우에 보여줄 css Object 생성
+  const ActiveLink = {
+    color: "red",
+    fontWeight: "bold",
+  };
+
   return (
     <header className="header">
       <ul>
         <li>
-          <Link to="/">홈</Link>
+          <NavLink
+            to="/"
+            className={({ isActive }) => (isActive ? "active-link" : "")}
+          >
+            홈
+          </NavLink>
         </li>
         <li>
-          <Link to="/company">회사소개</Link>
+          <NavLink
+            to="/company"
+            className={({ isActive }) => (isActive ? "active-link" : "")}
+          >
+            회사소개
+          </NavLink>
           <ul>
             <li>
-              <Link to="/company/ceo?name=홍길동&age=30">대표 소개</Link>
+              <NavLink
+                to="/company/ceo?name=홍길동&age=30"
+                className={({ isActive }) => (isActive ? "active-link" : "")}
+              >
+                대표 소개
+              </NavLink>
             </li>
             <li>
-              <Link to="/company/history">회사 연혁</Link>
+              <NavLink
+                to="/company/history"
+                className={({ isActive }) => (isActive ? "active-link" : "")}
+              >
+                회사 연혁
+              </NavLink>
             </li>
             <li>
-              <Link to="/company/partner">파트너사</Link>
+              <NavLink
+                to="/company/partner"
+                className={({ isActive }) => (isActive ? "active-link" : "")}
+              >
+                파트너사
+              </NavLink>
             </li>
             <li>
-              <Link to="/company/location">회사위치</Link>
+              <NavLink
+                to="/company/location"
+                className={({ isActive }) => (isActive ? "active-link" : "")}
+              >
+                회사위치
+              </NavLink>
             </li>
           </ul>
         </li>
         <li>
-          <Link to="/good">제품소개</Link>
+          <NavLink
+            to="/good"
+            className={({ isActive }) => (isActive ? "active-link" : "")}
+          >
+            제품소개
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to="/schedule"
+            className={({ isActive }) => (isActive ? "active-link" : "")}
+          >
+            일정
+          </NavLink>
         </li>
       </ul>
 

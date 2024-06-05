@@ -1,7 +1,5 @@
-import React from "react";
-
 const Index = () => {
-  return <div>Index</div>;
+  return <h1>회사소개</h1>;
 };
 
 export default Index;

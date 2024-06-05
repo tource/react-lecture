@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .active {
+        background-color: red;
+      }
+    </style>
+    <script>
+    window.addEventListener("load", function () {
+      const infoForm = document.querySelector(".info-form");
+      const inputList = document.querySelector(".main-top-info");
+      console.log(inputList);
+      // infoForm.addEventListener("submit", function (e) {    
+      //   // e.preventDefault();
+      //   // const list = inputList.value;
+      //   // console.log(list);
+      // });
+    });
+    </script>
+  </head>
+  <body>
+    <form name="info-form" class="info-form" action="a.jsp" method="get">
+      <input class="main-top-info" name="gogo"></input>
+      <input class="main-top-info2" name="age"></input>
+      <button type="button">전송</button>
+    </form>
+  </body>
+</html>
