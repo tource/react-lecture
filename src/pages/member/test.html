@@ -4,58 +4,23 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>회원가입</title>
+    <link rel="stylesheet" href="member.css" />
+    <script src="member.js"></script>
   </head>
   <body>
-    <h1>입력양식(Form)</h1>
-    <h2>회원가입</h2>
     <div class="join-wrap">
-      <form action="/member/join.php" method="get">
+      <form class="join-form">
         <div class="form-group">
           <label for="name">이름</label>
-          <input type="text" id="name" name="name" class="name" />
+          <input type="text" name="join-name" class="join-name" />
         </div>
         <div class="form-group">
           <label for="email">이메일</label>
-          <input type="email" id="email" name="email" class="email" />
+          <input type="email" name="join-email" class="join-email" />
         </div>
         <div class="form-group">
-          <label for="pw">비밀번호</label>
-          <input type="password" id="pw" name="pw" class="pw" />
-        </div>
-        <div class="form-group">
-          <label for="pwcheck">비밀번호확인</label>
-          <input type="password" id="pwcheck" name="pwcheck" class="pwcheck" />
-        </div>
-        <div class="form-group">
-          <label for="phone">전화번호</label>
-          <input type="tel" id="phone" name="phone" class="phone" />
-        </div>
-        <div class="form-group">
-          <label for="address">주소</label>
-          <input type="text" id="address" name="address" class="address" />
-        </div>
-        <div class="form-group">
-          <label for="address2">상세주소</label>
-          <input type="text" id="address2" name="address2" class="address2" />
-        </div>
-        <div class="form-group">
-          <label for="birthday">생년월일</label>
-          <input type="date" id="birthday" name="birthday" class="birthday" />
-        </div>
-        <div class="form-group">
-          <label for="gender">성별</label>
-          <select id="gender" name="gender" class="gender">
-            <option value="">선택하세요.</option>
-            <option value="male">남성</option>
-            <option value="female">여성</option>
-            <option value="other">기타</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <input type="submit" value="확인" />
-          <button type="submit">submit 확인</button>
-          <button type="button">button type 확인</button>
-          <button>그냥 버튼 확인</button>
+          <button type="submit" class="bt-submit">수정</button>
+          <button type="reset" class="bt-cancel">취소</button>
         </div>
       </form>
     </div>

@@ -14,6 +14,7 @@ import Good from "./pages/good/Good";
 import { useState } from "react";
 import Schedule from "./pages/Schedule";
 import NotFound from "./pages/NotFound";
+import Join from "./pages/member/Join";
 
 function App() {
   // 복잡한 데이터
@@ -67,6 +68,7 @@ function App() {
           </Route>
 
           <Route path="/schedule" element={<Schedule />}></Route>
+          <Route path="/join" element={<Join />}></Route>
 
           {/* 잘못된 경로 */}
           <Route path="*" element={<NotFound />}></Route>

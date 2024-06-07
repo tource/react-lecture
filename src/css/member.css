@@ -1,0 +1,104 @@
+/* 기본 스타일 설정 */
+body {
+  background-color: #f4f4f4;
+}
+
+h1,
+h2 {
+  text-align: center;
+  color: #333;
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 10px 0;
+}
+
+/* form 래퍼 스타일 */
+.join-wrap {
+  margin: 0 auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+/* 레이블 스타일 */
+label {
+  display: block;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+/* 입력 필드 스타일 */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="date"],
+input[type="file"],
+textarea,
+select {
+  width: calc(100% - 22px);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+/* 체크박스 및 라디오 버튼 스타일 */
+input[type="checkbox"],
+input[type="radio"] {
+  margin-right: 10px;
+}
+
+/* 취미 항목 스타일 */
+.hobbies-container {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.hobbies-container div {
+  display: flex;
+  align-items: center;
+}
+
+/* submit 버튼 스타일 */
+input[type="submit"],
+button[type="submit"] {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 5px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+/* 기타 버튼 스타일 */
+button[type="button"],
+button {
+  background-color: #008cba;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 5px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+}
