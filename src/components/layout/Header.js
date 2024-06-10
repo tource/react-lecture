@@ -85,6 +85,14 @@ const Header = ({ children }) => {
             회원가입
           </NavLink>
         </li>
+        <li>
+          <NavLink
+            to="/login"
+            className={({ isActive }) => (isActive ? "active-link" : "")}
+          >
+            로그인
+          </NavLink>
+        </li>
       </ul>
 
       {children}

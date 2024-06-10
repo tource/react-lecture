@@ -1,37 +1,40 @@
 import { useEffect, useState } from "react";
 import "../../css/member.css";
-import axios from "axios";
+import { getResetPwd, getUser, postUser } from "../../axios/user/apiuser";
+import { useNavigate } from "react-router-dom";
 const Join = () => {
+  // 라우터
+  const navigate = useNavigate();
   // 입력할 항목 변수
+  const [userId, setUserId] = useState("tource1");
   const [userEmail, setUserEmail] = useState("");
-  const [userPass, setUserPass] = useState("");
-  const [userPass2, setUserPass2] = useState("");
+  const [userPass, setUserPass] = useState("A123456789!a");
+  const [userPass2, setUserPass2] = useState("A123456789!a");
   const [userName, setUserName] = useState("");
 
   // 회원가입시 처리할 함수
-  const joinMember = event => {
-    // 데이터를 최종적으로 전달하는 submit 실행시에는
-    // 웹브라우저가 자동으로 갱신되므로 무조건 기본 기능을 막는다.
+  const joinMember = async event => {
+    // form 태그에서 submit 을 하면 웹브라우저 갱신
+    // 갱신하면 초기화 되므로 막아줌. (기본기능막기)
     event.preventDefault();
-    // console.log(userEmail, userPass, userName);
 
-    const sendData = {
-      id: userEmail,
+    // 아래의 데이터를 API 로 보낸다.
+    const requestData = {
+      id: userId,
       pwd: userPass,
       name: userName,
       email: userEmail,
     };
-    postUser(sendData);
-  };
-
-  // 월요일 apis 폴더에 memberapi.js 만들고 axios 관련 컨벤션
-  const postUser = async ({ id, pwd, name, email }) => {
-    try {
-      const response = await axios.post("/api/user", { id, pwd, name, email });
-      console.log(response.data);
-    } catch (error) {
-      console.log(error);
+    const result = await postUser(requestData);
+    console.log(result);
+    if (result.statusCode !== 2) {
+      alert(result.resultMsg);
+      return;
     }
+    // 회원가입이 성공했으므로 /login으로 이동한다.
+    // path로 강제 이동시키기
+
+    navigate("/login");
   };
 
   // 회원내용 재 작성 함수
@@ -52,9 +55,49 @@ const Join = () => {
     };
   }, []);
 
+  const findPass = () => {
+    getResetPwd({ userEmail, userId });
+  };
+
+  const findId = () => {
+    getUser({ userName, userEmail });
+  };
+
   return (
     <div className="join-wrap">
       <form className="join-form">
+        <div className="form-group">
+          <button
+            type="button"
+            onClick={() => {
+              findId();
+            }}
+          >
+            아이디찾기
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              findPass();
+            }}
+          >
+            비밀번호찾기
+          </button>
+        </div>
+        {/* 사용자 아이디 */}
+        <div className="form-group">
+          <label htmlFor="userid">아이디</label>
+          <input
+            type="text"
+            id="userid"
+            value={userId}
+            onChange={event => {
+              // console.log(event.target);
+              setUserId(event.target.value);
+            }}
+            className="join-email"
+          />
+        </div>
         {/* 사용자 이메일 */}
         <div className="form-group">
           <label htmlFor="email">이메일</label>
@@ -63,6 +106,7 @@ const Join = () => {
             id="email"
             value={userEmail}
             onChange={event => {
+              // console.log(event.target);
               setUserEmail(event.target.value);
             }}
             className="join-email"
@@ -96,9 +140,10 @@ const Join = () => {
         </div>
         {/* 사용자 이름 */}
         <div className="form-group">
-          <label htmlFor="name">이름</label>
+          <label htmlFor="username">이름</label>
           <input
             type="text"
+            id="username"
             value={userName}
             onChange={event => {
               setUserName(event.target.value);
