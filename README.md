@@ -501,4 +501,305 @@ const Login = () => {
 export default Login;
 ```
 
-## 5. 회원정보수정
+## 5. 모달창 적용해 보기
+
+- /src/components/modal/Modal.js
+
+```js
+import "./modal.css";
+const Modal = ({
+  title,
+  text,
+  modalOk,
+  modalcancle,
+  modalBtOk,
+  modalBtCancel,
+}) => {
+  return (
+    <div className="modal-wrap">
+      <div className="modal-content">
+        <header>
+          <h1>{title}</h1>
+        </header>
+        <main>
+          <p>{text}</p>
+        </main>
+        <footer>
+          {modalBtOk ? (
+            <button
+              onClick={() => {
+                modalOk();
+              }}
+            >
+              확인
+            </button>
+          ) : null}
+          {modalBtCancel ? (
+            <button
+              onClick={() => {
+                modalcancle();
+              }}
+            >
+              취소
+            </button>
+          ) : null}
+        </footer>
+      </div>
+    </div>
+  );
+};
+
+export default Modal;
+```
+
+- /src/components/modal/Modal.css
+
+```css
+.modal-wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.7);
+}
+.modal-content {
+  position: relative;
+  width: 100%;
+  max-width: 650px;
+  min-height: 400px;
+  overflow: hidden;
+  background: #fff;
+  border-radius: 20px;
+}
+.modal-content header {
+  text-align: center;
+}
+.modal-content main {
+  text-align: center;
+}
+.modal-content footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  text-align: center;
+}
+```
+
+- /src/pages/member/Login.js
+
+```js
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { postSignIn } from "../../axios/user/apiuser";
+import "../../css/member.css";
+import Modal from "../../components/modal/Modal";
+const Login = () => {
+  // 라우터
+  const navigate = useNavigate();
+  // 모달창 전달 변수
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalText, setModalText] = useState("");
+  // 컴포넌트 버튼 보이고, 숨기기 ( children, 새로 컴포넌트도 고민)
+  const [modalBtOk, setModalBtOk] = useState(true);
+  const [modalBtCancel, setModalBtCancel] = useState(true);
+  // 모달 보이는 상태값
+  const [isModal, setIsModal] = useState(false);
+
+  // 모달 실행 함수
+  const modalOk = () => {
+    setIsModal(false);
+    if (isSuccess) {
+      navigate("/");
+    }
+  };
+  const modalcancel = () => {
+    setIsModal(false);
+  };
+
+  const [userId, setUserId] = useState("tource1");
+  const [userPass, setUserPass] = useState("A123456789!a");
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const handleSubmit = async e => {
+    // 새로 고침 막기
+    e.preventDefault();
+    // 아이디가 입력이 되었는지 확인
+    if (!userId) {
+      setIsModal(true);
+      setModalTitle("로그인 안내");
+      setModalText("아이디를 반드시 입력해주세요.");
+      setModalBtOk(true);
+      setModalBtCancel(true);
+      return;
+    }
+    if (!userPass) {
+      setIsModal(true);
+      setModalTitle("로그인 안내");
+      setModalText("비밀번호를 반드시 입력해주세요.");
+      setModalBtOk(true);
+      setModalBtCancel(true);
+      return;
+    }
+
+    const result = await postSignIn({ userId, userPass });
+    if (result.statusCode !== 2) {
+      setIsModal(true);
+      setModalTitle("로그인 안내");
+      setModalText(result.resultMsg);
+      setModalBtOk(true);
+      setModalBtCancel(true);
+      return;
+    }
+    // 성공함
+    setIsModal(true);
+    setModalTitle("로그인 안내");
+    setModalText("로그인에 성공하였습니다.");
+    setModalBtOk(true);
+    setModalBtCancel(false);
+
+    setIsSuccess(true);
+  };
+
+  return (
+    <>
+      {isModal ? (
+        <Modal
+          title={modalTitle}
+          text={modalText}
+          modalOk={modalOk}
+          modalcancel={modalcancel}
+          modalBtOk={modalBtOk}
+          modalBtCancel={modalBtCancel}
+        />
+      ) : null}
+
+      <div className="join-wrap">
+        <form className="join-form">
+          {/* 사용자 아이디 */}
+          <div className="form-group">
+            <label htmlFor="userid">아이디</label>
+            <input
+              type="text"
+              value={userId}
+              id="userid"
+              className="join-email"
+              onChange={e => {
+                setUserId(e.target.value);
+              }}
+            />
+          </div>
+
+          {/* 사용자 패스워드 */}
+          <div className="form-group">
+            <label htmlFor="pass">패스워드</label>
+            <input
+              type="password"
+              value={userPass}
+              id="pass"
+              className="join-email"
+              onChange={e => {
+                setUserPass(e.target.value);
+              }}
+            />
+          </div>
+
+          <div className="form-group">
+            <button
+              type="submit"
+              className="bt-submit"
+              onClick={e => {
+                handleSubmit(e);
+              }}
+            >
+              로그인
+            </button>
+            <button type="reset" className="bt-cancel">
+              취소
+            </button>
+          </div>
+        </form>
+      </div>
+    </>
+  );
+};
+
+export default Login;
+```
+
+## 6. localStorage에 정보 저장
+
+- 웹브라우저에 영원히 보관됩니다.
+- 누구나 f12으로 확인가능합니다.
+- 위험한 장소
+- `localStorage.setItem("키명", 값)`
+- `localStorage.getItem("키명")`
+- `localStorage.removeItem("키명")`
+- `localStorage.clear()`
+- 새로고침한 경우에 정보를 useState에 담는다.
+- 각 컴포넌트에 props를 통해 정보를 전달한다.
+- 이러한 props가 전달되는 과정을 Drilling이라고 합니다.
+- 컴포넌트 드릴링은 많은 부작용이 있다.
+- props는 3단계 이상 연속으로 전달하지 않도록 노력하자.
+- 3단계 이상 넘어간다면 전역상태관리를 권장한다.
+
+### 6.1. Context API 와 localStorage 활용
+
+- 어느 컴포넌트에서 전역관리 코드를 해줄까?
+  : App.js 를 추천함.
+- react 라이브러리에 내장되어 있다.
+- step 1.
+  : Context 를 생성한다. createContext()
+  : `export const userInfoContext = createContext();`
+- step 2. Provider 생성 및 value 지정
+
+```js
+const [isUser, setIsUser] = useState("");
+....
+<userInfoContext.Provider
+  value={{ isUser, setIsUser }}
+>
+  컴포넌트 배치
+</userInfoContext.Provider>;
+```
+
+- step 3. Context를 사용. useContext()
+  : ` const { isUser, setIsUser } = useContext(userInfoContext);`
+
+## 7. sessionStorage에 정보 저장
+
+- 위험한 장소이지만 그래도 휘발성이다
+- `sessionStorage.setItem("키명", 값)`
+- `sessionStorage.getItem("키명")`
+- `sessionStorage.removeItem("키명")`
+- `sessionStorage.clear()`
+
+## 8. cookie에 정보 저장
+
+- https://www.npmjs.com/package/react-cookie
+- `npm i react-cookie`
+- https://velog.io/@defaultkyle/react-cookie
+- /src/utils/cookie.js
+
+```js
+import { Cookies } from "react-cookie";
+
+const cookies = new Cookies();
+
+export const setCookie = (name, value, options) => {
+  return cookies.set(name, value, { ...options });
+};
+
+export const getCookie = name => {
+  return cookies.get(name);
+};
+```
+
+## 9. Context API로 정보 출력 및 수정
+
+## 10. 회원정보수정

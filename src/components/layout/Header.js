@@ -1,12 +1,21 @@
+import { useContext, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import "../../css/header.css";
+import { userInfoContext } from "../../context/UserInfoProvider";
+import { setCookie } from "../../utils/cookie";
 const Header = ({ children }) => {
+  const { isUser, setIsUser } = useContext(userInfoContext);
+
+  console.log("홍길동이~", isUser);
+
   // js 자리
   // 현재 패스와 같은 경우에 보여줄 css Object 생성
   const ActiveLink = {
     color: "red",
     fontWeight: "bold",
   };
+
+  useEffect(() => {}, []);
 
   return (
     <header className="header">
@@ -77,22 +86,44 @@ const Header = ({ children }) => {
             일정
           </NavLink>
         </li>
-        <li>
-          <NavLink
-            to="/join"
-            className={({ isActive }) => (isActive ? "active-link" : "")}
-          >
-            회원가입
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to="/login"
-            className={({ isActive }) => (isActive ? "active-link" : "")}
-          >
-            로그인
-          </NavLink>
-        </li>
+        {isUser ? (
+          <>
+            <li>{isUser} 님이 로그인 하셨어요</li>
+            <li>
+              <button
+                onClick={() => {
+                  // localStorage 아이템 삭제
+                  // useState 업데이트
+                  // localStorage.removeItem("userid")
+                  // sessionStorage.setItem("userid", "");
+                  setCookie("userid", "", {});
+                  setIsUser("");
+                }}
+              >
+                로그아웃
+              </button>
+            </li>
+          </>
+        ) : (
+          <>
+            <li>
+              <NavLink
+                to="/join"
+                className={({ isActive }) => (isActive ? "active-link" : "")}
+              >
+                회원가입
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/login"
+                className={({ isActive }) => (isActive ? "active-link" : "")}
+              >
+                로그인
+              </NavLink>
+            </li>
+          </>
+        )}
       </ul>
 
       {children}

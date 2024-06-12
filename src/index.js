@@ -1,7 +1,7 @@
-import React from "react";
+import { createContext, useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
 import App from "./App";
+import "./index.css";
 
 // ts 에서는 데이터 종류를 구별한다.
 // as 는 강제로 타입지정
@@ -10,8 +10,4 @@ import App from "./App";
 // js 버전
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
-root.render(
-  <>
-    <App />
-  </>
-);
+root.render(<App />);

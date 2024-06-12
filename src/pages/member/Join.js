@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import "../../css/member.css";
-import { getResetPwd, getUser, postUser } from "../../axios/user/apiuser";
 import { useNavigate } from "react-router-dom";
+import { getResetPwd, getUser, postUser } from "../../axios/user/apiuser";
+import "../../css/member.css";
 const Join = () => {
   // 라우터
   const navigate = useNavigate();
@@ -33,8 +33,6 @@ const Join = () => {
     }
     // 회원가입이 성공했으므로 /login으로 이동한다.
     // path로 강제 이동시키기
-
-    navigate("/login");
   };
 
   // 회원내용 재 작성 함수
