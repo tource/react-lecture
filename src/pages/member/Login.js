@@ -27,7 +27,11 @@ const Login = () => {
       // localStorage에 저장하기
       // localStorage.setItem("userid", userId);
       // sessionStorage.setItem("userid", userId);
-      setCookie("userid", userId, {});
+      setCookie("userid", userId, {
+        path: "/",
+        expire: new Date(Date.now() + 86400e3), // 1일 후 만료시간 설정
+        maxAge: 86400, // 1일 동안 유효
+      });
       setIsUser(userId);
       navigate("/");
     }
