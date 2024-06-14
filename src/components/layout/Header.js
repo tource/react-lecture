@@ -94,6 +94,14 @@ const Header = ({ children }) => {
             파일업로드
           </NavLink>
         </li>
+        <li>
+          <NavLink
+            to="/animaladd"
+            className={({ isActive }) => (isActive ? "active-link" : "")}
+          >
+            애완동물 등록하기
+          </NavLink>
+        </li>
         {isUser ? (
           <>
             <li>{isUser} 님이 로그인 하셨어요</li>
