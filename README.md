@@ -1,308 +1,64 @@
-# File
+# component
 
-## 1. form 태그 구성
+- 퍼블리싱 완료 후 JSX 로 변환
+- 컴포넌트는 html 을 작성 하여 출력하는 용도
 
-- `<input type="file"/>`
-- `<... accept="image/png, image/gif, image/jpeg"/>`
-- `<... onChange={(e) => handleFile(e)} />`
+## 1. JSX 로 변환시 주의사항
 
-## 2. file 선택시 구성
+- 반드시 하나의 태그로 감싸야 한다. (무조건)
+- 의미없는 태그를 활용하면 안된다.
+  : 대신 <></> 를 활용한다.
+- class 는 반드시 className 변경한다.
+  : js에서는 tag.classList 활용
+  : js에서는 class 가 데이터 타입이라서 의미가 다름
+- js 로 변하는 내용은 {} 기호안에 작성한다.
 
-- handleFile 선택시 실행
-  : e.target.value 아니다.
-  : e.target.file 아니다.
-  : e.target.files 배열입니다.
+## 2. 컴포넌트로 변환하는 이유
 
-```js
-const [sendFile, setSendFile] = useState(null);
-const handleFile = e => {
-  const file = e.target.files[0];
-  // 파일 보관
-  setSendFile(file);
-};
-```
+- 재사용하려고
+- 유지보수 편리하게 하려고
+- 기능별 분류하여서 협업가능하도록 하기위해서
 
-- 이미지 미리보기
+## 3. 컴포넌트 생성법
 
-```js
-const [previewFile, setPreviewFile] = useState("");
+- JSX 를 리턴해 주므로 함수로 만든다.
+- 추천하는 함수 형태는 화살표 함수다.
+- 컴포넌트 변수는 대문자로 시작하는 단어(명사) 작성한다.
+- 컴포넌트 변수는 export 를 해야 의미가 있다.
+- export를 할 정도로 코드량이 많다면 파일로 만드시기를 추천합니다.
+- 별도의 용도별로 폴더(소문자)에 모아서 관리하는 것이 좋다.
+- 컴포넌트를 사용하는 곳에서 JSX를 배치하고 싶다면 children 을 사용한다.
 
-const handleFile = e => {
-  const file = e.target.files[0];
-  const url = URL.createObjectURL(file);
-  // 웹 브라우저 임시 파일 주소
-  setPreviewFile(url);
-};
+## 4. 페이지용 컴포넌트 생성법
 
-<img src={previewFile} />;
-```
+- 필요로 한 컴포넌트 들을 모아서 화면 단위로 출력하는 용도
 
-## 3. 전송 데이터 만들기
+## 5. 컴포넌트에 값 전달하기
 
-```js
-// 1 번 전송데이터 포맷 만들기
-const formData = new FormData();
+- 컴포넌트를 사용하는 곳에서는 값을 객체 리터럴로 전달합니다.
+  : 글자(문자열)를 전달할 경우 title="제목"
+  : 숫자를 전달할 경우 age={1}
+  : Boolean을 전달할 경우 study={true}
+  : 배열을 전달할 경우 hobby={["축구", "야구", "배구"]}
+  : 함수를 전달할 경우 say={ () => { console.log("안녕"); }}
+  : 객체를 전달할 경우 info={{ lastName: "길동", firstName: "홍" }}
+  : 컴포넌트를 전달할 경우 comp={<Header />}
 
-// 2 번 보낼데이터 (json 형식의 문자열로 만들기)
-const infoData = JSON.stringify({
-  속성명: 속성값,
-  속성명: 속성값,
-});
+- 컴포넌트에서는 전달된 값을 객체 리터럴로 받습니다.
+  : 권장하지 않는 값 접근 방식은 props.속성명 (props.age)
+  : 권장하는 값 접근 방식은 객체구조분해할당 { title, age, study, hobby, say, info, comp }
 
-// 3 번 Blob 바이너리 데이터 만들기
-const 자료 = new Blob([infoData], { type: "application/json" });
-
-// 4 번 form-data 에 키에 값으로 추가하기
-formData.append("키명", 자료);
-
-// 5 번 이미지 파일 추가하기
-formData.append("키명", 파일);
-
-// 6 번 axios 로 전달
-axiosPost함수(formData);
-```
-
-## 4. axios 전송하기
+## 6. 컴포넌트에 useState 변수값 전달하기
 
 ```js
-const post기능명 = async data => {
-  try {
-    const header = { headers: { "Content-Type": "multipart/form-data" } };
-    const response = await axios.post("/api/pet", data, header);
-    //console.log(response);
-    return response;
-  } catch (error) {
-    console.log(error);
-  }
-};
-```
-
-## 5. 전송 상태 확인하기
-
-- Chorome > F12 > Network 탭 > XHR/fetch탭 > 각 내용 확인
-
-# MultiFile
-
-## 1. form 태그 구성
-
-- multiple (여러 파일 선택)
-- accept (파일 종류 구분)
-
-```js
-<input
-  type="file"
-  accept="image/jpg, image/png, image/gif"
-  multiple
-  onChange={e => handleFileChange(e)}
-/>
-```
-
-## 2. form 태그 선택시 처리 함수
-
-### 2.1. 파일 목록 보관
-
-```js
-const [sendFiles, setSendFiles] = useState([]);
-....
-const handleFileChange = e => {
-    // console.log(e.target.files);
-    // 출력결과 FileList {0: File, 1: File, length: 2}
-    // Array.from(객체) : 객체를 배열로 만듦
-    const filesArr = Array.from(e.target.files);
-    // 파일 보관
-    setSendFiles([...sendFiles, ...filesArr]);
-  };
-```
-
-### 2.2. 미리보기 목록 보관
-
-```js
-const [previewFiles, setPreviewFiles] = useState([]);
-....
-const handleFileChange = e => {
-    // Array.from(객체) : 객체를 배열로 만듦
-    const filesArr = Array.from(e.target.files);
-    // 파일 보관
-    setSendFiles([...sendFiles, ...filesArr]);
-    // 미리보기 URL 보관
-    const imgUrlArr = filesArr.map(item => URL.createObjectURL(item));
-    setPreviewFiles([...previewFiles, ...imgUrlArr]);
-  };
-```
-
-### 2.3. 미리보기 JSX 출력함수
-
-```js
-const makeThumbnail = () => {
-  return previewFiles.map((item, index) => (
-    <img
-      src={item}
-      key={index}
-      style={{ width: 80 }}
-      onClick={e => {
-        deleteFile(index);
-      }}
-    />
-  ));
-};
-....
-<div>{makeThumbnail()}</div>
-```
-
-### 2.4. 이미지 클릭시 목록에서 제거
-
-```js
- const deleteFile = _index => {
-    // console.log("삭제", _index);
-    // 미리보기 배열에서 제거 : 기준 순서(index)
-    const tempPreviewArr = previewFiles.filter(
-      (item, index) => index !== _index,
-    );
-    setPreviewFiles(tempPreviewArr);
-    // 전송 파일 배열에서 제거 : 기준 순서(index)
-    const tempFileArr = sendFiles.filter((item, index) => index !== _index);
-    setSendFiles(tempFileArr);
-  };
-....
-const makeThumbnail = () => {
-  return previewFiles.map((item, index) => (
-    <img
-      src={item}
-      key={index}
-      style={{ width: 80 }}
-      onClick={e => {
-        deleteFile(index);
-      }}
-    />
-  ));
-};
-```
-
-### 2.5. 별도에 디자인 된 버튼을 이용해서 업로드 하기
-
-- <input type="file"> 을 숨기고 디자인 버튼에 기능 위임할 경우.
-- style={{ display: "none" }}
-
-```js
-<input
-  style={{ display: "none" }}
-  ref={fileBt}
-  id="filebt_id"
-  type="file"
-  accept="image/jpg, image/png, image/gif"
-  multiple
-  onChange={e => handleFileChange(e)}
-/>
-```
-
-- cursor: "pointer" 버튼 모양 커서 보이기
-
-```js
-<div
-  style={{
-    width: 50,
-    height: 50,
-    background: "red",
-    cursor: "pointer",
-    color: "#fff",
-  }}
-  onClick={() => handleFileClick()}
->
-  파일선택
-</div>
-```
-
-- #filebt_id 는 <input type="file" id="filebt_id" />
-
-```js
-const handleFileClick = () => {
-  document.querySelector("#filebt_id").click();
-};
-```
-
-### 2.6. 별도에 디자인 된 버튼을 useRef 변환해서 업로드 하기
-
-```js
-const fileBt = useRef(null);
+const [level, setLevel] = useState(0);
+const [gogo, setGogo] = useState(() => {});
 ...
-const handleFileClick = () => {
-    // document.querySelector("#filebt_id").click();
-    fileBt.current.click();
-  };
+ <Header
+        gogo={gogo}
+        level={level}
+  />
 ```
 
-- ref={fileBt}
-
-```js
-<input
-  style={{ display: "none" }}
-  ref={fileBt}
-  id="filebt_id"
-  type="file"
-  accept="image/jpg, image/png, image/gif"
-  multiple
-  onChange={e => handleFileChange(e)}
-/>
-```
-
-### 2.7. lable을 활용하여 업로드 하기 (추천 : 성환님 짱)
-
-- <label htmlFor="filebt_id">파일을 선택하시오.</label>
-
-```js
-<label htmlFor="filebt_id">파일을 선택하시오.</label>
-<input
-  style={{ display: "none" }}
-  ref={fileBt}
-  id="filebt_id"
-  type="file"
-  accept="image/jpg, image/png, image/gif"
-  multiple
-  onChange={e => handleFileChange(e)}
-/>
-```
-
-## 3. 데이터 전송하기
-
-- 자세한 과정은 File 항목을 참조
-
-```js
-// 파일 전송
-const handleSubmit = e => {
-  // 기본 기능 막기
-  e.preventDefault();
-  // 각 항목 체크하기 생략
-  // ........... 유효성 검사
-  // 1 번 전송데이터 포맷 만들기
-  const formData = new FormData();
-
-  // 2 번 보낼데이터 (json 형식의 문자열로 만들기)
-  const infoData = JSON.stringify({
-    title: title,
-    dDay: dday,
-  });
-  // 3 번 Blob 바이너리 데이터 만들기
-  const 자료 = new Blob([infoData], { type: "application/json" });
-  // 4 번 form-data 에 키에 값으로 추가하기
-  formData.append("p", 자료);
-
-  // 5 번 이미지 파일 추가하기
-  sendFiles.forEach(item => {
-    formData.append("files", item);
-  });
-
-  // 6 번 axios 로 전달
-  axiosPost함수(formData);
-};
-// 7 번 post 로 form-data 보내기
-const axiosPost함수 = async data => {
-  try {
-    const header = { headers: { "Content-Type": "multipart/form-data" } };
-    const response = await axios.post("/api/pet", data, header);
-    //console.log(response);
-    return response;
-  } catch (error) {
-    console.log(error);
-  }
-};
-```
+- useState 변수는 화면이 갱신 될때도 유지되는 변수.
+- 일반 변수는 화면이 갱신 즉, js 가 다시 실행되므로 늘 초기화된다.
