@@ -10,30 +10,31 @@ const Schedule = () => {
     margin: "0 auto",
   };
 
-  // 사용자가 API 로 전달하기 기능
+  // 사용자가 API로 전달하기 가능
   const scheduleDelete = _pk => {
-    alert(`삭제해요. 스케쥴 번호 ${_pk}`);
+    alert(`삭제합니당 스케쥴 번호 ${_pk}`);
   };
+
   // 날짜의 범위 초기값
   const initRange = {
     start: "2024-06-01",
     end: "2024-06-07",
   };
-  // 화면에 출력할 날짜 sate 관리
-  // react-calendar 에서는 JS의 Date 객체를 사용합니다.
-  // 단지 우리가 moment 로 글자를 변환해서 보여줄 뿐
+  // 화면에 출력할 날짜 state 관리
+  // react-calendar 에서는 Date 객체를 사용한다.
+  // 단지 우리가 moment 로 글자를 변환해서 보여줄 뿐이다.
   const [selectedRange, setSelectedRange] = useState([
     new Date(initRange.start),
     new Date(initRange.end),
   ]);
-  // Range 를 사용하는 경우의 날짜 꾸미기
+  // Range를 사용하는 경우의 날짜 꾸미기
   const tileClassNameRange = ({ date }) => {
     // console.log(date);
     const checkDay = moment(date).format("YYYY-MM-DD");
-    // 범위 안에 있는가의 변수를 찾자, 결과로 true와 false 리턴한다.
+    // 범위 안에 있는 변수를 찾자, 결과로 true와 false 리턴
     // 배열을 대상으로 매개변수로 요소를 전달하고
     // 요소를 전달받아서 함수를 실행하도록 하는
-    // 고차함수의 일종입니다.
+    // 고차함수의 일종
     const isRange = allData.some(
       item => checkDay >= item.startday && checkDay <= item.endday,
     );
@@ -41,7 +42,6 @@ const Schedule = () => {
       return "sun";
     }
 
-    // const checkDay = moment(date).format("YYYY-MM-DD");
     // if (checkDay >= initRange.start && checkDay <= initRange.end) {
     //   // CSS 적용하기
     //   return "sun";
@@ -50,7 +50,7 @@ const Schedule = () => {
   // Range 를 사용하는 경우의 내용출력하기
   const tileContentRange = ({ date }) => {
     const checkDay = moment(date).format("YYYY-MM-DD");
-    // 만약  checkDay : 2024-06-01
+    // 만약 checkDay : 2024-06-01
     // 1. 배열의 각 요소를 찾는다.
     // 2. 찾은 요소의 값을 이용한다.
     const dayResults = allData.filter(item => {
@@ -68,7 +68,9 @@ const Schedule = () => {
                   onClick={() => {
                     scheduleDelete(dayResult.pk);
                   }}
-                ></button>
+                >
+                  수정하기
+                </button>
               </div>
               <div>
                 <img

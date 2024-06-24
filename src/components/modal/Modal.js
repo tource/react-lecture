@@ -3,7 +3,7 @@ const Modal = ({
   title,
   text,
   modalOk,
-  modalcancle,
+  modalCancel,
   modalBtOk,
   modalBtCancel,
 }) => {
@@ -26,10 +26,11 @@ const Modal = ({
               확인
             </button>
           ) : null}
+
           {modalBtCancel ? (
             <button
               onClick={() => {
-                modalcancle();
+                modalCancel();
               }}
             >
               취소

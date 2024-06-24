@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { getResetPwd, getUser, postUser } from "../../axios/user/apiuser";
+import { getResetPwd, getUser, postUser } from "../../apis/user/apiuser";
 import "../../css/member.css";
+import { useNavigate } from "react-router-dom";
 const Join = () => {
   // 라우터
   const navigate = useNavigate();
+
   // 입력할 항목 변수
-  const [userId, setUserId] = useState("tource1");
+  const [userId, setUserId] = useState("hong14Guild");
   const [userEmail, setUserEmail] = useState("");
-  const [userPass, setUserPass] = useState("A123456789!a");
-  const [userPass2, setUserPass2] = useState("A123456789!a");
+  const [userPass, setUserPass] = useState("Abc@1234");
+  const [userPass2, setUserPass2] = useState("");
   const [userName, setUserName] = useState("");
 
   // 회원가입시 처리할 함수
@@ -31,8 +32,9 @@ const Join = () => {
       alert(result.resultMsg);
       return;
     }
-    // 회원가입이 성공했으므로 /login으로 이동한다.
-    // path로 강제 이동시키기
+    // 회원가입이 성공했으므로 /login 으로 이동한다.
+    // path 로 강제 이동시키기
+    navigate("/login");
   };
 
   // 회원내용 재 작성 함수
@@ -73,6 +75,9 @@ const Join = () => {
           >
             아이디찾기
           </button>
+        </div>
+
+        <div className="form-group">
           <button
             type="button"
             onClick={() => {

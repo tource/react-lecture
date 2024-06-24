@@ -1,12 +1,13 @@
-import { useContext, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import "../../css/header.css";
+import { useEffect, useState, useContext } from "react";
 import { userInfoContext } from "../../context/UserInfoProvider";
 import { setCookie } from "../../utils/cookie";
+
 const Header = ({ children }) => {
   const { isUser, setIsUser } = useContext(userInfoContext);
 
-  console.log("홍길동이~", isUser);
+  console.log("홍길동이 ~", isUser);
 
   // js 자리
   // 현재 패스와 같은 경우에 보여줄 css Object 생성
@@ -86,17 +87,42 @@ const Header = ({ children }) => {
             일정
           </NavLink>
         </li>
+        <li>
+          <NavLink
+            to="/file"
+            className={({ isActive }) => (isActive ? "active-link" : "")}
+          >
+            파일업로드
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to="/animaladd"
+            className={({ isActive }) => (isActive ? "active-link" : "")}
+          >
+            애완동물 등록하기
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to="/mulitifile"
+            className={({ isActive }) => (isActive ? "active-link" : "")}
+          >
+            멀티파일 등록하기
+          </NavLink>
+        </li>
+
         {isUser ? (
           <>
-            <li>{isUser} 님이 로그인 하셨어요</li>
+            <li>`${isUser} 님이 로그인 하셨어요`</li>
             <li>
               <button
                 onClick={() => {
-                  // localStorage 아이템 삭제
-                  // useState 업데이트
-                  // localStorage.removeItem("userid")
+                  // sessionStorage 아이템 삭제
+                  // sessionStorage.removeItem("userid");
                   // sessionStorage.setItem("userid", "");
                   setCookie("userid", "", {});
+                  // useState 업데이트
                   setIsUser("");
                 }}
               >

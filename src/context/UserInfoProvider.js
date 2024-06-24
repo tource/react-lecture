@@ -1,6 +1,5 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 import { getCookie } from "../utils/cookie";
-
 export const userInfoContext = createContext();
 export const UserInfoProvider = ({ children }) => {
   // 전역 상태 관리 (사용자 아이디를 관리)
@@ -9,12 +8,12 @@ export const UserInfoProvider = ({ children }) => {
   const [theme, setTheme] = useState("black");
 
   useEffect(() => {
-    // setIsUser에 값을 채워준다.
     // const tempUser = localStorage.getItem("userid");
     // const tempUser = sessionStorage.getItem("userid");
     const tempUser = getCookie("userid");
     console.log("tempUser : ", tempUser);
-    if (tempUser !== null) {
+
+    if (tempUser !== null || tempUser !== "") {
       setIsUser(tempUser);
     }
   }, []);

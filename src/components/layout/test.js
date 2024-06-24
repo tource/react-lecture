@@ -1,13 +1,9 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { postSignIn } from "../../apis/user/apiuser";
+import { postSignIn } from "../../axios/user/apiuser";
 import "../../css/member.css";
 import Modal from "../../components/modal/Modal";
-import { userInfoContext } from "../../context/UserInfoProvider";
-import { setCookie } from "../../utils/cookie";
-
-const Login = () => {
-  const { setIsUser } = useContext(userInfoContext);
+const Login = ({ setIsUser }) => {
   // 라우터
   const navigate = useNavigate();
   // 모달창 전달 변수
@@ -18,32 +14,25 @@ const Login = () => {
   const [modalBtCancel, setModalBtCancel] = useState(true);
   // 모달 보이는 상태값
   const [isModal, setIsModal] = useState(false);
+
   // 모달 실행 함수
   const modalOk = () => {
     setIsModal(false);
-
     if (isSuccess) {
       // console.log(userId);
       // console.log(userPass);
-      // localStorage.setItem("userid", userId);
-      // sessionStorage.setItem("userid", userId);
-      setCookie("userid", userId, {
-        path: "/",
-        expire: new Date(Date.now() + 86400e3), // 1일 후 만료시간 설정
-        maxAge: 86400, // 1일 동안 유효
-      });
-      //setUserId(userId);
+      // localStorage에 저장하기
+      localStorage.setItem("userid", userId);
       setIsUser(userId);
       navigate("/");
     }
   };
-  const modalCancel = () => {
+  const modalcancel = () => {
     setIsModal(false);
   };
 
-  const [userId, setUserId] = useState("hong14Guild");
-  const [userPass, setUserPass] = useState("Abc@1234");
-  // 로그인 성공 여부
+  const [userId, setUserId] = useState("tource1");
+  const [userPass, setUserPass] = useState("A123456789!a");
   const [isSuccess, setIsSuccess] = useState(false);
 
   const handleSubmit = async e => {
@@ -73,7 +62,7 @@ const Login = () => {
       setModalTitle("로그인 안내");
       setModalText(result.resultMsg);
       setModalBtOk(true);
-      setModalBtCancel(false);
+      setModalBtCancel(true);
       return;
     }
     // 성공함
@@ -83,9 +72,7 @@ const Login = () => {
     setModalBtOk(true);
     setModalBtCancel(false);
 
-    // 로그인 성공
     setIsSuccess(true);
-    // navigate("/");
   };
 
   return (
@@ -95,7 +82,7 @@ const Login = () => {
           title={modalTitle}
           text={modalText}
           modalOk={modalOk}
-          modalCancel={modalCancel}
+          modalcancel={modalcancel}
           modalBtOk={modalBtOk}
           modalBtCancel={modalBtCancel}
         />
