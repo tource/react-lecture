@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Gallery } from "../components/Gallery";
 import { Info } from "../components/Info";
 import { Notice } from "../components/Notice";
@@ -9,27 +9,42 @@ import { Header } from "../components/layout/Header";
 import { Main } from "../components/layout/Main";
 
 export const Home = () => {
-  const age = 100;
-  const [level, setLevel] = useState(0);
-  const [gogo, setGogo] = useState(() => {});
+  let [login, setLogin] = useState(false);
+  console.log("Home 이 새로고침 되니? login : ", login);
+
+  let [count, setCount] = useState(0);
+
+  const changeLogin = () => {
+    // setLogin(!login);
+    // useState는 비동기 방식으로 처리된다.
+    // 업데이트 함수 활용
+    setCount(prev => prev + 1);
+    setCount(prev => prev + 1);
+    setCount(prev => prev + 1);
+    setCount(prev => prev + 1);
+
+    // console.log("현재 login : ", login);
+    console.log("현재 count : ", count);
+  };
+
+  useEffect(() => {
+    console.log("Home 이 새로고침 되니? USE-EFFECT", count);
+  }, [count]);
+
+  useEffect(() => {
+    console.log("Home 이 새로고침 되니? USE-EFFECT", login);
+  }, [login]);
 
   return (
     <>
-      <Header
-        gogo={gogo}
-        setGogo={setGogo}
-        level={level}
-        setLevel={setLevel}
-        title={"제목"}
-        age={age}
-        study={true}
-        hobby={["축구", "야구", "배구"]}
-        say={() => {
-          console.log("안녕");
+      <button
+        onClick={() => {
+          changeLogin();
         }}
-        info={{ lastName: "길동", firstName: "홍" }}
-        comp={<Header />}
-      />
+      >
+        {count}개 로그인버튼
+      </button>
+      <Header login={login} />
       <Main>
         <Slide />
         <Info>
