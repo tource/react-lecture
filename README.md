@@ -1,289 +1,178 @@
-# CSS
+# Component 문법(syntax)
 
-## 1. link css 방식(외부파일)
-
-### 1.1. 최초 css 관련 초기 설정 적용
-
-- normalize.css : https://necolas.github.io/normalize.css/
-- reset.css : https://meyerweb.com/eric/tools/css/reset/
-- cdn 방식
-  : public/index.html 에 작성
-
-  ```html
-  <!doctype html>
-  <html lang="ko">
-    <head>
-      <meta charset="utf-8" />
-      <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <meta name="theme-color" content="#000000" />
-      <meta
-        name="description"
-        content="Web site created using create-react-app"
-      />
-      <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-      <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-      <title>리액트 학습</title>
-      <link
-        rel="stylesheet"
-        href="https://necolas.github.io/normalize.css/8.0.1/normalize.css"
-      />
-    </head>
-    <body>
-      <noscript>You need to enable JavaScript to run this app.</noscript>
-      <div id="root"></div>
-    </body>
-  </html>
-  ```
-
-  - 참고사항 (폰트어썸)
-    : https://cdnjs.com/libraries/font-awesome
-
-  ```html
-  <!doctype html>
-  <html lang="ko">
-    <head>
-      <meta charset="utf-8" />
-      <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <meta name="theme-color" content="#000000" />
-      <meta
-        name="description"
-        content="Web site created using create-react-app"
-      />
-      <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-      <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-      <title>리액트 학습</title>
-      <link
-        rel="stylesheet"
-        href="https://necolas.github.io/normalize.css/8.0.1/normalize.css"
-      />
-      <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-      />
-    </head>
-    <body>
-      <noscript>You need to enable JavaScript to run this app.</noscript>
-      <div id="root"></div>
-    </body>
-  </html>
-  ```
-
-### 1.2. 앱 전체 css 초기화 파일
-
-- src/index.css 를 권장함.
-
-```css
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-ul,
-li {
-  list-style: none;
-}
-a {
-  text-decoration: none;
-  color: #000;
-}
-img {
-  vertical-align: middle;
-}
-html {
-  font-size: 12px;
-}
-body {
-  font-family: "Noto Sans KR", sans-serif;
-  letter-spacing: 0.25;
-  font-weight: 400;
-  word-break: keep-all;
-}
-```
-
-- src/index.js 에서 css 파일 적용
-  : `import "./index.css";`
-  : ./ 는 현재 폴더를 말함.
-
-- 앱에 특성화된 css 기초 내용(권장 사항 회사마다 다름)
-  : src/App.css
-  : src/App.js 에 `import "./App.css";`
-
-### 1.3. JSX 에 css 적용시
-
-- `<div className="클래스명">내용</div>`
-
-## 2. module css 방식(외부파일)
-
-- module 방식은 협업시에 class 명 및 css 선택자가 우선권 문제를 해결하기 위해서
-- header.css 와 App.css 가 충돌나는 샘플
-- Header.js
+## 1. 기본데이터 출력
 
 ```js
-import "../../css/header.css";
-
-export const Header = ({ login }) => {
-  console.log("Header Header Header");
-  return (
-    <header className="header">{login ? "정보수정" : "로그인필요"}</header>
-  );
-};
-```
-
-- header.css
-
-```css
-.active-link {
-  color: red;
-  font-weight: bold;
-}
-.header {
-  background-color: green;
-}
-```
-
-- App.css
-
-```css
-.header {
-  background-color: orange;
-}
-```
-
-- 위의 방식으로 진행시 어느 css 가 우선권일지 고민된다.
-  : 이에 대한 해결책으로 module 방식이 활용됨.
-  : css/header.module.css
-  : 파일명의 확장자 앞에 .module 을 붙여줌
-
-```css
-.active-link {
-  color: red;
-  font-weight: bold;
-}
-.header {
-  background-color: green;
-}
-```
-
-- Header.js
-
-```js
-// import "../../css/header.css";
-import 이름 from "../../css/header.module.css";
-
-export const Header = ({ login }) => {
-  console.log("Header Header Header");
-  return (
-    <header className={이름.header}>{login ? "정보수정" : "로그인필요"}</header>
-  );
-};
-```
-
-## 3. SCSS 방식
-
-- 설치
-  : `npm i -D sass`
-  : 플로그인 Live Sass Complier
-- 기본적인 폴더 구조
-  : src/scss 폴더
-
-### 3.1. css 파일 생성
-
-- css 파일과 map 파일이 생성됨
-- 일반적인 css 역할과 같다.
-  : `src/scss/main.scss`
-
-### 3.2. css 프로그래밍 적용
-
-- `파일명에 _를 붙여서 생성`
-  : `src/scss/_valiables.scss`
-  ```scss
-  $wide-screen: 2028px;
-  $pc-screen: 1280px;
-  $notebook-screen: 1020px;
-  $tablet-screen: 960px;
-  $mobile-screen: 760px;
-  $min-mobile-screen: 480px;
-  $main-color: "red";
-  ```
-
-### 3.3. scss 에 변수활용
-
-- 중요한 것은 `@import "파일이름"`
-- `_는 제외`
-
-```scss
-@import "valiables";
-.wrap {
-  position: relative;
-  background: $main-color;
-}
-@media screen and (max-width: $wide-screen) {
-  .wrap {
-    background: orange;
-  }
-}
-```
-
-### 3.4. scss 에 함수활용(MixIn)
-
-- `src/scss/_mixin.scss`
-
-```scss
-@mixin bt($cc) {
-  border: 5px solid $cc;
-}
-```
-
-- 활용하기
-
-```scss
-@import "mixin";
-.wrap {
-  position: relative;
-  background: $main-color;
-  .header button {
-    @include bt(blue);
-  }
-}
-```
-
-## 4. 객체 css inline 방식 ( {속성명:속성값} )
-
-```js
-<div className="wrap" style={{ backgroundColor: "red", fontSize: "12px" }}>
-  <Home />
-</div>
-```
-
-```js
-// 객체 변수 설정을 해서 활용을 추천
-const WrapStyle = { backgroundColor: "red", fontSize: "12px" };
-return (
-  <div className="wrap" style={WrapStyle}>
-    <Home />
-  </div>
-);
-```
-
-- 외부 파일로 CSS 객체 모음
-  : src/css/AppCss.js
-
-```js
-export const WrapStyle = { backgroundColor: "red", fontSize: "12px" };
-export const DivStyle = { backgroundColor: "red", fontSize: "12px" };
-```
-
-```js
-import { Home } from "./pages/Home";
 import "./App.css";
-import { WrapStyle, DivStyle } from "./css/AppCss";
 const App = () => {
   // js 자리
+  const a = 1; // 숫자출력하기
+  const b = "hello"; // 문자출력하기
+  const c = true; // 참, 거짓을 이용한 출력하기
+  const d = undefined; // 값이 없다고 명시적으로 표현
+  const e = null; // 값이 비었다.
+  const f = [1, 2, 3]; // 배열
+  const g = { age: 15, name: "hong" }; // 객체 리터럴
   return (
-    <div className="wrap" style={WrapStyle}>
-      <Home />
+    <>
+      a: {a} <br />
+      b: {b} <br />
+      c: {c} <br />
+      d: {d} <br />
+      e: {e} <br />
+      f: {f} {f[1]}
+      <br />
+      g: {g.age} {g.name} <br />
+    </>
+  );
+};
+
+export default App;
+```
+
+## 2. 함수 활용하기
+
+```js
+import "./App.css";
+const App = () => {
+  // 매개변수 없는 경우
+  function say() {
+    return "안녕";
+  }
+  // 화살표 함수
+  const sayArrow = () => {
+    return "안녕";
+  };
+  // 매개변수 있는 경우
+  function hi(who) {
+    return `안녕 ${who}`;
+  }
+  const hiArrow = who => {
+    return `안녕 ${who}`;
+  };
+
+  return (
+    <>
+      {say()}
+      <br />
+      {hi("길동")}
+      <br />
+      {sayArrow()}
+      <br />
+      {hiArrow("길동")}
+    </>
+  );
+};
+
+export default App;
+```
+
+## 3. 조건문 활용하기
+
+```js
+import "./App.css";
+const App = () => {
+  const flag = true;
+  const show = () => {
+    if (flag) {
+      return "참이군요";
+    } else {
+      return "거짓이군요";
+    }
+  };
+  const showJSX = () => {
+    if (flag) {
+      return <div>참이군요</div>;
+    } else {
+      return <div>거짓이군요</div>;
+    }
+  };
+
+  return (
+    <>
+      {show()}
+      <br />
+      {showJSX()}
+      <br />
+      {
+        // JSX 는 만들어진 결과물만 보여주는 곳, 조건식을 사용할 수 없다.
+        // if(flag) {
+        //   참이군요
+        // }else{
+        //   거짓이군요
+        // }
+      }
+      {
+        // 조건에 따라서 내용을 별도로 구분해서 출력한다면 삼항연산자를 쓴다.
+        flag ? "참이군요" : "거짓이군요"
+      }
+    </>
+  );
+};
+
+export default App;
+```
+
+## 4. 조건문 활용하기 2.
+
+- CSS 객체 만들기
+
+```js
+import "./App.css";
+const App = () => {
+  // 조건에 따른 CSS 객체생성하기
+  const flag = true;
+  const DivStyle = {
+    color: flag ? "red" : "blue",
+    fontWeight: flag ? "bold" : "normal",
+  };
+
+  return <div style={DivStyle}>스타일 적용</div>;
+};
+
+export default App;
+```
+
+- 조건에 따라서 클래스 적용하기
+
+```js
+const App = () => {
+  // 조건에 따른 CSS 클래스 적용하기
+  const flag = true;
+  return <div className={flag ? "member" : "join"}>스타일 적용</div>;
+};
+
+export default App;
+```
+
+- 공백 조심하기
+
+```js
+import "./App.css";
+const App = () => {
+  // 조건에 따른 CSS 클래스 적용하기
+  const flag = true;
+  const loginType = "admin";
+  return (
+    // 클래스 명을 조건에 따라서 동적으로 추가할 때는 공백을 꼭!!! 확인하자
+    <div className={flag ? "member " + loginType : "member"}>스타일 적용</div>
+  );
+};
+
+export default App;
+```
+
+- if 문 말고 조건부 연산자 ( && || )
+
+```js
+import "./App.css";
+const App = () => {
+  const flag = true;
+  return (
+    <div>
+      {/* { flag ? "환영합니다." : "" } */}
+      {flag && "환영합니다"}
+      {flag || "이건 현재 안나와요. "}
     </div>
   );
 };
@@ -291,139 +180,712 @@ const App = () => {
 export default App;
 ```
 
-## 5. CSS-in-JS css 방식(emotion)
-
-### 5.1. 설치
-
-- `npm i @emotion/react @emotion/styled`
-
-### 5.2. 플러그인
-
-- vscode-styled-components
-
-### 5.3. 왜 CSS-in-JS 를 쓰는가?
-
-- HTML 태그 만으로는 역할을 설명하지 못한다.
-
-```html
-<div>슬라이드</div>
-<div>게시판</div>
-<div>공지사항</div>
-```
-
-- styled 적용시 태그를 만들면서 내용을 표현할 수 있다.
-
-```html
-<SlideDiv>슬라이드</SlideDiv>
-<BoardDiv>게시판</BoardDiv>
-<NoticeDiv>공지사항</NoticeDiv>
-```
-
-- 클래스 만으로는 레이아웃을 구분하기 어렵다.
-
-```html
-<div className="slide">슬라이드</div>
-<div className="board">게시판</div>
-<div className="notice">공지사항</div>
-```
-
-- styled 적용시 css 표현을 포함한다.
-
-```html
-<SlideDiv>슬라이드</SlideDiv>
-<BoardDiv>게시판</BoardDiv>
-<NoticeDiv>공지사항</NoticeDiv>
-```
-
-### 5.4. 태그에 의미 부여한 방식으로 변경
+- 객체의 속성이 있는지 if 문 말고 옵셔널체이닝
+  : 객체 ?. 속성
 
 ```js
-export const Header = ({ login }) => {
+import "./App.css";
+const App = () => {
+  const member = {
+    name: "hong",
+    age: 15,
+  };
   return (
-    <header>
-      <div className="logo"></div>
-      <div className="gnb">
-        <nav className="menu"></nav>
-      </div>
-      <div className="member"></div>
-    </header>
+    <div>
+      이름 : {member.name} <br />
+      나이 : {member.age} <br />
+      취미 : {member.hobby ? member.hobby : "취미정보가 없어요"} <br />
+      취미 : {member?.hobby || "취미정보가 없어요"} <br />
+    </div>
   );
 };
+
+export default App;
 ```
 
-```js
-import styled from "@emotion/styled";
+## 5. 반복문 이해하기
 
-export const Header = ({ login }) => {
-  const LogoDiv = styled.div``;
-  const GnbDiv = styled.div``;
-  const MemberDiv = styled.div``;
-  const HomeBt = styled.a``;
+```js
+import "./App.css";
+const App = () => {
+  // 반복문의 대상은 주로 배열입니다.
+  const todoList = ["a", "b", "c", "d"];
+  // 화면 출력 JSX
   return (
-    <header>
-      <LogoDiv className="logo">
-        <HomeBt href="http://www.naver.com">네이버</HomeBt>
-      </LogoDiv>
-      <GnbDiv className="gnb">
-        <nav className="menu"></nav>
-      </GnbDiv>
-      <MemberDiv className="member"></MemberDiv>
-    </header>
+    <>
+      <h1>할일</h1>
+      <ul>
+        <li>{todoList[0]}</li>
+        <li>{todoList[1]}</li>
+        <li>{todoList[2]}</li>
+        <li>{todoList[3]}</li>
+      </ul>
+    </>
   );
 };
+
+export default App;
 ```
 
-### 5.5. CSS 도 함께 적용하기
+- 배열.map 추천
 
 ```js
-import styled from "@emotion/styled";
-
-export const Header = ({ login }) => {
-  const LogoDiv = styled.div`
-    background-color: red;
-    width: 80%;
-    margin: 0 auto;
-    border: 5px solid red;
-  `;
-  const GnbDiv = styled.div`
-    width: 80%;
-    nav {
-      background-color: yellow;
+import "./App.css";
+const App = () => {
+  // 반복문의 대상은 주로 배열입니다.
+  const todoList = ["a", "b", "c", "d"];
+  const showList = () => {
+    // 기초 코드
+    for (let i = 0; i < todoList.length; i++) {
+      const item = todoList[i];
+      // console.log(item);
     }
-  `;
-  const MemberDiv = styled.div``;
-  const HomeBt = styled.a``;
+    // 배열.forEach 를 시도
+    const 결과 = todoList.forEach((item, index, arr) => {
+      // console.log(item, index, arr);
+      return item;
+    });
+    // 결론적으로 단순 반복 작업시 for 말고 forEach 사용
+    // for 이든 forEach 이든 리턴 되는 결과는 직접 코딩해야 함.
+    // 그래서 JSX 형태의 html 태그를 만들기 곤란
+
+    // 배열의 요소를 필터링 하기
+    const 선택결과 = todoList.filter((item, index, arr) => {
+      // 조건이 참인 것들만 모아서 배열 만든다.
+      if (item === "a" || item === "d") {
+        return item;
+      }
+    });
+    console.log(선택결과);
+    const 선택결과2 = todoList.filter(
+      (item, index, arr) => item === "a" || item === "d",
+    );
+    console.log(선택결과2);
+
+    // JSX 에 배열을 대상으로 출력하는 반복문은 map 만 쓴다.
+    const 태그결과 = todoList.map((item, index, arr) => {
+      return <li key={index}>{item}</li>;
+    });
+    // 태그 결과 즉, map 은 최종 결과물들을 배열에 모아준다.
+    return 태그결과;
+  };
+  // 화면 출력 JSX
   return (
-    <header>
-      <LogoDiv>
-        <HomeBt href="http://www.naver.com">네이버</HomeBt>
-      </LogoDiv>
-      <GnbDiv>
-        <nav className="menu"></nav>
-      </GnbDiv>
-      <MemberDiv className="member"></MemberDiv>
-    </header>
+    <>
+      <h1>할일</h1>
+      <ul>{showList()}</ul>
+    </>
   );
 };
+
+export default App;
 ```
 
-### 5.6. Props 전달하기
+- 샘플 코드
 
 ```js
-<LogoDiv bg={"yellow"} w={200} h={300} visible={false}>
-  <HomeBt href="http://www.naver.com">네이버</HomeBt>
-</LogoDiv>
+import "./App.css";
+const App = () => {
+  const feelData = [
+    { icon: "1.svg", txt: "rad", color: "green" },
+    { icon: "2.svg", txt: "good", color: "red" },
+    { icon: "3.svg", txt: "meh", color: "blue" },
+    { icon: "1.svg", txt: "bad", color: "hotpink" },
+    { icon: "2.svg", txt: "awful", color: "gold" },
+  ];
+
+  const FeelCate = {
+    position: "relative",
+    display: "flex",
+    justifyContent: "center",
+    gap: "10px",
+  };
+  const FeelIcon = {
+    position: "relative",
+    display: "flex",
+    flexDirection: "column",
+    textAlign: "center",
+    alignItems: "center",
+    "text-transform": "uppercase",
+  };
+
+  return (
+    <>
+      <ul style={FeelCate}>
+        {feelData.map((item, index) => {
+          return (
+            <li key={index} style={FeelIcon}>
+              <img src={item?.icon} alt={item?.txt} />
+              <span style={{ color: item?.color }}>{item?.txt}</span>
+            </li>
+          );
+        })}
+      </ul>
+    </>
+  );
+};
+
+export default App;
 ```
 
 ```js
-const LogoDiv = styled.div`
-  background-color: ${props.bg};
-  width: ${props.w}px;
-  height: ${props.h}px;
-  visibility: ${props.visible ? "visible" : "hidden"};
-  margin: 0 auto;
-  border: 5px solid red;
-`;
+import "./App.css";
+const App = () => {
+  const feelData = [
+    { icon: "1.svg", txt: "rad", color: "green" },
+    { icon: "2.svg", txt: "good", color: "red" },
+    { icon: "3.svg", txt: "meh", color: "blue" },
+    { icon: "1.svg", txt: "bad", color: "hotpink" },
+    { icon: "2.svg", txt: "awful", color: "gold" },
+  ];
+
+  const FeelCate = {
+    position: "relative",
+    display: "flex",
+    justifyContent: "center",
+    gap: "10px",
+  };
+  const FeelIcon = {
+    position: "relative",
+    display: "flex",
+    flexDirection: "column",
+    textAlign: "center",
+    alignItems: "center",
+    "text-transform": "uppercase",
+  };
+
+  const showFeel = () => {
+    const result = feelData.map((item, index) => {
+      return (
+        <li key={index} style={FeelIcon}>
+          <img src={item?.icon} alt={item?.txt} />
+          <span style={{ color: item?.color }}>{item?.txt}</span>
+        </li>
+      );
+    });
+
+    return result;
+  };
+
+  return (
+    <>
+      <ul style={FeelCate}>{showFeel()}</ul>
+    </>
+  );
+};
+
+export default App;
 ```
 
-### 5.7. 외부파일로 라이브러리 형태로 제공
+## 6. 이벤트의 이해
+
+- 기본 : onClick, onChange, onSubmit
+
+### 6.1. onClick
+
+- 반드시 카멜케이스로 작성한다.
+
+```js
+ onClick={() => {
+    하고 싶은일
+ }}
+```
+
+```js
+import "./App.css";
+const App = () => {
+  let count = 0;
+  return (
+    <>
+      <button
+        onClick={() => {
+          count++;
+          alert(count);
+        }}
+      >
+        클릭
+      </button>
+    </>
+  );
+};
+
+export default App;
+```
+
+- 이벤트에서 실행할 내용들은 별도 함수 작성 권장
+
+```js
+import "./App.css";
+const App = () => {
+  let count = 0;
+  const showCount = () => {
+    count++;
+    alert(count);
+  };
+  return (
+    <>
+      <button
+        onClick={() => {
+          showCount();
+        }}
+      >
+        클릭
+      </button>
+    </>
+  );
+};
+
+export default App;
+```
+
+### 6.2. onChange
+
+- form 태그에서 사용자가 내용을 변경한 경우 처리이벤트
+
+```js
+import React from "react";
+
+const App = () => {
+  return (
+    <div>
+      <form action="/path" method="get">
+        <fieldset>
+          <legend>회원가입</legend>
+          <label htmlFor="user">아이디</label>
+          <input
+            type="text"
+            name="user"
+            id="user"
+            placeholder="아이디 입력해주세요."
+          />
+          <input type="button" name="idcheck" value="중복확인" />
+          <br />
+          <label htmlFor="pw">비밀번호</label>
+          <input type="password" name="pw" id="pw" />
+          <br />
+        </fieldset>
+
+        <fieldset>
+          <legend>정보입력</legend>
+          <label htmlFor="age">나이</label>
+          <input type="number" name="age" id="age" />
+          <br />
+          <label htmlFor="gm">남성</label>
+          <input type="radio" name="gender" value="m" id="gm" checked={true} />
+          <label htmlFor="gf">여성</label>
+          <input type="radio" name="gender" value="f" id="gf" />
+
+          <br />
+          <label htmlFor="js">JS</label>
+          <input type="checkbox" name="js" id="js" />
+          <label htmlFor="css">CSS</label>
+          <input type="checkbox" name="css" id="css" />
+          <label htmlFor="html">HTML</label>
+          <input type="checkbox" name="html" id="html" />
+          <br />
+          <label htmlFor="level">성적등급</label>
+          <select name="level" id="level">
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+          </select>
+          <br />
+          <label htmlFor="file">파일첨부</label>
+          <input type="file" name="file" id="file" />
+          <br />
+          <label htmlFor="etc">기타사항</label>
+          <textarea name="etc" id="etc"></textarea>
+        </fieldset>
+
+        <fieldset>
+          <legend>버튼들</legend>
+          <input type="reset" value="다시작성" />
+          <input type="submit" value="작성완료" />
+          <button type="button">버튼 작성 완료</button>
+          <input type="image" src="images/a.jpg" />
+        </fieldset>
+      </form>
+    </div>
+  );
+};
+
+export default App;
+```
+
+- 폼 이벤트 값
+
+```js
+const App = () => {
+  return (
+    <div>
+      <form action="/path" method="get">
+        <fieldset>
+          <legend>회원가입</legend>
+          <label htmlFor="user">아이디</label>
+          <input
+            type="text"
+            name="user"
+            id="user"
+            placeholder="아이디 입력해주세요."
+            onChange={e => {
+              console.log(e.type);
+              console.log(e.target);
+              console.log(e.target.value);
+            }}
+          />
+          <input type="button" name="idcheck" value="중복확인" />
+          <br />
+          <label htmlFor="pw">비밀번호</label>
+          <input
+            type="password"
+            name="pw"
+            id="pw"
+            onChange={e => {
+              console.log(e.type);
+              console.log(e.target);
+              console.log(e.target.value);
+            }}
+          />
+          <br />
+        </fieldset>
+
+        <fieldset>
+          <legend>정보입력</legend>
+          <label htmlFor="age">나이</label>
+          <input
+            type="number"
+            name="age"
+            id="age"
+            onChange={e => {
+              console.log(e.type);
+              console.log(e.target);
+              console.log(e.target.value);
+            }}
+          />
+          <br />
+          <label htmlFor="gm">남성</label>
+          <input
+            type="radio"
+            name="gender"
+            value="m"
+            id="gm"
+            checked={true}
+            onClick={e => {
+              console.log(e.type);
+              console.log(e.target);
+              console.log(e.target.value);
+            }}
+          />
+          <label htmlFor="gf">여성</label>
+          <input
+            type="radio"
+            name="gender"
+            value="f"
+            id="gf"
+            onClick={e => {
+              console.log(e.type);
+              console.log(e.target);
+              console.log(e.target.value);
+            }}
+          />
+
+          <br />
+          <label htmlFor="js">JS</label>
+          <input
+            type="checkbox"
+            name="js"
+            id="js"
+            onClick={e => {
+              console.log(e.type);
+              console.log(e.target);
+              console.log(e.target.value);
+            }}
+          />
+          <label htmlFor="css">CSS</label>
+          <input
+            type="checkbox"
+            name="css"
+            id="css"
+            onClick={e => {
+              console.log(e.type);
+              console.log(e.target);
+              console.log(e.target.value);
+            }}
+          />
+          <label htmlFor="html">HTML</label>
+          <input
+            type="checkbox"
+            name="html"
+            id="html"
+            onClick={e => {
+              console.log(e.type);
+              console.log(e.target);
+              console.log(e.target.value);
+            }}
+          />
+          <br />
+          <label htmlFor="level">성적등급</label>
+          <select
+            name="level"
+            id="level"
+            onChange={e => {
+              console.log(e.type);
+              console.log(e.target);
+              console.log(e.target.value);
+            }}
+          >
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+          </select>
+          <br />
+          <label htmlFor="file">파일첨부</label>
+          <input
+            type="file"
+            name="file"
+            id="file"
+            onChange={e => {
+              console.log(e.type);
+              console.log(e.target);
+              console.log(e.target.value);
+            }}
+          />
+          <br />
+          <label htmlFor="etc">기타사항</label>
+          <textarea
+            name="etc"
+            id="etc"
+            onChange={e => {
+              console.log(e.type);
+              console.log(e.target);
+              console.log(e.target.value);
+            }}
+          ></textarea>
+        </fieldset>
+
+        <fieldset>
+          <legend>버튼들</legend>
+          <input type="reset" value="다시작성" />
+          <input type="submit" value="작성완료" />
+          <button type="button">버튼 작성 완료</button>
+          <input type="image" src="images/a.jpg" />
+        </fieldset>
+      </form>
+    </div>
+  );
+};
+
+export default App;
+```
+
+- 폼 필드의 값을 처리하는 handler함수 생성 권장
+
+```js
+const App = () => {
+  const handleChangeForm = e => {
+    console.log(e.type);
+    console.log(e.target);
+    console.log(e.target.name);
+    console.log(e.target.value);
+  };
+  return (
+    <div>
+      <form action="/path" method="get">
+        <fieldset>
+          <legend>회원가입</legend>
+          <label htmlFor="user">아이디</label>
+          <input
+            type="text"
+            name="user"
+            id="user"
+            placeholder="아이디 입력해주세요."
+            onChange={e => {
+              handleChangeForm(e);
+            }}
+          />
+          <input type="button" name="idcheck" value="중복확인" />
+          <br />
+          <label htmlFor="pw">비밀번호</label>
+          <input
+            type="password"
+            name="pw"
+            id="pw"
+            onChange={e => {
+              handleChangeForm(e);
+            }}
+          />
+          <br />
+        </fieldset>
+
+        <fieldset>
+          <legend>정보입력</legend>
+          <label htmlFor="age">나이</label>
+          <input
+            type="number"
+            name="age"
+            id="age"
+            onChange={e => {
+              handleChangeForm(e);
+            }}
+          />
+          <br />
+          <label htmlFor="gm">남성</label>
+          <input
+            type="radio"
+            name="gender"
+            value="m"
+            id="gm"
+            checked={true}
+            onClick={e => {
+              handleChangeForm(e);
+            }}
+          />
+          <label htmlFor="gf">여성</label>
+          <input
+            type="radio"
+            name="gender"
+            value="f"
+            id="gf"
+            onClick={e => {
+              handleChangeForm(e);
+            }}
+          />
+
+          <br />
+          <label htmlFor="js">JS</label>
+          <input
+            type="checkbox"
+            name="js"
+            id="js"
+            onClick={e => {
+              handleChangeForm(e);
+            }}
+          />
+          <label htmlFor="css">CSS</label>
+          <input
+            type="checkbox"
+            name="css"
+            id="css"
+            onClick={e => {
+              handleChangeForm(e);
+            }}
+          />
+          <label htmlFor="html">HTML</label>
+          <input
+            type="checkbox"
+            name="html"
+            id="html"
+            onClick={e => {
+              handleChangeForm(e);
+            }}
+          />
+          <br />
+          <label htmlFor="level">성적등급</label>
+          <select
+            name="level"
+            id="level"
+            onChange={e => {
+              handleChangeForm(e);
+            }}
+          >
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+          </select>
+          <br />
+          <label htmlFor="file">파일첨부</label>
+          <input
+            type="file"
+            name="file"
+            id="file"
+            onChange={e => {
+              handleChangeForm(e);
+            }}
+          />
+          <br />
+          <label htmlFor="etc">기타사항</label>
+          <textarea
+            name="etc"
+            id="etc"
+            onChange={e => {
+              handleChangeForm(e);
+            }}
+          ></textarea>
+        </fieldset>
+
+        <fieldset>
+          <legend>버튼들</legend>
+          <input type="reset" value="다시작성" />
+          <input type="submit" value="작성완료" />
+          <button type="button">버튼 작성 완료</button>
+          <input type="image" src="images/a.jpg" />
+        </fieldset>
+      </form>
+    </div>
+  );
+};
+
+export default App;
+```
+
+- 리액트에서는 데이터 전송은 axios활용
+
+```html
+<form action="/path" method="get"></form>
+아래 권장
+<form></form>
+```
+
+### 6.3. form 버튼 처리 주의사항
+
+#### 6.3.1 `<button>중복확인</button>`
+
+- 만약 form 태그안에 배치되면 onSubmit 됩니다.
+- 아래 처럼 변형됩니다.
+
+```html
+<form>
+  <button type="submit">중복확인</button>
+</form>
+```
+
+- 직접 고치셔야 합니다. !!!!
+
+```html
+<form>
+  <button type="button">중복확인</button>
+</form>
+```
+
+- form 태그 바깥이라면 일반 버튼
+- 아니면 아래 코드 처럼 작성
+  : `<input type="button" value="중복확인" />`
+
+### 6.4. form 데이터 전송 이벤트 처리
+
+```js
+  <legend>버튼들</legend>
+  <input type="reset" value="다시작성" />
+  <input type="submit" value="작성완료" />
+  <button type="submit">버튼 작성 완료</button>
+  <input type="image" src="images/a.jpg" />
+```
+
+```js
+const handleSubmit = e => {
+  // 반드시 처리한다. 기본기능 막는다.
+  // 데이터 유효성 검증을 위해서 막음.
+  e.preventDefault();
+};
+
+<form
+  onSubmit={e => {
+    handleSubmit(e);
+  }}
+>
+  ............. ............. .............
+</form>;
+```
