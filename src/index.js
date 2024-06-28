@@ -1,5 +1,5 @@
 import ReactDOM from "react-dom/client";
-import App from "./App";
+import AppRoot from "./AppRoot";
 import "./index.css";
 
 // ts 에서는 데이터 종류를 구별한다.
@@ -9,4 +9,4 @@ import "./index.css";
 // js 버전
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
-root.render(<App />);
+root.render(<AppRoot />);

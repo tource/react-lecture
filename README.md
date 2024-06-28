@@ -1,64 +1,317 @@
-# component
+# component TS 버전
 
-- 퍼블리싱 완료 후 JSX 로 변환
-- 컴포넌트는 html 을 작성 하여 출력하는 용도
+- 퍼블리싱 완료 후 js 확장자
+  : js, jsx 는 일반적으로 js 로 확장자 통일
+  : 규칙 1. js 는 JSX 즉, 리액트 태그를 쓸 수 없다.
+  : 규칙 2. jsx 는 JSX 를 사용할 수있다.
+  : 하지만, 현재는 그냥 js 로 확장자 통일했다.
 
-## 1. JSX 로 변환시 주의사항
+- 퍼블리싱 완료 후 tsx 와 ts 확장자로 반드시 구분한다.
+  : ts 확장자는 일반적 js 에 데이터 종류 즉, 타입을 정의한 것.
+  : tsx 확장자는 JSX 를 사용하겠다. 즉, 컴포넌트에 타입을 정의하겠다.
 
-- 반드시 하나의 태그로 감싸야 한다. (무조건)
-- 의미없는 태그를 활용하면 안된다.
-  : 대신 <></> 를 활용한다.
-- class 는 반드시 className 변경한다.
-  : js에서는 tag.classList 활용
-  : js에서는 class 가 데이터 타입이라서 의미가 다름
-- js 로 변하는 내용은 {} 기호안에 작성한다.
+## 1. TS 의 좋은 점
 
-## 2. 컴포넌트로 변환하는 이유
+- 코딩 중에 오류를 발견하기 쉽도록 VSCode 가 지원한다.
+- 코드 힌트가 VSCode 에서 가이드를 해준다.
+- 코딩 중에 오류를 줄이면 서비스 중에 오류도 줄여줍니다.
+- js 를 같이 사용하셔도 문제가 없습니다.
 
-- 재사용하려고
-- 유지보수 편리하게 하려고
-- 기능별 분류하여서 협업가능하도록 하기위해서
+## 2. TS 의 단점
 
-## 3. 컴포넌트 생성법
+- 문법 즉, 데이터 종류를 설정하는 방법이 어렵다.
+- 문법이 일반 프로그래밍 방식으로 진행되므로 어렵다.
 
-- JSX 를 리턴해 주므로 함수로 만든다.
-- 추천하는 함수 형태는 화살표 함수다.
-- 컴포넌트 변수는 대문자로 시작하는 단어(명사) 작성한다.
-- 컴포넌트 변수는 export 를 해야 의미가 있다.
-- export를 할 정도로 코드량이 많다면 파일로 만드시기를 추천합니다.
-- 별도의 용도별로 폴더(소문자)에 모아서 관리하는 것이 좋다.
-- 컴포넌트를 사용하는 곳에서 JSX를 배치하고 싶다면 children 을 사용한다.
+## 3. index.js 가 아니라 index.ts가 됩니다.
 
-## 4. 페이지용 컴포넌트 생성법
+- 마이그레이션 : src/index.js 확장자를 src/index.ts 로 수정
 
-- 필요로 한 컴포넌트 들을 모아서 화면 단위로 출력하는 용도
+## 4. 컴포넌트 tsx 버전 만들기
 
-## 5. 컴포넌트에 값 전달하기
+- src/AppRoot.tsx 생성
+- TS 는 데이터 종류를 설정하는 것이다.
+- 데이터 종류를 설정할 때는 : 키워드를 이용한다.
+  : 타입정의문법
+  : 데이터 종류를 확인하시고 싶은 경우 타입추론을 믿어라.
+  : VSCode 는 타입추론을 사람보다 잘한다.
 
-- 컴포넌트를 사용하는 곳에서는 값을 객체 리터럴로 전달합니다.
-  : 글자(문자열)를 전달할 경우 title="제목"
-  : 숫자를 전달할 경우 age={1}
-  : Boolean을 전달할 경우 study={true}
-  : 배열을 전달할 경우 hobby={["축구", "야구", "배구"]}
-  : 함수를 전달할 경우 say={ () => { console.log("안녕"); }}
-  : 객체를 전달할 경우 info={{ lastName: "길동", firstName: "홍" }}
-  : 컴포넌트를 전달할 경우 comp={<Header />}
+## 5. tsx 로 컴포넌트를 React.FC 데이터 종류로 만들기
 
-- 컴포넌트에서는 전달된 값을 객체 리터럴로 받습니다.
-  : 권장하지 않는 값 접근 방식은 props.속성명 (props.age)
-  : 권장하는 값 접근 방식은 객체구조분해할당 { title, age, study, hobby, say, info, comp }
+```tsx
+import React from "react";
 
-## 6. 컴포넌트에 useState 변수값 전달하기
+const AppRoot: React.FC = () => {
+  return <div>안녕하세요.</div>;
+};
 
-```js
-const [level, setLevel] = useState(0);
-const [gogo, setGogo] = useState(() => {});
-...
- <Header
-        gogo={gogo}
-        level={level}
-  />
+export default AppRoot;
 ```
 
-- useState 변수는 화면이 갱신 될때도 유지되는 변수.
-- 일반 변수는 화면이 갱신 즉, js 가 다시 실행되므로 늘 초기화된다.
+## 6. tsx 로 컴포넌트를 JSX.Element 데이터 종류로 만들기
+
+```tsx
+const AppRoot = (): JSX.Element => {
+  return <div>안녕하세요.</div>;
+};
+```
+
+## 7. tsx 로 컴포넌트를 React.FC 와 JSX.Element 데이터 종류로 만들기
+
+```tsx
+const AppRoot: React.FC = (): JSX.Element => {
+  return <div>안녕하세요.</div>;
+};
+```
+
+## 8. ts 에 함수 이해하기
+
+### 8.1. 일반적인 함수
+
+```js
+function Add(a, b) {
+  return a + b;
+}
+```
+
+```js
+function Add(a:number, b:number) : number {
+  return a + b;
+}
+```
+
+### 8.2. 화살표 함수
+
+```js
+const Add = (a, b) => {
+  return a + b;
+};
+```
+
+```js
+const Add = (a, b) => {
+  return a + b;
+};
+```
+
+```ts
+const Add = (a: number, b: number): number => {
+  return a + b;
+};
+```
+
+### 8.3. 화살표 함수의 이름에 타입정의하기
+
+```ts
+const Add = (a: number, b: number): number => {
+  return a + b;
+};
+```
+
+- 함수를 저장하고 있는 Add 변수라서
+
+```ts
+const Add: (a: number, b: number) => number = (
+  a: number,
+  b: number,
+): number => {
+  return a + b;
+};
+```
+
+### 8.4. React.FC 와 JSX.Element 의 차이
+
+- React.FC 는 children 을 자동으로 삽입해 준다.
+- JSX.Element 는 children 을 반드시 직접 종류를 작성해 준다.
+
+## 9. 컴포넌트에 props 전달하기
+
+- src/components/Hi.tsx
+
+```tsx
+import React from "react";
+// props 로 전달되는 데이터의 모양을 만들어준다.
+// 모양을 만드는 방법은 interface 또는 type 이 있다.
+interface HiProps {
+  nickname: string;
+  age: number;
+}
+
+const Hi: React.FC<HiProps> = ({ nickname, age }) => {
+  return (
+    <div>
+      반가워요! {nickname}님, 나이가 {age} 이군요
+    </div>
+  );
+};
+
+export default Hi;
+```
+
+```tsx
+<Hi nickname={"hong"} age={15} />
+```
+
+### 9.1. 제네릭 <데이터종류> 의 간단 이해
+
+- 제네릭은 어떤 데이터가 들어올지 알수 없다.
+- 그래서 `나중에 전달된 데이터종류를 판단하겠다.` 라는 것
+- <interface변수>, <type변수>, <기본형변수>, <객체형변수>
+
+## 10. React.FC 와 JSX.Element 에 children 활용하기
+
+### 10.1.React.FC 에 children 활용하기
+
+- src/components/Child.tsx
+  : 주의사항은 `children?: React.ReactNode;`
+  : `?는 필수입니다.`
+  : children 이 있을 수도 없을 수도 있다
+
+```tsx
+import React from "react";
+
+interface ChildProps {
+  title: string;
+  hobby: string;
+  say: () => void;
+  info: { name: string; age: number };
+  children?: React.ReactNode;
+}
+
+const Child: React.FC<ChildProps> = ({ title, hobby, say, info, children }) => {
+  return (
+    <div>
+      Child 입니다. {info.name}은 {info.age} 입니다.
+      <div>{children}</div>
+    </div>
+  );
+};
+
+export default Child;
+```
+
+- children 전달
+
+```tsx
+const title: "React.FC 활용" = "React.FC 활용";
+const hobby: "축구" = "축구";
+const say: () => void = () => {
+  console.log("안녕");
+};
+
+const info: {
+  name: string;
+  age: number;
+} = {
+  name: "홍길동",
+  age: 15,
+};
+```
+
+```tsx
+<Child title={title} hobby={hobby} say={say} info={info}>
+  <h2>나는 React.FC 의 children 속성이다.</h2>
+</Child>
+```
+
+### 10.2.JSX.Element 에 children 활용하기
+
+- src/components/Son.tsx
+
+```tsx
+import React from "react";
+interface SonProps {
+  title: string;
+  hobby: string;
+  say: () => void;
+  info: { name: string; age: number };
+  children?: React.ReactNode;
+}
+const Son = ({ title, hobby, say, info, children }: SonProps): JSX.Element => {
+  return (
+    <div>
+      Son 입니다.
+      {children}
+    </div>
+  );
+};
+
+export default Son;
+```
+
+```tsx
+<Son title={title} hobby={hobby} say={say} info={info}>
+  <h2>나는 JSX.Element 의 children 이다.</h2>
+</Son>
+```
+
+### 10.3. children 을 사용한다면 2가지 있을 것이다.
+
+- props 여러개의 데이터를 전달하는 컴포넌트 + children
+
+```tsx
+<Child title="안녕" age={15}>
+  <h1>자식요소</h1>
+</Child>
+```
+
+- props 없이 보여주는 컴포넌트 + children
+
+```tsx
+<Child>
+  <h1>자식요소</h1>
+</Child>
+```
+
+- 고민하지 말고 기본 Props 용 Interface 한개 만들어주자.
+- 아래가 컴포넌트에 기본형이어야 한다고 판단합니다.
+
+```tsx
+interface ChildProps {
+  children?: React.ReactNode;
+  // 추가 Props 작성해 주기
+}
+// React.FC 용
+const Child: React.FC<ChildProps> = ({ children }) => {})
+// JSX.Element
+const Son = ({ children }: ChildProps): JSX.Element => {})
+// React.FC 용
+const Child: React.FC<ChildProps> = ({ children }: ChildProps): JSX.Element => {})
+
+```
+
+## 11. useState 에 TS 적용하기
+
+```tsx
+/* eslint-disable prefer-const */
+import React, { useState } from "react";
+
+interface ChildProps {
+  children?: React.ReactNode;
+}
+
+const Child: React.FC<ChildProps> = ({ children }) => {
+  const [level, setLevel] = useState<number>(0);
+  const [userId, setUserId] = useState<string>("");
+  const initData = [
+    { pk: 1, title: "할일 1", complted: true },
+    { pk: 1, title: "할일 1", complted: true },
+    { pk: 1, title: "할일 1", complted: true },
+    { pk: 1, title: "할일 1", complted: true },
+    { pk: 1, title: "할일 1", complted: true },
+  ];
+  const [todoList, setTodoList] = useState<[]>([]);
+
+  return (
+    <div
+      onClick={() => {
+        setLevel("hello");
+      }}
+    >
+      Child 입니다.
+      <div>{children}</div>
+    </div>
+  );
+};
+
+export default Child;
+```
