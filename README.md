@@ -2,882 +2,302 @@
 
 ## 1. 기본데이터 출력
 
-```js
-import "./App.css";
-const App = () => {
-  // js 자리
-  const a = 1; // 숫자출력하기
-  const b = "hello"; // 문자출력하기
-  const c = true; // 참, 거짓을 이용한 출력하기
-  const d = undefined; // 값이 없다고 명시적으로 표현
-  const e = null; // 값이 비었다.
-  const f = [1, 2, 3]; // 배열
-  const g = { age: 15, name: "hong" }; // 객체 리터럴
-  return (
-    <>
-      a: {a} <br />
-      b: {b} <br />
-      c: {c} <br />
-      d: {d} <br />
-      e: {e} <br />
-      f: {f} {f[1]}
-      <br />
-      g: {g.age} {g.name} <br />
-    </>
-  );
-};
-
-export default App;
+```ts
+const a: number = 1; // 숫자출력하기
+const b: string = "hello"; // 문자출력하기
+const c: boolean = true; // 참, 거짓을 이용한 출력하기
+const d: undefined = undefined; // 값이 없다고 명시적으로 표현
+const e: null = null; // 값이 비었다.
+const f: number[] = [1, 2, 3]; // 배열
+const g: { age: number; name: string } = { age: 15, name: "hong" };
 ```
 
-## 2. 함수 활용하기
+```ts
+interface IMember {
+  age: number;
+  name: string;
+}
+const g: IMember = { age: 15, name: "hong" };
+```
+
+## 2. 알아두면 좋은 ts 기본데이터형
+
+- any, void, never 도 있어요.
+- any, never 는 가능하면 권장하지는 않아요.
+- 하지만 마이그레이션 즉, js 를 ts 로 변경시 좋아요.
 
 ```js
-import "./App.css";
-const App = () => {
-  // 매개변수 없는 경우
-  function say() {
-    return "안녕";
+const what = 1;
+const where = "대구";
+```
+
+- 일단 확장자를 수정(ts, tsx)
+
+```ts
+const what: any = 1;
+const where: any = "대구";
+```
+
+- 시간을 두고 꼼꼼하게 타입형을 지정한다.
+
+```ts
+const what: number = 1;
+const where: string = "대구";
+```
+
+## 3. 함수 활용하기
+
+```js
+function 함수명() {
+  return 결과값;
+}
+function say() {
+  return "안녕";
+}
+```
+
+```ts
+function 함수명(): 리턴데이터형 {
+  return 결과값;
+}
+function say(): string {
+  return "안녕";
+}
+```
+
+- 매개변수가 있는 경우
+
+```js
+function 함수명(매개변수) {
+  return 결과값;
+}
+function say(message) {
+  return message;
+}
+```
+
+```js
+function 함수명(매개변수:데이터형):리턴데이터형 {
+  return 결과값;
+}
+function say(message: string): string {
+  return message;
+}
+```
+
+## 4. 화살표 함수 활용하기
+
+```js
+const 변수명 = () => {
+  return 결과값;
+};
+const hello = () => {
+  return "Hello";
+};
+```
+
+```ts
+const 변수명 = (): 리턴데이터형 => {
+  return 결과값;
+};
+const hello = (): string => {
+  return "Hello";
+};
+```
+
+- 매개변수가 있는 경우
+
+```js
+const 변수명 = message => {
+  return message;
+};
+const hello = message => {
+  return message;
+};
+```
+
+```ts
+const 변수명 = (message: 데이터형): 리턴데이터형 => {
+  return message;
+};
+const hello = (message: string): string => {
+  return message;
+};
+```
+
+## 5. 화살표 함수로 JSX.Element 를 리턴하기
+
+```js
+const ListTag = () => {
+  return <div>안녕</div>;
+};
+```
+
+```ts
+const ListTag = ():JSX.Element => {
+  return <div>안녕</div>;
+};
+```
+
+## 6. 화살표 함수 변수명에 데이터 형 지정하기
+
+- 가독성이 너무 힘들어요.
+
+```ts
+const hello: () => string = (): string => {
+  return "Hello";
+};
+```
+
+```ts
+interface IHelloFunction {
+  (): string;
+}
+const hello: IHelloFunction = (): string => {
+  return "Hello";
+};
+```
+
+- 매개변수가 있는 경우
+
+```ts
+const hello: (message: string) => string = (message: string): string => {
+  return message;
+};
+```
+
+```ts
+interface IHelloFunction {
+  (message: string): string;
+}
+const hello: IHelloFunction = (message: string): string => {
+  return message;
+};
+```
+
+## 7. 화살표 함수 변수명에 JSX.Element 지정하기
+
+```ts
+ const ListTag: () => JSX.Element = () => {
+    return <div>안녕</div>;
+  };
+```
+
+```ts
+ const ListTag: () => JSX.Element = () => {
+    return <div>안녕</div>;
+  };
+```
+
+```ts
+  const ListTag: React.FC = (): JSX.Element => {
+    return <div>안녕</div>;
+  };
+
+  const ListTag: React.FC  = () => {
+    return <div>안녕</div>;
+  };
+
+  // 아래를 추천합니다.(다수가 활용)
+  const ListTag = (): JSX.Element => {
+    return <div>안녕</div>;
+  };
+```
+
+## 8. 여러 타입의 리턴데이터형을 가지는 함수
+
+- 대단히 좋지 않아요.
+- 순수한 (Pure) 함수
+  : 함수의 기능이 대단히 간단하고 늘 동일한 결과를 리턴하는 것
+  : 함수의 리턴형의 데이터 종류는 늘 동일한 것
+
+```ts
+const Add = (a: number, b: number): number => {
+  return a + b;
+};
+
+const go = Add(4, 5);
+```
+
+```ts
+const Add = (a: number | string, b: number): number | string => {
+  if (typeof a === "string") {
+    return a + b.toString();
+  } else {
+    return a + b;
   }
-  // 화살표 함수
-  const sayArrow = () => {
-    return "안녕";
-  };
-  // 매개변수 있는 경우
-  function hi(who) {
-    return `안녕 ${who}`;
+};
+
+const go2 = Add("안녕", 5);
+```
+
+```ts
+const Add = (a: number | string, b: number | string): number | string => {
+  if (typeof a === "string" || typeof b === "string") {
+    return a.toString() + b.toString();
+  } else {
+    return a + b;
   }
-  const hiArrow = who => {
-    return `안녕 ${who}`;
-  };
+};
+const go3 = Add("안녕", "반가워");
+```
 
-  return (
-    <>
-      {say()}
-      <br />
-      {hi("길동")}
-      <br />
-      {sayArrow()}
-      <br />
-      {hiArrow("길동")}
-    </>
-  );
+## 9. onClick 이벤트 ts
+
+```js
+const handleClick = e => {
+  console.log("안녕");
 };
 
-export default App;
+// jsx 코드
+<button
+  onClick={e => {
+    handleClick(e);
+  }}
+>
+  클릭
+</button>;
 ```
 
-## 3. 조건문 활용하기
+```ts
+import React, { MouseEvent } from "react";
 
-```js
-import "./App.css";
-const App = () => {
-  const flag = true;
-  const show = () => {
-    if (flag) {
-      return "참이군요";
-    } else {
-      return "거짓이군요";
-    }
-  };
-  const showJSX = () => {
-    if (flag) {
-      return <div>참이군요</div>;
-    } else {
-      return <div>거짓이군요</div>;
-    }
-  };
+const handleClick = (e: MouseEvent<HTMLButtonElement>): void => {
+  console.log("안녕");
+};
+```
 
-  return (
-    <>
-      {show()}
-      <br />
-      {showJSX()}
-      <br />
-      {
-        // JSX 는 만들어진 결과물만 보여주는 곳, 조건식을 사용할 수 없다.
-        // if(flag) {
-        //   참이군요
-        // }else{
-        //   거짓이군요
-        // }
-      }
-      {
-        // 조건에 따라서 내용을 별도로 구분해서 출력한다면 삼항연산자를 쓴다.
-        flag ? "참이군요" : "거짓이군요"
-      }
-    </>
-  );
+```ts
+const handleDivClick = (e: MouseEvent<HTMLDivElement>): void => {
+  console.log("반가워");
+};
+```
+
+## 10. onChange 이벤트 ts
+
+```ts
+import React, { ChangeEvent, MouseEvent } from "react";
+
+const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
+  console.log(e.target);
 };
 
-export default App;
+<input
+  type="text"
+  onChange={e => {
+    handleChange(e);
+  }}
+/>
+
 ```
 
-## 4. 조건문 활용하기 2.
+11. onSubmit 이벤트 ts
 
-- CSS 객체 만들기
+```ts
+import React, { ChangeEvent, FormEvent, MouseEvent } from "react";
 
-```js
-import "./App.css";
-const App = () => {
-  // 조건에 따른 CSS 객체생성하기
-  const flag = true;
-  const DivStyle = {
-    color: flag ? "red" : "blue",
-    fontWeight: flag ? "bold" : "normal",
-  };
-
-  return <div style={DivStyle}>스타일 적용</div>;
-};
-
-export default App;
-```
-
-- 조건에 따라서 클래스 적용하기
-
-```js
-const App = () => {
-  // 조건에 따른 CSS 클래스 적용하기
-  const flag = true;
-  return <div className={flag ? "member" : "join"}>스타일 적용</div>;
-};
-
-export default App;
-```
-
-- 공백 조심하기
-
-```js
-import "./App.css";
-const App = () => {
-  // 조건에 따른 CSS 클래스 적용하기
-  const flag = true;
-  const loginType = "admin";
-  return (
-    // 클래스 명을 조건에 따라서 동적으로 추가할 때는 공백을 꼭!!! 확인하자
-    <div className={flag ? "member " + loginType : "member"}>스타일 적용</div>
-  );
-};
-
-export default App;
-```
-
-- if 문 말고 조건부 연산자 ( && || )
-
-```js
-import "./App.css";
-const App = () => {
-  const flag = true;
-  return (
-    <div>
-      {/* { flag ? "환영합니다." : "" } */}
-      {flag && "환영합니다"}
-      {flag || "이건 현재 안나와요. "}
-    </div>
-  );
-};
-
-export default App;
-```
-
-- 객체의 속성이 있는지 if 문 말고 옵셔널체이닝
-  : 객체 ?. 속성
-
-```js
-import "./App.css";
-const App = () => {
-  const member = {
-    name: "hong",
-    age: 15,
-  };
-  return (
-    <div>
-      이름 : {member.name} <br />
-      나이 : {member.age} <br />
-      취미 : {member.hobby ? member.hobby : "취미정보가 없어요"} <br />
-      취미 : {member?.hobby || "취미정보가 없어요"} <br />
-    </div>
-  );
-};
-
-export default App;
-```
-
-## 5. 반복문 이해하기
-
-```js
-import "./App.css";
-const App = () => {
-  // 반복문의 대상은 주로 배열입니다.
-  const todoList = ["a", "b", "c", "d"];
-  // 화면 출력 JSX
-  return (
-    <>
-      <h1>할일</h1>
-      <ul>
-        <li>{todoList[0]}</li>
-        <li>{todoList[1]}</li>
-        <li>{todoList[2]}</li>
-        <li>{todoList[3]}</li>
-      </ul>
-    </>
-  );
-};
-
-export default App;
-```
-
-- 배열.map 추천
-
-```js
-import "./App.css";
-const App = () => {
-  // 반복문의 대상은 주로 배열입니다.
-  const todoList = ["a", "b", "c", "d"];
-  const showList = () => {
-    // 기초 코드
-    for (let i = 0; i < todoList.length; i++) {
-      const item = todoList[i];
-      // console.log(item);
-    }
-    // 배열.forEach 를 시도
-    const 결과 = todoList.forEach((item, index, arr) => {
-      // console.log(item, index, arr);
-      return item;
-    });
-    // 결론적으로 단순 반복 작업시 for 말고 forEach 사용
-    // for 이든 forEach 이든 리턴 되는 결과는 직접 코딩해야 함.
-    // 그래서 JSX 형태의 html 태그를 만들기 곤란
-
-    // 배열의 요소를 필터링 하기
-    const 선택결과 = todoList.filter((item, index, arr) => {
-      // 조건이 참인 것들만 모아서 배열 만든다.
-      if (item === "a" || item === "d") {
-        return item;
-      }
-    });
-    console.log(선택결과);
-    const 선택결과2 = todoList.filter(
-      (item, index, arr) => item === "a" || item === "d",
-    );
-    console.log(선택결과2);
-
-    // JSX 에 배열을 대상으로 출력하는 반복문은 map 만 쓴다.
-    const 태그결과 = todoList.map((item, index, arr) => {
-      return <li key={index}>{item}</li>;
-    });
-    // 태그 결과 즉, map 은 최종 결과물들을 배열에 모아준다.
-    return 태그결과;
-  };
-  // 화면 출력 JSX
-  return (
-    <>
-      <h1>할일</h1>
-      <ul>{showList()}</ul>
-    </>
-  );
-};
-
-export default App;
-```
-
-- 샘플 코드
-
-```js
-import "./App.css";
-const App = () => {
-  const feelData = [
-    { icon: "1.svg", txt: "rad", color: "green" },
-    { icon: "2.svg", txt: "good", color: "red" },
-    { icon: "3.svg", txt: "meh", color: "blue" },
-    { icon: "1.svg", txt: "bad", color: "hotpink" },
-    { icon: "2.svg", txt: "awful", color: "gold" },
-  ];
-
-  const FeelCate = {
-    position: "relative",
-    display: "flex",
-    justifyContent: "center",
-    gap: "10px",
-  };
-  const FeelIcon = {
-    position: "relative",
-    display: "flex",
-    flexDirection: "column",
-    textAlign: "center",
-    alignItems: "center",
-    "text-transform": "uppercase",
-  };
-
-  return (
-    <>
-      <ul style={FeelCate}>
-        {feelData.map((item, index) => {
-          return (
-            <li key={index} style={FeelIcon}>
-              <img src={item?.icon} alt={item?.txt} />
-              <span style={{ color: item?.color }}>{item?.txt}</span>
-            </li>
-          );
-        })}
-      </ul>
-    </>
-  );
-};
-
-export default App;
-```
-
-```js
-import "./App.css";
-const App = () => {
-  const feelData = [
-    { icon: "1.svg", txt: "rad", color: "green" },
-    { icon: "2.svg", txt: "good", color: "red" },
-    { icon: "3.svg", txt: "meh", color: "blue" },
-    { icon: "1.svg", txt: "bad", color: "hotpink" },
-    { icon: "2.svg", txt: "awful", color: "gold" },
-  ];
-
-  const FeelCate = {
-    position: "relative",
-    display: "flex",
-    justifyContent: "center",
-    gap: "10px",
-  };
-  const FeelIcon = {
-    position: "relative",
-    display: "flex",
-    flexDirection: "column",
-    textAlign: "center",
-    alignItems: "center",
-    "text-transform": "uppercase",
-  };
-
-  const showFeel = () => {
-    const result = feelData.map((item, index) => {
-      return (
-        <li key={index} style={FeelIcon}>
-          <img src={item?.icon} alt={item?.txt} />
-          <span style={{ color: item?.color }}>{item?.txt}</span>
-        </li>
-      );
-    });
-
-    return result;
-  };
-
-  return (
-    <>
-      <ul style={FeelCate}>{showFeel()}</ul>
-    </>
-  );
-};
-
-export default App;
-```
-
-## 6. 이벤트의 이해
-
-- 기본 : onClick, onChange, onSubmit
-
-### 6.1. onClick
-
-- 반드시 카멜케이스로 작성한다.
-
-```js
- onClick={() => {
-    하고 싶은일
- }}
-```
-
-```js
-import "./App.css";
-const App = () => {
-  let count = 0;
-  return (
-    <>
-      <button
-        onClick={() => {
-          count++;
-          alert(count);
-        }}
-      >
-        클릭
-      </button>
-    </>
-  );
-};
-
-export default App;
-```
-
-- 이벤트에서 실행할 내용들은 별도 함수 작성 권장
-
-```js
-import "./App.css";
-const App = () => {
-  let count = 0;
-  const showCount = () => {
-    count++;
-    alert(count);
-  };
-  return (
-    <>
-      <button
-        onClick={() => {
-          showCount();
-        }}
-      >
-        클릭
-      </button>
-    </>
-  );
-};
-
-export default App;
-```
-
-### 6.2. onChange
-
-- form 태그에서 사용자가 내용을 변경한 경우 처리이벤트
-
-```js
-import React from "react";
-
-const App = () => {
-  return (
-    <div>
-      <form action="/path" method="get">
-        <fieldset>
-          <legend>회원가입</legend>
-          <label htmlFor="user">아이디</label>
-          <input
-            type="text"
-            name="user"
-            id="user"
-            placeholder="아이디 입력해주세요."
-          />
-          <input type="button" name="idcheck" value="중복확인" />
-          <br />
-          <label htmlFor="pw">비밀번호</label>
-          <input type="password" name="pw" id="pw" />
-          <br />
-        </fieldset>
-
-        <fieldset>
-          <legend>정보입력</legend>
-          <label htmlFor="age">나이</label>
-          <input type="number" name="age" id="age" />
-          <br />
-          <label htmlFor="gm">남성</label>
-          <input type="radio" name="gender" value="m" id="gm" checked={true} />
-          <label htmlFor="gf">여성</label>
-          <input type="radio" name="gender" value="f" id="gf" />
-
-          <br />
-          <label htmlFor="js">JS</label>
-          <input type="checkbox" name="js" id="js" />
-          <label htmlFor="css">CSS</label>
-          <input type="checkbox" name="css" id="css" />
-          <label htmlFor="html">HTML</label>
-          <input type="checkbox" name="html" id="html" />
-          <br />
-          <label htmlFor="level">성적등급</label>
-          <select name="level" id="level">
-            <option value="A">A</option>
-            <option value="B">B</option>
-            <option value="C">C</option>
-            <option value="D">D</option>
-          </select>
-          <br />
-          <label htmlFor="file">파일첨부</label>
-          <input type="file" name="file" id="file" />
-          <br />
-          <label htmlFor="etc">기타사항</label>
-          <textarea name="etc" id="etc"></textarea>
-        </fieldset>
-
-        <fieldset>
-          <legend>버튼들</legend>
-          <input type="reset" value="다시작성" />
-          <input type="submit" value="작성완료" />
-          <button type="button">버튼 작성 완료</button>
-          <input type="image" src="images/a.jpg" />
-        </fieldset>
-      </form>
-    </div>
-  );
-};
-
-export default App;
-```
-
-- 폼 이벤트 값
-
-```js
-const App = () => {
-  return (
-    <div>
-      <form action="/path" method="get">
-        <fieldset>
-          <legend>회원가입</legend>
-          <label htmlFor="user">아이디</label>
-          <input
-            type="text"
-            name="user"
-            id="user"
-            placeholder="아이디 입력해주세요."
-            onChange={e => {
-              console.log(e.type);
-              console.log(e.target);
-              console.log(e.target.value);
-            }}
-          />
-          <input type="button" name="idcheck" value="중복확인" />
-          <br />
-          <label htmlFor="pw">비밀번호</label>
-          <input
-            type="password"
-            name="pw"
-            id="pw"
-            onChange={e => {
-              console.log(e.type);
-              console.log(e.target);
-              console.log(e.target.value);
-            }}
-          />
-          <br />
-        </fieldset>
-
-        <fieldset>
-          <legend>정보입력</legend>
-          <label htmlFor="age">나이</label>
-          <input
-            type="number"
-            name="age"
-            id="age"
-            onChange={e => {
-              console.log(e.type);
-              console.log(e.target);
-              console.log(e.target.value);
-            }}
-          />
-          <br />
-          <label htmlFor="gm">남성</label>
-          <input
-            type="radio"
-            name="gender"
-            value="m"
-            id="gm"
-            checked={true}
-            onClick={e => {
-              console.log(e.type);
-              console.log(e.target);
-              console.log(e.target.value);
-            }}
-          />
-          <label htmlFor="gf">여성</label>
-          <input
-            type="radio"
-            name="gender"
-            value="f"
-            id="gf"
-            onClick={e => {
-              console.log(e.type);
-              console.log(e.target);
-              console.log(e.target.value);
-            }}
-          />
-
-          <br />
-          <label htmlFor="js">JS</label>
-          <input
-            type="checkbox"
-            name="js"
-            id="js"
-            onClick={e => {
-              console.log(e.type);
-              console.log(e.target);
-              console.log(e.target.value);
-            }}
-          />
-          <label htmlFor="css">CSS</label>
-          <input
-            type="checkbox"
-            name="css"
-            id="css"
-            onClick={e => {
-              console.log(e.type);
-              console.log(e.target);
-              console.log(e.target.value);
-            }}
-          />
-          <label htmlFor="html">HTML</label>
-          <input
-            type="checkbox"
-            name="html"
-            id="html"
-            onClick={e => {
-              console.log(e.type);
-              console.log(e.target);
-              console.log(e.target.value);
-            }}
-          />
-          <br />
-          <label htmlFor="level">성적등급</label>
-          <select
-            name="level"
-            id="level"
-            onChange={e => {
-              console.log(e.type);
-              console.log(e.target);
-              console.log(e.target.value);
-            }}
-          >
-            <option value="A">A</option>
-            <option value="B">B</option>
-            <option value="C">C</option>
-            <option value="D">D</option>
-          </select>
-          <br />
-          <label htmlFor="file">파일첨부</label>
-          <input
-            type="file"
-            name="file"
-            id="file"
-            onChange={e => {
-              console.log(e.type);
-              console.log(e.target);
-              console.log(e.target.value);
-            }}
-          />
-          <br />
-          <label htmlFor="etc">기타사항</label>
-          <textarea
-            name="etc"
-            id="etc"
-            onChange={e => {
-              console.log(e.type);
-              console.log(e.target);
-              console.log(e.target.value);
-            }}
-          ></textarea>
-        </fieldset>
-
-        <fieldset>
-          <legend>버튼들</legend>
-          <input type="reset" value="다시작성" />
-          <input type="submit" value="작성완료" />
-          <button type="button">버튼 작성 완료</button>
-          <input type="image" src="images/a.jpg" />
-        </fieldset>
-      </form>
-    </div>
-  );
-};
-
-export default App;
-```
-
-- 폼 필드의 값을 처리하는 handler함수 생성 권장
-
-```js
-const App = () => {
-  const handleChangeForm = e => {
-    console.log(e.type);
-    console.log(e.target);
-    console.log(e.target.name);
-    console.log(e.target.value);
-  };
-  return (
-    <div>
-      <form action="/path" method="get">
-        <fieldset>
-          <legend>회원가입</legend>
-          <label htmlFor="user">아이디</label>
-          <input
-            type="text"
-            name="user"
-            id="user"
-            placeholder="아이디 입력해주세요."
-            onChange={e => {
-              handleChangeForm(e);
-            }}
-          />
-          <input type="button" name="idcheck" value="중복확인" />
-          <br />
-          <label htmlFor="pw">비밀번호</label>
-          <input
-            type="password"
-            name="pw"
-            id="pw"
-            onChange={e => {
-              handleChangeForm(e);
-            }}
-          />
-          <br />
-        </fieldset>
-
-        <fieldset>
-          <legend>정보입력</legend>
-          <label htmlFor="age">나이</label>
-          <input
-            type="number"
-            name="age"
-            id="age"
-            onChange={e => {
-              handleChangeForm(e);
-            }}
-          />
-          <br />
-          <label htmlFor="gm">남성</label>
-          <input
-            type="radio"
-            name="gender"
-            value="m"
-            id="gm"
-            checked={true}
-            onClick={e => {
-              handleChangeForm(e);
-            }}
-          />
-          <label htmlFor="gf">여성</label>
-          <input
-            type="radio"
-            name="gender"
-            value="f"
-            id="gf"
-            onClick={e => {
-              handleChangeForm(e);
-            }}
-          />
-
-          <br />
-          <label htmlFor="js">JS</label>
-          <input
-            type="checkbox"
-            name="js"
-            id="js"
-            onClick={e => {
-              handleChangeForm(e);
-            }}
-          />
-          <label htmlFor="css">CSS</label>
-          <input
-            type="checkbox"
-            name="css"
-            id="css"
-            onClick={e => {
-              handleChangeForm(e);
-            }}
-          />
-          <label htmlFor="html">HTML</label>
-          <input
-            type="checkbox"
-            name="html"
-            id="html"
-            onClick={e => {
-              handleChangeForm(e);
-            }}
-          />
-          <br />
-          <label htmlFor="level">성적등급</label>
-          <select
-            name="level"
-            id="level"
-            onChange={e => {
-              handleChangeForm(e);
-            }}
-          >
-            <option value="A">A</option>
-            <option value="B">B</option>
-            <option value="C">C</option>
-            <option value="D">D</option>
-          </select>
-          <br />
-          <label htmlFor="file">파일첨부</label>
-          <input
-            type="file"
-            name="file"
-            id="file"
-            onChange={e => {
-              handleChangeForm(e);
-            }}
-          />
-          <br />
-          <label htmlFor="etc">기타사항</label>
-          <textarea
-            name="etc"
-            id="etc"
-            onChange={e => {
-              handleChangeForm(e);
-            }}
-          ></textarea>
-        </fieldset>
-
-        <fieldset>
-          <legend>버튼들</legend>
-          <input type="reset" value="다시작성" />
-          <input type="submit" value="작성완료" />
-          <button type="button">버튼 작성 완료</button>
-          <input type="image" src="images/a.jpg" />
-        </fieldset>
-      </form>
-    </div>
-  );
-};
-
-export default App;
-```
-
-- 리액트에서는 데이터 전송은 axios활용
-
-```html
-<form action="/path" method="get"></form>
-아래 권장
-<form></form>
-```
-
-### 6.3. form 버튼 처리 주의사항
-
-#### 6.3.1 `<button>중복확인</button>`
-
-- 만약 form 태그안에 배치되면 onSubmit 됩니다.
-- 아래 처럼 변형됩니다.
-
-```html
-<form>
-  <button type="submit">중복확인</button>
-</form>
-```
-
-- 직접 고치셔야 합니다. !!!!
-
-```html
-<form>
-  <button type="button">중복확인</button>
-</form>
-```
-
-- form 태그 바깥이라면 일반 버튼
-- 아니면 아래 코드 처럼 작성
-  : `<input type="button" value="중복확인" />`
-
-### 6.4. form 데이터 전송 이벤트 처리
-
-```js
-  <legend>버튼들</legend>
-  <input type="reset" value="다시작성" />
-  <input type="submit" value="작성완료" />
-  <button type="submit">버튼 작성 완료</button>
-  <input type="image" src="images/a.jpg" />
-```
-
-```js
-const handleSubmit = e => {
-  // 반드시 처리한다. 기본기능 막는다.
-  // 데이터 유효성 검증을 위해서 막음.
+const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  // 기본 기능 막기
   e.preventDefault();
 };
 
@@ -886,6 +306,6 @@ const handleSubmit = e => {
     handleSubmit(e);
   }}
 >
-  ............. ............. .............
-</form>;
+</form>
+
 ```
