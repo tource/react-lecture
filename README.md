@@ -1,311 +1,265 @@
-# Component 문법(syntax)
+# axios
 
-## 1. 기본데이터 출력
+- [axios](https://axios-http.com/kr/docs/intro)
 
-```ts
-const a: number = 1; // 숫자출력하기
-const b: string = "hello"; // 문자출력하기
-const c: boolean = true; // 참, 거짓을 이용한 출력하기
-const d: undefined = undefined; // 값이 없다고 명시적으로 표현
-const e: null = null; // 값이 비었다.
-const f: number[] = [1, 2, 3]; // 배열
-const g: { age: number; name: string } = { age: 15, name: "hong" };
-```
+## 1. REST API 연동 기본
 
-```ts
-interface IMember {
-  age: number;
-  name: string;
-}
-const g: IMember = { age: 15, name: "hong" };
-```
+### 1.1. CRUD
 
-## 2. 알아두면 좋은 ts 기본데이터형
+- Create : post
+- Read : get
+- Update : put(전체 수정), patch(항목 중 일부 수정)
+- Delete : delete
 
-- any, void, never 도 있어요.
-- any, never 는 가능하면 권장하지는 않아요.
-- 하지만 마이그레이션 즉, js 를 ts 로 변경시 좋아요.
+### 1.2. 연동 테스트
 
-```js
-const what = 1;
-const where = "대구";
-```
+- Postman : 기본
+- Swagger : 백엔드에서 구축을 해주어야 함.
 
-- 일단 확장자를 수정(ts, tsx)
+### 1.3. Proxy 설정
 
-```ts
-const what: any = 1;
-const where: any = "대구";
-```
+- 서비스 하는 컴퓨터가 다를 때
+- 백엔드에서 구축한 API 서버와 프론트엔드 서버가 다를 때 오류발생
+  : CORS 에러(접근권한 없다는 에러)
+  : 개발 중에 자주 발생
+  : `npm run build` 후에 파일 전달시까지 테스트 곤란
+- 개발 중에 하나의 컴퓨터에서 API 에 접근하는 것처럼 진행을 위해서 proxy 설정
+- package.json 에 proxy 셋팅
+  : `"proxy": "주소:port번호"`
 
-- 시간을 두고 꼼꼼하게 타입형을 지정한다.
+## 2. axios 설치
 
-```ts
-const what: number = 1;
-const where: string = "대구";
-```
+- `npm i axios`
 
-## 3. 함수 활용하기
+## 3. axios 구성 권장
 
-```js
-function 함수명() {
-  return 결과값;
-}
-function say() {
-  return "안녕";
-}
-```
+- 폴더
+  : `/src/apis` 폴더 생성
+- axios 환경 설정 파일
+  : `/src/apis/config.js` 파일 생성
 
-```ts
-function 함수명(): 리턴데이터형 {
-  return 결과값;
-}
-function say(): string {
-  return "안녕";
-}
-```
+## 4. axios 권장하는 코딩 자리 및 순서이해
 
-- 매개변수가 있는 경우
+- useEffect 에서 작성 및 호출
+  : 화면을 보여줄 때 원하는 tag 에 보여주는 게 일반적
+  : 화면이 완성되어 보여지는 시점이 useEffect 이므로
+
+### 4.1. 기본 코드
+
+: 아래 처럼해도 됩니다.
+: 하지만, axios 호출 함수가 지역변수 이므로 재호출 곤란
 
 ```js
-function 함수명(매개변수) {
-  return 결과값;
-}
-function say(message) {
-  return message;
-}
+import axios from "axios";
+import React, { useEffect } from "react";
+
+const App = () => {
+  getLists();
+
+  useEffect(() => {
+    const getLists = async () => {
+      try {
+        const res = await axios.get("주소");
+        // data 속성은 axios 의 기본 객체 속성
+        console.log(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    // axios 호출
+    getLists();
+  }, []);
+  return <div></div>;
+};
+
+export default App;
 ```
+
+: 여러번 호출하기 위해서 외부로 이동
+: 외부로 이동한 것은 잘했지만, 코드 대단히 복잡하다.
+: 데이터를 보여주는 것이 컴포넌트인데,
+: 데이터를 호출하는 것도 컴포넌트에서 관리?
+
+- 웹 서비스가 간단한 결과물이면 이렇게 관리를 해도 괜찮을 것 같다.
+- 하지만, 리액트를 도입하는 서비스는 실제로 대단히 복잡해집니다.
+- 그래서, 아래 방식도 그렇게 권장하지는 않는다.
+- 결론은 데이터 호출 코드는 외부 파일로 만드시길 권장합니다.
 
 ```js
-function 함수명(매개변수:데이터형):리턴데이터형 {
-  return 결과값;
-}
-function say(message: string): string {
-  return message;
-}
-```
+import axios from "axios";
+import React, { useEffect } from "react";
 
-## 4. 화살표 함수 활용하기
-
-```js
-const 변수명 = () => {
-  return 결과값;
-};
-const hello = () => {
-  return "Hello";
-};
-```
-
-```ts
-const 변수명 = (): 리턴데이터형 => {
-  return 결과값;
-};
-const hello = (): string => {
-  return "Hello";
-};
-```
-
-- 매개변수가 있는 경우
-
-```js
-const 변수명 = message => {
-  return message;
-};
-const hello = message => {
-  return message;
-};
-```
-
-```ts
-const 변수명 = (message: 데이터형): 리턴데이터형 => {
-  return message;
-};
-const hello = (message: string): string => {
-  return message;
-};
-```
-
-## 5. 화살표 함수로 JSX.Element 를 리턴하기
-
-```js
-const ListTag = () => {
-  return <div>안녕</div>;
-};
-```
-
-```ts
-const ListTag = ():JSX.Element => {
-  return <div>안녕</div>;
-};
-```
-
-## 6. 화살표 함수 변수명에 데이터 형 지정하기
-
-- 가독성이 너무 힘들어요.
-
-```ts
-const hello: () => string = (): string => {
-  return "Hello";
-};
-```
-
-```ts
-interface IHelloFunction {
-  (): string;
-}
-const hello: IHelloFunction = (): string => {
-  return "Hello";
-};
-```
-
-- 매개변수가 있는 경우
-
-```ts
-const hello: (message: string) => string = (message: string): string => {
-  return message;
-};
-```
-
-```ts
-interface IHelloFunction {
-  (message: string): string;
-}
-const hello: IHelloFunction = (message: string): string => {
-  return message;
-};
-```
-
-## 7. 화살표 함수 변수명에 JSX.Element 지정하기
-
-```ts
- const ListTag: () => JSX.Element = () => {
-    return <div>안녕</div>;
-  };
-```
-
-```ts
- const ListTag: () => JSX.Element = () => {
-    return <div>안녕</div>;
-  };
-```
-
-```ts
-  const ListTag: React.FC = (): JSX.Element => {
-    return <div>안녕</div>;
+const App = () => {
+  const getLists = async () => {
+    try {
+      const res = await axios.get("주소");
+      // data 속성은 axios 의 기본 객체 속성
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const ListTag: React.FC  = () => {
-    return <div>안녕</div>;
-  };
-
-  // 아래를 추천합니다.(다수가 활용)
-  const ListTag = (): JSX.Element => {
-    return <div>안녕</div>;
-  };
-```
-
-## 8. 여러 타입의 리턴데이터형을 가지는 함수
-
-- 대단히 좋지 않아요.
-- 순수한 (Pure) 함수
-  : 함수의 기능이 대단히 간단하고 늘 동일한 결과를 리턴하는 것
-  : 함수의 리턴형의 데이터 종류는 늘 동일한 것
-
-```ts
-const Add = (a: number, b: number): number => {
-  return a + b;
+  useEffect(() => {
+    // axios 호출
+    getLists();
+  }, []);
+  return <div></div>;
 };
 
-const go = Add(4, 5);
+export default App;
 ```
 
-```ts
-const Add = (a: number | string, b: number): number | string => {
-  if (typeof a === "string") {
-    return a + b.toString();
-  } else {
-    return a + b;
+- /src/apis/기능별.js 를 만들기를 권장함
+  : /src/apis/sampleApi.js
+
+```js
+import axios from "axios";
+
+export const getLists = async () => {
+  try {
+    const res = await axios.get("주소");
+    // data 속성은 axios 의 기본 객체 속성
+    console.log(res.data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+```
+
+- App.js
+
+```js
+import { useEffect } from "react";
+import { getLists } from "./apis/sampleApi";
+
+const App = () => {
+  useEffect(() => {
+    // axios 호출
+    getLists();
+  }, []);
+  return <div></div>;
+};
+
+export default App;
+```
+
+## 5. 샘플코드
+
+- https://jsonplaceholder.typicode.com/
+- API 문서를 보면
+  : /posts
+  : /comments
+  : /albums
+  : /photos
+  : /todos
+  : /users
+- /src/apis/각 폴더 생성을 권장함.
+- /src/apis/photos/apisphotos.js 파일 생성
+- /src/apis/todos/apistodos.js 파일 생성
+
+### 5.1. apitodos.js
+
+```js
+import axios from "axios";
+const todoURL = "https://jsonplaceholder.typicode.com/todos/";
+// 자료 1개 호출하기
+const getTodo = async id => {
+  try {
+    const res = await axios.get(`${todoURL}${id}`);
+    console.log(res.data);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+// 자료 여러개 호출하기
+const getTodos = async () => {
+  try {
+    const res = await axios.get(todoURL);
+    console.log(res.data);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+// 자료 1개 추가하기
+const postTodo = async ({ title, completed }) => {
+  try {
+    const res = await axios.post(todoURL, { title, completed });
+    console.log(res.data);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+// 자료 1개 전체 내용 업데이트 하기
+// put 은 어떤 대상을 업데이트한다.
+const putTodo = async (id, { title, completed }) => {
+  try {
+    const res = await axios.put(`${todoURL}${id}`, { title, completed });
+    console.log(res.data);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+// 자료 1개 중 일부분 내용 업데이트 하기
+// patch 은 어떤 대상을 일부분만 업데이트한다.
+const patchTodo = async (id, { title }) => {
+  try {
+    const res = await axios.patch(`${todoURL}${id}`, { title });
+    console.log(res.data);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+// 자료 1개 삭제하기
+const deleteTodo = async id => {
+  try {
+    const res = axios.delete(`${todoURL}${id}`);
+    console.log(res.data);
+    return res.data;
+  } catch (error) {
+    console.log(error);
   }
 };
 
-const go2 = Add("안녕", 5);
+export { getTodo, getTodos, postTodo, putTodo, patchTodo, deleteTodo };
 ```
-
-```ts
-const Add = (a: number | string, b: number | string): number | string => {
-  if (typeof a === "string" || typeof b === "string") {
-    return a.toString() + b.toString();
-  } else {
-    return a + b;
-  }
-};
-const go3 = Add("안녕", "반가워");
-```
-
-## 9. onClick 이벤트 ts
 
 ```js
-const handleClick = e => {
-  console.log("안녕");
+import { useEffect } from "react";
+import {
+  deleteTodo,
+  getTodo,
+  getTodos,
+  patchTodo,
+  postTodo,
+  putTodo,
+} from "./apis/todos/apistodos";
+
+const App = () => {
+  useEffect(() => {
+    // getTodo(3);
+    // getTodos();
+    const todo = {
+      title: "안녕하세요. 오늘 할일입니다.",
+      completed: false,
+    };
+    // postTodo(todo);
+    // putTodo(3, todo);
+    // patchTodo(5, todo);
+    deleteTodo(10);
+  }, []);
+  return <div></div>;
 };
 
-// jsx 코드
-<button
-  onClick={e => {
-    handleClick(e);
-  }}
->
-  클릭
-</button>;
+export default App;
 ```
 
-```ts
-import React, { MouseEvent } from "react";
+## 6. 파일업로드 포함
 
-const handleClick = (e: MouseEvent<HTMLButtonElement>): void => {
-  console.log("안녕");
-};
-```
-
-```ts
-const handleDivClick = (e: MouseEvent<HTMLDivElement>): void => {
-  console.log("반가워");
-};
-```
-
-## 10. onChange 이벤트 ts
-
-```ts
-import React, { ChangeEvent, MouseEvent } from "react";
-
-const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
-  console.log(e.target);
-};
-
-<input
-  type="text"
-  onChange={e => {
-    handleChange(e);
-  }}
-/>
-
-```
-
-11. onSubmit 이벤트 ts
-
-```ts
-import React, { ChangeEvent, FormEvent, MouseEvent } from "react";
-
-const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
-  // 기본 기능 막기
-  e.preventDefault();
-};
-
-<form
-  onSubmit={e => {
-    handleSubmit(e);
-  }}
->
-</form>
-
-```
+: 12-file 브랜치 참조
