@@ -1,6 +1,6 @@
 import ReactDOM from "react-dom/client";
-import App from "./App";
 import "./index.css";
+import AppTodo from "./AppTodo";
 
 // ts 에서는 데이터 종류를 구별한다.
 // as 는 강제로 타입지정
@@ -9,4 +9,4 @@ import "./index.css";
 // js 버전
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
-root.render(<App />);
+root.render(<AppTodo />);
