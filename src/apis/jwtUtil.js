@@ -1,36 +1,76 @@
 import axios from "axios";
+import { getCookie } from "../utils/cookie";
 
-// 과정을 준수하시고 나서, 필요하면 수정
 const jwtAxios = axios.create();
-// axios 호출시 중간에 accessToken을 추가하려고 함.
-// 결국 axios 호출시 중간에 낚아채서 추가 내용 포함시키고
-// 다시 호출을 해준다.
-// 호출을 중간단계를 intercepter 라고 합니다.
-// 1. 인증이 적용된 경우의 intercepter
-// 1.1. axios 호출 전에 포함시킴
+// Request Intercepter
+// Access Token 활용하기
 const beforeReq = config => {
-  console.log("요청 전... 전달", config);
+  console.log("1. 요청 전  전달", config);
+  const accessToken = getCookie("accessToken");
+  console.log("2. 쿠키로 토큰 가져오기 ", accessToken);
+  if (!accessToken) {
+    console.log("쿠키정보가 없습니다.!!!!!!!!");
+    console.log("호출 중인 axios 를 중단합니다.");
+    return Promise.reject({
+      response: { data: { error: "Login 하셔서 인증받으세요." } },
+    });
+  }
+  console.log("4. AccessToken을 인증키에 등록하기");
+  config.headers.Authorization = `Bearer ${accessToken}`;
   return config;
 };
-
-// 1.2. 호출의 결과가 실패 즉, 인증 실패인 경우
 const failReq = err => {
-  console.log("요청 전... 실패", err);
+  console.log("요청 후... 실패", err);
   return Promise.reject(err);
 };
 
-// 1.3. 호출의 결과가 성공하고 리턴값이 있을 때
-const beforeRes = res => {
-  console.log("요청 Response 전처리", res);
-  return res;
+// 새로운 토큰을 요청하는 함수
+const refereshJWT = async (accessToken, reFreshToken) => {
+  console.log("accessToken ==== 새로운 토큰을 요청함 : ", accessToken);
+  console.log("reFreshToken ==== 새로운 토큰을 요청함 : ", reFreshToken);
+  const header = { headers: { Authorization: `Bearer ${accessToken}` } };
+  const res = await axios.get(
+    `/api/auth/refresh-token?refreshToken=${reFreshToken}`,
+    header,
+  );
+  console.log("BE에서 새로 만들어준 토큰값", res.data);
+  return res.data;
 };
 
-// 1.4. 호출의 결과가 성공하고 리턴값이 있을 때
+// Response Intercepter
+const beforeRes = async res => {
+  console.log("1. 요청 Response 전처리", res);
+  const data = res.data;
+  console.log("2. Response 오기전 서버 전달해 준 데이터", data);
+
+  // 여기서 부터 테스트 필요로 함.
+  if (data && data.error === "ERROR_ACCESS_TOKEN") {
+    console.log("3. 일반적인 오류가 아닌 액세스 토큰 오류다.");
+    console.log("4. 액세스 토큰 오류이므로 새로운 토큰을 요청한다.");
+    console.log("5. 쿠키에 담겨진 Refresh Token 을 읽어들인다.");
+    const accessToken = getCookie("accessToken");
+    const reFreshToken = getCookie("refresh-token");
+    console.log(
+      "6. Refresh Token 을 이용해서 새로운 토큰을 요청한다. ",
+      reFreshToken,
+    );
+
+    console.log("7. 새로운 access Token 생성 요청. ");
+    // 새로운 토큰을 요청하는 함수 실행
+    const result = await refereshJWT(reFreshToken);
+
+    console.log("8. 새로운 토큰으로 쿠키를 업데이트한다. ");
+    console.log(
+      "9. 이전에 요청했던 axios 를 새로운 토큰을 담아서 다시 호출한다. ",
+    );
+  }
+
+  return res;
+};
 const responseFail = err => {
   console.log("요청 Response 에러일 때", err);
   return Promise.reject(err);
 };
-
 // axios의 intercepter 적용
 jwtAxios.interceptors.request.use(beforeReq, failReq);
 jwtAxios.interceptors.response.use(beforeRes, responseFail);
