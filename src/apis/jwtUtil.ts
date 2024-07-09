@@ -1,8 +1,3 @@
-# 백엔드 연동 TS 버전
-
-- /src/apis/jwtUtilTs.ts
-
-```ts
 import axios, {
   AxiosError,
   AxiosInstance,
@@ -76,4 +71,3 @@ const responseFail = async (err: AxiosError): Promise<AxiosError> => {
 jwtAxios.interceptors.response.use(beforeRes, responseFail);
 
 export default jwtAxios;
-```
