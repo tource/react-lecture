@@ -2,16 +2,17 @@ import React from "react";
 import Menu from "./components/Menu";
 import { useDispatch, useSelector } from "react-redux";
 import { changeEng, changeEtc, changeKor } from "./slices/langSlice";
+import { AppDispatch, RootState } from "./store";
 
-const RTKSample = () => {
+const RTKSample: React.FC = () => {
   // slice 정보 가져오기
-  const themeState = useSelector(state => state.themeSlice);
+  const themeState = useSelector((state: RootState) => state.themeSlice);
   //console.log(themeState); // {theme:"black"}
   // const colorObj = {
   //   color: themeState.theme,
   // };
-  const langState = useSelector(state => state.langSlice);
-  const dispatch = useDispatch();
+  const langState = useSelector((state: RootState) => state.langSlice);
+  const dispatch = useDispatch<AppDispatch>();
   const handleClickKR = () => {
     dispatch(changeKor());
   };
