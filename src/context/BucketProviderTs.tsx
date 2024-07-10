@@ -13,11 +13,6 @@ interface BucketAction {
   payload: Item[];
 }
 
-export interface BucketContextProps {
-  state: State;
-  dispatch: Dispatch<BucketAction>;
-}
-
 const bucketReducer = (state: State, action: BucketAction): State => {
   switch (action.type) {
     case "SET_BUCKET":
@@ -27,6 +22,10 @@ const bucketReducer = (state: State, action: BucketAction): State => {
   }
 };
 
+interface BucketContextProps {
+  state: State;
+  dispatch: Dispatch<BucketAction>;
+}
 export const BucketContext = createContext<BucketContextProps | null>(null);
 
 interface BucketProviderTsProps {
@@ -34,6 +33,7 @@ interface BucketProviderTsProps {
 }
 const BucketProviderTs: React.FC<BucketProviderTsProps> = ({ children }) => {
   const [state, dispatch] = useReducer(bucketReducer, initialState);
+
   useEffect(() => {
     dispatch({ type: "SET_BUCKET", payload: [] });
   }, []);

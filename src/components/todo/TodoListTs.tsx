@@ -5,7 +5,7 @@ import {
   Todo,
   TodoContext,
   TodoContextType,
-} from "../../components/TodoContextProviderTs";
+} from "../../context/TodoContextProviderTs";
 
 const TodoListTs = (): JSX.Element => {
   const { state, dispatch } = useContext(TodoContext) as TodoContextType;

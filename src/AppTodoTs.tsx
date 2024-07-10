@@ -1,5 +1,5 @@
 import React from "react";
-import TodoContextProviderTs from "./components/TodoContextProviderTs";
+import TodoContextProviderTs from "./context/TodoContextProviderTs";
 import TodoListTs from "./components/todo/TodoListTs";
 import TodoAddTs from "./components/todo/TodoAddTs";
 

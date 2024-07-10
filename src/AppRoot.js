@@ -3,16 +3,16 @@
 // 3. context 적용 3단계 (/src/context 폴더에 파일 생성 후 코드 이동)
 // 4. context 적용 4단계 (미리 Provider 파일을 생성한다)
 // - LoginProvider.js
-// 5. contex 적용 5단계(파일관리 측면 createContext 이동)
+// 5. context 적용 5단계 (파일관리 측면 createContex 이동)
 
 import { useContext } from "react";
 import { LoginContext, LoginProvider } from "./context/LoginProvider";
 
 const AppRoot = () => {
-  // 6. contex 적용 6단계 : context 에 적용한 value를 컴포넌트(children)에 활용
+  // 6. context 적용 6단계 : context 에 적용한  value를 컴포넌트(children) 에 활용
   const { userInfo, userLang, setUserInfo } = useContext(LoginContext);
 
-  // 7. context의 value를 이용한 정보변경
+  // 7. context 의 value 를 이용한 정보변경
   const handleClick = () => {
     setUserInfo("홍길동");
   };
@@ -26,7 +26,7 @@ const AppRoot = () => {
             handleClick();
           }}
         >
-          사용자 정보변경
+          사용자 정보 변경
         </button>
       </div>
     </LoginProvider>

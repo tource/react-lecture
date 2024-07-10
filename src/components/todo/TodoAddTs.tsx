@@ -1,13 +1,18 @@
 import React, { KeyboardEvent, useContext, useState } from "react";
-import { Action, TodoContext, TodoContextType } from "../TodoContextProviderTs";
+import {
+  Action,
+  TODO_ACTION_TYPE,
+  TodoContext,
+  TodoContextType,
+} from "../../context/TodoContextProviderTs";
 
 const TodoAddTs: React.FC = () => {
   // 타입스크립트 useContext 예외처리 방법 1.
   // const context = useContext(TodoContext);
-  // if (!context) {
-  //   throw Error("없어요");
+  // if(!context) {
+  //   throw Error("없어요")
   // }
-  // const { dispatch } = context;
+  // const {dispatch} = context;
 
   // 타입스크립트 useContext as 처리 방법 2.
   const { dispatch } = useContext(TodoContext) as TodoContextType;
@@ -19,7 +24,7 @@ const TodoAddTs: React.FC = () => {
       return;
     }
     const todo: Action = {
-      type: "ADD_TODO",
+      type: TODO_ACTION_TYPE.ADD_TODO,
       payload: { content: content, isComplted: false },
     };
     dispatch(todo);
@@ -32,6 +37,7 @@ const TodoAddTs: React.FC = () => {
       handleClick();
     }
   };
+
   return (
     <div>
       <input

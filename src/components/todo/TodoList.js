@@ -58,7 +58,6 @@ const TodoList = () => {
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
   }
-
   // 실제 목록에서 원하는 부분부터 갯수 만큼 배열 만들기
   // 보여줄 목록의 시작 번호
   const [currentPage, setCurrentPage] = useState(1);
@@ -69,7 +68,7 @@ const TodoList = () => {
   const currentTodos = state.slice(indexStart, indexStart + todosPerPage);
 
   // 화면에 페이지 버튼 목록을 출력하기 기능
-  // 예: pageNumbers = [1,2,3,4,5...]
+  // 예: pageNumbers = [1,2,3,4,5....]
   const renderPageNumbers = pageNumbers.map((item, index) => (
     <button
       key={index}
@@ -80,6 +79,19 @@ const TodoList = () => {
       {item}
     </button>
   ));
+
+  // 이전 페이지 가기
+  const handleClickPrev = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+  // 다음 페이지 가기
+  const handleClickNext = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
 
   return (
     <div>
@@ -116,7 +128,7 @@ const TodoList = () => {
                   </div>
                 ) : (
                   <div>
-                    <p>할일 번호(uid): {item.uid}</p>
+                    <p>할일 번호(uid) : {item.uid}</p>
                     <p>할일 내용: {item.content}</p>
                     <button
                       onClick={() => {
@@ -139,7 +151,25 @@ const TodoList = () => {
           </div>
           <div>{renderPageNumbers}</div>
           <div>
-            현재페이지 {currentPage} / {totalPages}
+            <button
+              disabled={currentPage === 1}
+              onClick={() => {
+                handleClickPrev();
+              }}
+            >
+              이전페이지
+            </button>
+            <button
+              disabled={currentPage === totalPages}
+              onClick={() => {
+                handleClickNext();
+              }}
+            >
+              다음페이지
+            </button>
+          </div>
+          <div>
+            현재페이지 {currentPage} / 총페이지 {totalPages}
           </div>
         </>
       )}

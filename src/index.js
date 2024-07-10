@@ -1,12 +1,13 @@
 import ReactDOM from "react-dom/client";
-import AppTodoTs from "./AppTodoTs";
+import { Provider } from "react-redux";
+import RTKSample from "./RTKSample";
 import "./index.css";
-
-// ts 에서는 데이터 종류를 구별한다.
-// as 는 강제로 타입지정
-// const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
-
-// js 버전
+import store from "./store";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
-root.render(<AppTodoTs />);
+// Redux Toolkit 저장소 공급
+root.render(
+  <Provider store={store}>
+    <RTKSample />
+  </Provider>,
+);
