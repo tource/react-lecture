@@ -4,14 +4,14 @@
 - URI 구성
   : Protocol (http, https, ftp, smtp)
   : URL (도메인)
-  : Port (3000 번 리액트, 3306 번 데이터베이스, 8080 번 웹서버)
+  : Port (3000 번 리액트 테스트용, 3306 번 데이터베이스, 8080 번 웹서버)
   : Path (파일의 경로)
   : Query String (?쿼리명=값&쿼리명=값)
 - 예) http://localhost:3000/todo/login?id=hong&pass=1234
 
 ## 1.라우터를 먼저 고려해야함.
 
-- 일반적으로 웹서비스 기획이후에 화면구성을 도출
+- 일반적으로 웹서비스 기획 이후에 화면구성을 도출
 - 화면구성에 맞게 화면흐름이 정의
 - 화면흐름에 맞는 경로를 작성
 
@@ -285,6 +285,7 @@ function App() {
           <Route path="delete/번호"></Route>
           <Route path="modify/번호"></Route>
         </Route>
+
         {/* 잘못된 경로 */}
         <Route path="*" element={<h1>잘못된 경로입니다.</h1>}></Route>
       </Routes>
@@ -295,7 +296,7 @@ function App() {
 export default App;
 ```
 
-### 4.9. 공통 레이아웃 적용하기 (선택)
+### 4.9. 공통 레이아웃 적용하기(선택)
 
 ```js
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -307,8 +308,33 @@ function App() {
       {/* 공통레이아웃 적용 */}
       <div className="wrap">
         <header className="header"></header>
-        <Routes>...</Routes>
-        <footer className="footer"></footer>
+        <Routes>
+          {/* 루트경로 */}
+          <Route path="/"></Route>
+
+          <Route path="/company">
+            {/* 패스 상 기본페이지 */}
+            <Route index></Route>
+
+            <Route path="ceo"></Route>
+            <Route path="history"></Route>
+            <Route path="partner"></Route>
+            <Route path="location"></Route>
+          </Route>
+
+          <Route path="/good">
+            {/* 패스 상 기본페이지 */}
+            <Route index></Route>
+
+            <Route path="번호"></Route>
+            <Route path="delete/번호"></Route>
+            <Route path="modify/번호"></Route>
+          </Route>
+
+          {/* 잘못된 경로 */}
+          <Route path="*" element={<h1>잘못된 경로입니다.</h1>}></Route>
+        </Routes>
+        <footer className="header"></footer>
       </div>
     </BrowserRouter>
   );
@@ -317,11 +343,10 @@ function App() {
 export default App;
 ```
 
-### 4.10. 라우터에 변수(파라미터) 전달하기
+### 4.10. 라우터에 변수(파라메터) 전달하기
 
 - /good/번호
   : 여기서 번호는 수시로 달라요.
-  : 따라서 뒤에 :id를 붇여줍니다
   : `/good/:id`
   : http://localhost:3000/good/1
   : http://localhost:3000/good/152
@@ -341,54 +366,56 @@ export default App;
   : http://localhost:3000/good/modify/152
   : http://localhost:3000/good/modify/578
 
-  ### 4.11. 라우터에 따라서 보여줄 JSX 작성
+### 4.11. 라우터에 따라서 보여줄 JSX 작성
 
-  - `<Route path="경로" element={JSX}></Route>`
+- `<Route path="경로" element={JSX}></Route>`
 
-```js
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import "./App.css";
+  ```js
+  import { BrowserRouter, Route, Routes } from "react-router-dom";
+  import "./App.css";
 
-function App() {
-  return (
-    <BrowserRouter>
-      {/* 공통 레이아웃 적용 */}
-      <div className="wrap">
-        <header className="header"></header>
-        <Routes>
-          {/* 루트 경로 */}
-          <Route path="/" element={<h1>홈페이지</h1>}></Route>
+  function App() {
+    return (
+      <BrowserRouter>
+        {/* 공통레이아웃 적용 */}
+        <div className="wrap">
+          <header className="header"></header>
+          <Routes>
+            {/* 루트경로 */}
+            <Route path="/" element={<h1>홈페이지</h1>}></Route>
 
-          <Route path="/company">
-            {/* path상 기본 페이지 */}
-            <Route index element={<h1>회사소개</h1>}></Route>
-            <Route path="ceo" element={<h1>대표소개</h1>}></Route>
-            <Route path="history" element={<h1>회사연혁</h1>}></Route>
-            <Route path="partner" element={<h1>파트너소개</h1>}></Route>
-            <Route path="location" element={<h1>회사위치</h1>}></Route>
-          </Route>
+            <Route path="/company">
+              {/* 패스 상 기본페이지 */}
+              <Route index element={<h1>회사소개</h1>}></Route>
 
-          <Route path="/good">
-            {/* path상 기본 페이지 */}
-            <Route index element={<h1>제품소개</h1>}></Route>
-            <Route path=":id" element={<h1>제품상세</h1>}></Route>
-            <Route path="delete/:id" element={<h1>제품삭제</h1>}></Route>
-            <Route path="modify/:id" element={<h1>제품수정</h1>}></Route>
-          </Route>
+              <Route path="ceo" element={<h1>대표 소개</h1>}></Route>
+              <Route path="history" element={<h1>회사 연혁</h1>}></Route>
+              <Route path="partner" element={<h1>파트너 소개</h1>}></Route>
+              <Route path="location" element={<h1>회사 위치</h1>}></Route>
+            </Route>
 
-          {/* 잘못된 경로 */}
-          <Route path="*" element={<h1>잘못된 경로입니다.</h1>}></Route>
-        </Routes>
-        <footer className="footer"></footer>
-      </div>
-    </BrowserRouter>
-  );
-}
+            <Route path="/good">
+              {/* 패스 상 기본페이지 */}
+              <Route index element={<h1>제품 소개</h1>}></Route>
 
-export default App;
-```
+              <Route path=":id" element={<h1>제품 상세</h1>}></Route>
+              <Route path="delete/:id" element={<h1>제품 삭제</h1>}></Route>
+              <Route path="modify/:id" element={<h1>제품 수정</h1>}></Route>
+            </Route>
 
-### 4.12. 라우터를 이용하기
+            {/* 잘못된 경로 */}
+            <Route path="*" element={<h1>잘못된 경로입니다.</h1>}></Route>
+          </Routes>
+          <footer className="header"></footer>
+        </div>
+      </BrowserRouter>
+    );
+  }
+
+  export default App;
+  ```
+
+### 4.12. 라우터를 이동하기
 
 - html 태그에서는 `<a href="패스">메뉴명</a>` 작성
   : 웹브라우저에서 모든 소스를 다시 불러들임(단점)
@@ -397,88 +424,85 @@ export default App;
   : `import { Link } from "react-router-dom";`
   : `<Link to="패스">메뉴명</Link>` 로 작성
 
-```js
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import "./App.css";
-import { Link } from "react-router-dom";
+  ```js
+  import { BrowserRouter, Route, Routes } from "react-router-dom";
+  import "./App.css";
+  import { Link } from "react-router-dom";
 
-function App() {
-  return (
-    <BrowserRouter>
-      {/* 공통레이아웃 적용 */}
-      <div className="wrap">
-        <header className="header">
-          <ul>
-            <li>
-              <Link to="/">홈</Link>
-            </li>
-            <li>
-              <Link to="/company">회사소개</Link>
-              <ul>
-                <li>
-                  <Link to="/company/ceo">대표 소개</Link>
-                </li>
-                <li>
-                  <Link to="/company/history">회사 연혁</Link>
-                </li>
-                <li>
-                  <Link to="/company/partner">파트너사</Link>
-                </li>
-                <li>
-                  <Link to="/company/location">회사위치</Link>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <Link to="/good">제품소개</Link>
-              <ul>
-                <li>
-                  <Link to="/good/1">제품 소개</Link>
-                </li>
-                <li>
-                  <Link to="/good/delete/1">제품 삭제</Link>
-                </li>
-                <li>
-                  <Link to="/good/modify/1">제품 수정</Link>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </header>
-        <Routes>
-          {/* 루트경로 */}
-          <Route path="/" element={<h1>홈페이지</h1>}></Route>
+  function App() {
+    return (
+      <BrowserRouter>
+        {/* 공통레이아웃 적용 */}
+        <div className="wrap">
+          <header className="header">
+            <ul>
+              <li>
+                <Link to="/">홈</Link>
+              </li>
+              <li>
+                <Link to="/company">회사소개</Link>
+                <ul>
+                  <li>
+                    <Link to="/company/ceo">대표 소개</Link>
+                  </li>
+                  <li>
+                    <Link to="/company/history">회사 연혁</Link>
+                  </li>
+                  <li>
+                    <Link to="/company/location">회사위치</Link>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <Link to="/good">제품소개</Link>
+                <ul>
+                  <li>
+                    <Link to="/good/1">제품 소개</Link>
+                  </li>
+                  <li>
+                    <Link to="/good/delete/1">제품 삭제</Link>
+                  </li>
+                  <li>
+                    <Link to="/good/modify/1">제품 수정</Link>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </header>
+          <Routes>
+            {/* 루트경로 */}
+            <Route path="/" element={<h1>홈페이지</h1>}></Route>
 
-          <Route path="/company">
-            {/* 패스 상 기본페이지 */}
-            <Route index element={<h1>회사소개</h1>}></Route>
+            <Route path="/company">
+              {/* 패스 상 기본페이지 */}
+              <Route index element={<h1>회사소개</h1>}></Route>
 
-            <Route path="ceo" element={<h1>대표 소개</h1>}></Route>
-            <Route path="history" element={<h1>회사 연혁</h1>}></Route>
-            <Route path="partner" element={<h1>파트너 소개</h1>}></Route>
-            <Route path="location" element={<h1>회사 위치</h1>}></Route>
-          </Route>
+              <Route path="ceo" element={<h1>대표 소개</h1>}></Route>
+              <Route path="history" element={<h1>회사 연혁</h1>}></Route>
+              <Route path="partner" element={<h1>파트너 소개</h1>}></Route>
+              <Route path="location" element={<h1>회사 위치</h1>}></Route>
+            </Route>
 
-          <Route path="/good">
-            {/* 패스 상 기본페이지 */}
-            <Route index element={<h1>제품 소개</h1>}></Route>
+            <Route path="/good">
+              {/* 패스 상 기본페이지 */}
+              <Route index element={<h1>제품 소개</h1>}></Route>
 
-            <Route path=":id" element={<h1>제품 상세</h1>}></Route>
-            <Route path="delete/:id" element={<h1>제품 삭제</h1>}></Route>
-            <Route path="modify/:id" element={<h1>제품 수정</h1>}></Route>
-          </Route>
+              <Route path=":id" element={<h1>제품 상세</h1>}></Route>
+              <Route path="delete/:id" element={<h1>제품 삭제</h1>}></Route>
+              <Route path="modify/:id" element={<h1>제품 수정</h1>}></Route>
+            </Route>
 
-          {/* 잘못된 경로 */}
-          <Route path="*" element={<h1>잘못된 경로입니다.</h1>}></Route>
-        </Routes>
-        <footer className="header"></footer>
-      </div>
-    </BrowserRouter>
-  );
-}
+            {/* 잘못된 경로 */}
+            <Route path="*" element={<h1>잘못된 경로입니다.</h1>}></Route>
+          </Routes>
+          <footer className="header"></footer>
+        </div>
+      </BrowserRouter>
+    );
+  }
 
-export default App;
-```
+  export default App;
+  ```
 
 ### 4.13. 컴포넌트 만들기
 
@@ -519,9 +543,6 @@ export default App;
                 <Link to="/company/history">회사 연혁</Link>
               </li>
               <li>
-                <Link to="/company/partner">파트너사</Link>
-              </li>
-              <li>
                 <Link to="/company/location">회사위치</Link>
               </li>
             </ul>
@@ -558,15 +579,19 @@ export default App;
   export default Footer;
   ```
 
+- 주메뉴 라우터 path 에 연결하는 페이지 컴포넌트는 Index.js 추천
+  : http://localhost:3000/company
+  : /src/pages/company/Index.js
+
   ```js
   import { BrowserRouter, Route, Routes } from "react-router-dom";
   import "./App.css";
-  import { Link } from "react-router-dom";
   import Header from "./components/layout/Header";
   import Footer from "./components/layout/Footer";
-  // Index라는 이름 충돌로 변경함
+
+  // Index 라는 이름 충돌로 변경함
   import Home from "./pages/Index";
-  import Company from "./pages/company/Index";
+  import Compony from "./pages/company/Index";
 
   function App() {
     return (
@@ -580,7 +605,7 @@ export default App;
 
             <Route path="/company">
               {/* 패스 상 기본페이지 */}
-              <Route index element={<Company></Company>}></Route>
+              <Route index element={<Compony></Compony>}></Route>
 
               <Route path="ceo" element={<h1>대표 소개</h1>}></Route>
               <Route path="history" element={<h1>회사 연혁</h1>}></Route>
@@ -612,8 +637,8 @@ export default App;
 #### 4.13.3. 페이지 컴포넌트에 라우터 매개변수 보여주기
 
 - 예)
-  : 라우터의 매개변수(parameter)가 변했다.
-  : 라우터의 params 전달(리액트 표현)
+  : 라우터의 매개변수(parameter)가 변했다. (설명글)
+  : 라우터의 params 전달 (리액트 표현)
   : http://localhost:3000/good/딸기
   : http://localhost:3000/good/사과
   : http://localhost:3000/good/수박
@@ -621,94 +646,93 @@ export default App;
   : `<Route path=":id" element={}></Route>`
 
 - 페이지 컴포넌트
-  : /src/pages/good/Detail.js
-  : `import GoodDetail from "./pages/good/Deatil";`
-  : `<Route path=":id" element={<GoodDetail></GoodDetail>}></Route>`
+  : /src/pages/good/Deatil.js
+  : `import GoodDeatil from "./pages/good/Deatil";`
+  : `<Route path=":id" element={<GoodDeatil></GoodDeatil>}></Route>`
 
 - params 전달 값 출력 하기
-  : 단계 1 기본
+  : 단계 1
 
   ```js
-  const Detail = () => {
-    return <h1>제품상세</h1>;
+  const Deatil = () => {
+    return <h1>제품 상세</h1>;
   };
 
-  export default Detail;
+  export default Deatil;
   ```
 
-  : 단계 2
+  - 단계 2
 
   ```js
   import { useParams } from "react-router-dom";
 
-  const Detail = () => {
+  const Deatil = () => {
     // js 자리
-    // path로 전달된 params 출력해보기
-    // 예) /company/사과
-    // 예) /company/딸기
+    // path 로 전달된 prams 출력해 보기
+    // 예) /compnay/사과
+    // 예) /compnay/딸기
     const params = useParams();
     console.log(params);
-    // {id:'사과'}
+    // {id: '사과'}
 
-    return <h1>{params.id} 제품 상세</h1>;
+    return <h1> {params.id} 제품 상세</h1>;
   };
 
-  export default Detail;
+  export default Deatil;
   ```
 
-: 단계 3
+- 단계 3
 
-```js
-import { useParams } from "react-router-dom";
+  ```js
+  import { useParams } from "react-router-dom";
 
-const Detail = () => {
-  // js 자리
-  // path로 전달된 params 출력해보기
-  // 예) /company/사과
-  // 예) /company/딸기
-  //   const params = useParams();
-  //   console.log(params);
-  // {id:'사과'}
+  const Deatil = () => {
+    // js 자리
+    // path 로 전달된 prams 출력해 보기
+    // 예) /compnay/사과
+    // 예) /compnay/딸기
+    //   const params = useParams();
+    //   console.log(params);
+    // {id: '사과'}
+    // 객체 구조 분해 할당을 권장함
+    const { id } = useParams();
 
-  //객체 구조 분해 할당 방식을 권장함
-  const { id } = useParams();
+    return <h1> {id} 제품 상세</h1>;
+  };
 
-  return <h1>{id} 제품 상세</h1>;
-};
+  export default Deatil;
+  ```
 
-export default Detail;
-```
-
-#### 4.13.4 페이지 컴포넌트에 쿼리스트링 활용하기
+#### 4.13.4. 페이지 컴포넌트에 쿼리스트링 활용하기
 
 - Query String
 - 예) http://localhost:3000/member?no=1&msg=안녕&id=hong
-  : http://localhost:3000/member (path)
-  : ? ( search(질의)라고 합니다.)
+  : http://localhost:3000/member (패스)
+  : ? ( search(질의) 라고 합니다. )
   : no=1 (no의 값은 1이다)
   : & (구분자)
   : msg=안녕 (msg의 값은 안녕이다)
   : & (구분자)
   : id=hong (id의 값은 hong이다)
-
 - 쿼리스트링은 ?no=1&msg=안녕&id=hong
 
 - useSearchParams() 활용
-  : use (Hook 이라고합니다.)
-  : hook은 컴포넌트 화면이 보인다면 덩달아서 실행되는 것
-  : Search는 ? 를 말합니다.
-  : Params는 no=1&msg=안녕&id=hong를 말함
-  : ()는 hook을 실행시켜라
+  : use (Hook 이라고 합니다.)
+  : hook 은 컴포넌트 화면이 보인다면 덩달아서 실행되는 것
+  : Search 는 ? 를 말합니다.
+  : Params 는 no=1&msg=안녕&id=hong 말함
+  : () 는 hook 을 실행하라
   : `import { useSearchParams } from "react-router-dom";`
   : `const [searchParams, setSearchParams] = useSearchParams();`
 
   ```js
   import { useSearchParams } from "react-router-dom";
+
   const Ceo = () => {
-    //js자리
+    // JS 자리
     const [searchParams, setSearchParams] = useSearchParams();
     console.log(searchParams);
-    ///company/ceo?name=홍길동&age=30
+    // company/ceo?name=홍길동&age=30
     const name = searchParams.get("name");
     const age = searchParams.get("age");
     console.log(name);
@@ -716,7 +740,7 @@ export default Detail;
 
     return (
       <div>
-        <h1>대표({name})소개</h1>
+        <h1>대표({name}) 소개</h1>
         <h2>{age}살</h2>
       </div>
     );
@@ -781,10 +805,10 @@ const Partner = ({ pc }) => {
 export default Partner;
 ```
 
-#### 4.14.3. outlet 이해하기
+#### 4.14.3. Outlet 이해하기
 
 - Router 를 이용해서 컴포넌트의 레이아웃을 유지하고
-- Router 의 outlet 장소에 패스에 따라 컴포넌트 출력
+- Router 의 Outlet 장소에 패스에 따라 컴포넌트 출력
 
 ```js
 <Route path="/good" element={<Good></Good>}>
@@ -829,7 +853,7 @@ export default Good;
 
 #### 4.14.4. children 이해하기
 
-- Router와 연관성이 없습니다.
+- Router 와 연관성이 없습니다.
 - 컴포넌트 내부에 JSX 전달하기
 
 ```jsx
@@ -888,13 +912,13 @@ export default Header;
 
 ### 4.15.1. 문자열 또는 백틱으로 쿼리스트링만들기
 
-`const demo = "/company/ceo?name=김그냥&age=10";`
+`const demo = "/company/ceo?name=성환&age=10";`
 
 ### 4.15.2. createSearchParams()로 쿼리스트링만들기
 
 ```js
 const queryStr = createSearchParams({
-  name: "김추천",
+  name: "길동",
   age: 100,
 }).toString();
 ```
@@ -902,18 +926,22 @@ const queryStr = createSearchParams({
 ### 4.15.2. useNavigate()로 주소 전달하여 이동하기
 
 ```js
-const demo = `/company/ceo?name=김그냥&age=10`;
+const naviagte = useNavigate();
+```
+
+```js
+const demo = `/company/ceo?name=성환&age=10`;
 // console.log(demo);
-navigate(demo);
+naviagte(demo);
 ```
 
 ```js
 const queryStr = createSearchParams({
-  name: "김추천",
+  name: "길동",
   age: 100,
 }).toString();
 // console.log(queryStr);
-navigate({ pathname: "/company/ceo", search: queryStr });
+naviagte({ pathname: "/company/ceo", search: queryStr });
 ```
 
 ### 4.15.3. useLocation() 으로 주소 경로 정보 분석하기
@@ -926,9 +954,44 @@ console.log(location.search);
 console.log(location.state);
 ```
 
+- 아래의 내용을 아시면 참 좋겠어요.
+  : 아무도 모르게 내용을 전달하고 싶은 경우 즉, url 에 안보임.
+
+```js
+const specialNavi = () => {
+  const queryStr = createSearchParams({
+    name: "길동",
+    age: 100,
+  }).toString();
+  // console.log(queryStr);
+  const fromUrl = {
+    memo: "제품페이지에서 왔어요.",
+    good: "제품 1번을 보고 있었지요.",
+    favorite: "제품 1에 관심이 많네요.",
+  };
+
+  navigate(
+    {
+      pathname: "/company/ceo",
+      search: queryStr,
+    },
+    { state: { fromUrl } },
+  );
+};
+```
+
+```js
+const location = useLocation();
+console.log(location);
+console.log(location.pathname);
+console.log(location.search);
+console.log(location.state?.fromUrl);
+```
+
 ### 4.16. NavLink 이해하기
 
 - 현재 라우터의 path 에 맞게 css 적용해줌.
+  : 현재 활성화된 즉, 웹브라우저에 명시된 path 경로와 같은 경우 active 됨
 - /src/components/layout/Header.js
   : `import { NavLink } from "react-router-dom";`
 
