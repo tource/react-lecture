@@ -1,75 +1,39 @@
-# Redux Toolkit 비동기 서버 연동
+# React Toolkit TS 적용
 
-- 상식
-  : Redux 하위 버전에서는 비동기 서버 연동을 위한 라이브러리 별도제공
-  : Redux Thunk(리덕스 썽크), Redux Saga 등
-  : 현재 Redux Toolkit 에서는 createAsyncThunk 를 활용
-- 의도
-  : 상태관리 도구인 Redux Tookit 에서 서버연동 데이터도 같이 상태관리하겠다.
+## 1. 파일명 변경
 
-## 1. 백엔드 연동 API
+- index.js ===> index.tsx
 
-- `/src/apis/memberapi` 폴더 생성
-- memberapi.js 파일 생성
+```tsx
+import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
+import RTKSample from "./RTKSample";
+import "./index.css";
+import store from "./store";
 
-```js
-import axios from "axios";
+const root = ReactDOM.createRoot(
+  // as 는 내가 책임질께 VSCode 타입추론 하지마.
+  document.getElementById("root") as HTMLElement,
+);
 
-export const postLogin = async () => {
-  try {
-    const res = await axios.post("주소", {});
-    console.log(res.data);
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-export const getUser = async () => {
-  try {
-    const res = await axios.get("https://jsonplaceholder.typicode.com/todos/1");
-    console.log(res.data);
-    return res.data;
-  } catch (error) {
-    console.log(error);
-  }
-};
+// Redux Toolkit 저장소 공급
+root.render(
+  <Provider store={store}>
+    <RTKSample />
+  </Provider>,
+);
 ```
 
-## 2. userSlice 생성하기
+- store.js ===> store.ts
 
-- /src/slices/userSlice.js
-
-```js
-import { createSlice } from "@reduxjs/toolkit";
-
-const initialState = {
-  userId: 0,
-  id: 0,
-  title: "",
-  completed: false,
-};
-const userSlice = createSlice({
-  name: "userSlice",
-  initialState: initialState,
-  reducers: {
-    showUser: (state, actions) => {
-      console.log("정보를 보여줘");
-    },
-  },
-});
-export const { showUser } = userSlice.actions;
-export default userSlice.reducer;
-```
-
-## 3. store 에 slice 등록
-
-```js
+```ts
 import { configureStore } from "@reduxjs/toolkit";
 import loginSlice from "./slices/loginSlice";
 import themeSlice from "./slices/themeSlice";
 import langSlice from "./slices/langSlice";
 import userSlice from "./slices/userSlice";
-export default configureStore({
+
+const store = configureStore({
   reducer: {
     loginSlice,
     themeSlice,
@@ -77,28 +41,62 @@ export default configureStore({
     userSlice,
   },
 });
+// state 를 외부 에서 참조하도록
+export type RootState = ReturnType<typeof store.getState>;
+// dispatch 외부에서 실행하도록
+export type AppDispatch = typeof store.dispatch;
+// 기본 내보내기
+export default store;
 ```
 
-## 4. useSlector 와 useDispatch 활용
+- userSlice.js ===> index.ts
 
-- /src/RTKSample.js
+```ts
+import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
+import RTKSample from "./RTKSample";
+import "./index.css";
+import store from "./store";
 
-```js
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement,
+);
+
+// Redux Toolkit 저장소 공급
+root.render(
+  <Provider store={store}>
+    <RTKSample />
+  </Provider>,
+);
+
+```
+
+- RTKSample.js ===> RTKSample.tsx
+
+```tsx
 import React from "react";
 import Menu from "./components/Menu";
 import { useDispatch, useSelector } from "react-redux";
 import { changeEng, changeEtc, changeKor } from "./slices/langSlice";
-import { showUser } from "./slices/userSlice";
+import {
+  getUserAsyncThunk,
+  postLoginAsyncThunk,
+  showUser,
+  userlogin,
+} from "./slices/userSlice";
+import { postLogin } from "./apis/memberapi/memberapi";
+import { AppDispatch, RootState } from "./store";
 
-const RTKSample = () => {
+const RTKSample: React.FC = () => {
   // slice 정보 가져오기
-  const themeState = useSelector(state => state.themeSlice);
+  const themeState = useSelector((state: RootState) => state.themeSlice);
   //console.log(themeState); // {theme:"black"}
   // const colorObj = {
   //   color: themeState.theme,
   // };
-  const langState = useSelector(state => state.langSlice);
-  const dispatch = useDispatch();
+  const langState = useSelector((state: RootState) => state.langSlice);
+  const dispatch = useDispatch<AppDispatch>();
+  // store에서 정의한 action 즉, RootState 업데이트 함수
   const handleClickKR = () => {
     dispatch(changeKor());
   };
@@ -110,11 +108,17 @@ const RTKSample = () => {
   };
 
   // 사용자 정보
-  const userState = useSelector(state => state.userSlice);
-  console.log(userState);
+  const userState = useSelector((state: RootState) => state.userSlice);
+  console.log("사용자 정보 : ", userState);
   // 정보 호출
-  const handleClickUser = () => {
-    dispatch(showUser());
+  const handleClickUser = async () => {
+    // 일반적 reducer 함수 호출
+    // dispatch(showUser());
+    // 비동기 extraReducer 호출
+    dispatch(getUserAsyncThunk());
+    // dispatch(postLoginAsyncThunk());
+    // const result = await postLogin();
+    // dispatch(userlogin(result));
   };
 
   return (
@@ -134,7 +138,7 @@ const RTKSample = () => {
           {userState.id}
           {userState.userId}
           {userState.title}
-          {userState.complted}
+          {userState.completed}
         </div>
       ) : (
         <div>사용자정보가 없어요.</div>
@@ -169,5 +173,3 @@ const RTKSample = () => {
 
 export default RTKSample;
 ```
-
-## 5. 비동기 서버 API 활용

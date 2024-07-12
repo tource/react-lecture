@@ -8,10 +8,10 @@ const langSlice = createSlice({
   name: "langSlice",
   initialState: initialState,
   reducers: {
-    changeKor: (state, action) => {
+    changeKor: state => {
       return { ...initialState };
     },
-    changeEng: (state, action) => {
+    changeEng: state => {
       return { word: "Hello" };
     },
     changeEtc: (state, action) => {
