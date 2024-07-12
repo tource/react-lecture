@@ -1,4 +1,10 @@
-const Partner = ({ pc }) => {
+import { IArr } from "../../types/datatype";
+
+interface PartnerProps {
+  pc: IArr[];
+}
+
+const Partner: React.FC<PartnerProps> = ({ pc }) => {
   return (
     <div>
       <h1>파트너 소개</h1>

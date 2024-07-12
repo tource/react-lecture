@@ -1,9 +1,15 @@
 import { NavLink } from "react-router-dom";
 import "../../css/header.css";
-const Header = ({ children }) => {
+import { IActiveLink } from "../../types/datatype";
+
+interface HeaderProps {
+  children?: React.ReactNode;
+}
+
+const Header: React.FC<HeaderProps> = ({ children }) => {
   // js 자리
   // 현재 패스와 같은 경우에 보여줄 css Object 생성
-  const ActiveLink = {
+  const ActiveLink: IActiveLink = {
     color: "red",
     fontWeight: "bold",
   };

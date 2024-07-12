@@ -1,6 +1,10 @@
 import { useParams } from "react-router-dom";
 
-const Deatil = () => {
+interface DetailProps {
+  title?: string;
+}
+
+const Detail: React.FC<DetailProps> = ({ title }) => {
   // js 자리
   // path 로 전달된 prams 출력해 보기
   // 예) /compnay/사과
@@ -14,4 +18,4 @@ const Deatil = () => {
   return <h1>{id} 제품상세</h1>;
 };
 
-export default Deatil;
+export default Detail;

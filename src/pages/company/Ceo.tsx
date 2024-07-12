@@ -1,6 +1,6 @@
 import { useLocation, useSearchParams } from "react-router-dom";
 
-const Ceo = () => {
+const Ceo: React.FC = () => {
   // 현재 주소 및 패스 알아내기
   const location = useLocation();
   console.log(location);
