@@ -5,28 +5,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <style>
-      .active {
+      .wrap {
+        position: relative;
+        display: block;
+        width: 80%;
+        background-color: orange;
+        margin: 0 auto;
+      }
+      .header {
+        height: 80px;
+        background-color: skyblue;
+      }
+      .slide {
+        height: 300px;
+        background-color: orchid;
+      }
+
+      .box {
+        width: 50px;
+        height: 50px;
         background-color: red;
+        animation-name: fadeIn;
+        animation-duration: 5s;
+        animation-iteration-count: infinite;
+        animation-timing-function: ease;
+      }
+      .box:hover {
+        animation-play-state: paused;
+      }
+
+      @keyframes fadeIn {
+        0% {
+          opacity: 1;
+          transform: rotate(0deg) scale(5);
+        }
+        30% {
+          opacity: 0;
+          transform: rotate(360deg);
+        }
+        60% {
+          opacity: 1;
+          transform: rotate(0deg);
+        }
+        90% {
+          opacity: 0;
+          transform: rotate(45deg);
+        }
+        100% {
+          opacity: 1;
+          transform: rotate(0deg);
+        }
+      }
+
+      .board {
+        height: 400px;
+        background-color: brown;
+      }
+      .footer {
+        height: 80px;
+        background-color: black;
       }
     </style>
-    <script>
-    window.addEventListener("load", function () {
-      const infoForm = document.querySelector(".info-form");
-      const inputList = document.querySelector(".main-top-info");
-      console.log(inputList);
-      // infoForm.addEventListener("submit", function (e) {    
-      //   // e.preventDefault();
-      //   // const list = inputList.value;
-      //   // console.log(list);
-      // });
-    });
-    </script>
   </head>
   <body>
-    <form name="info-form" class="info-form" action="a.jsp" method="get">
-      <input class="main-top-info" name="gogo"></input>
-      <input class="main-top-info2" name="age"></input>
-      <button type="button">전송</button>
-    </form>
+    <div class="wrap">
+      <header class="header">상단</header>
+      <div class="slide">
+        <div class="box"></div>
+      </div>
+      <div class="board">게시판</div>
+      <footer class="footer">하단</footer>
+    </div>
   </body>
 </html>
