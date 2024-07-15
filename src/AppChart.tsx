@@ -1,6 +1,6 @@
 import Chart from "./pages/Chart";
 
-const AppChart = () => {
+const AppChart: React.FC = () => {
   return (
     <div>
       <Chart />

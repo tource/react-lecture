@@ -1,59 +1,5 @@
-# nivo-chart ts
-
-- /src/AppChart.js ===> /src/AppChart.tsx
-
-```tsx
-import Chart from "./pages/Chart";
-
-const AppChart: React.FC = () => {
-  return <Chart />;
-};
-
-export default AppChart;
-```
-
-- /src/pages/Chart.js ===> /src/Chart.tsx
-
-## 1. data 는 외부로 별도 파일
-
-- src/types/datatype.ts 내용 추가
-
-```ts
-// arr 데이터 기본형
-export interface IArr {
-  name: string;
-  link: string;
-}
-export interface IFromUrl {
-  memo: string;
-  good: string;
-  favorite: string;
-}
-export interface IQueryData {
-  name?: string;
-  age?: string;
-}
-export interface IActiveLink {
-  color: string;
-  fontWeight: string;
-}
-// 라인 차트 데이터 모양
-export interface DataPoint {
-  x: string;
-  y: number;
-}
-export interface Series {
-  id: string;
-  color: string;
-  data: DataPoint[];
-}
-```
-
-- src/apis/data.ts 생성
-
-```ts
-// 데이터 타입의 참조를 위해서 모양을 만든다.
 import { Series } from "../types/datatype";
+
 export const linedata: Series[] = [
   {
     id: "japan",
@@ -326,6 +272,3 @@ export const linedata: Series[] = [
     ],
   },
 ];
-```
-
-## 2. Chart.tsx
