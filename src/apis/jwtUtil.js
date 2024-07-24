@@ -1,17 +1,19 @@
 import axios from "axios";
 import { getCookie, setCookie } from "../utils/cookie";
+import { useSelector } from "react-redux";
 
 const jwtAxios = axios.create();
 // Request Intercepter
 // Access Token 활용하기
 const beforeReq = config => {
-  let accessToken = getCookie("accessToken");
-  if (!accessToken) {
+  // let accessToken = getCookie("accessToken");
+  const userInfo = useSelector(state => state.loginSlice);
+  if (!userInfo.token) {
     return Promise.reject({
       response: { data: { error: "Login 하셔서 인증받으세요." } },
     });
   }
-  config.headers.Authorization = `Bearer ${accessToken}`;
+  config.headers.Authorization = `Bearer ${userInfo.token}`;
   return config;
 };
 
