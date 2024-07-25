@@ -1,160 +1,164 @@
-# Router (라우터를 파일로 관리하자.)
+# Recoil
 
-- React Router Dom 의 버전 6 인 경우에 해당
-- 하위 버전은 적용안됨.
-- https://www.npmjs.com/package/react-spinners
-  : 활용
-  : `npm i react-spinners`
+- 장점
+  : 참 사용하기가 쉽다. 마치 useState 처럼.
+- 단점
+  : 버전업 없다. 개발자 퇴사로 중지
+- 제공 기능
+  : 웹 서비스 전역 상태관리, 마치 Redux Toolkit 처럼
+- https://recoiljs.org/ko/
 
-## 1. 폴더 구조
+## 1. 설치
 
-- /src/router 폴더생성
-- /src/router/root.js 파일 생성
+- `npm install recoil`
 
-## 2. root.js 의 역활
+## 2. 적용 단계
 
-- 기본 라우터 경로 작성
-- 서브 라우터들은 별도의 파일로 관리
-
-### 2.1. Loading 컴포넌트 만들기(react-spinners)
-
-- 동적 컴포넌트 로딩을 구현한다.
-  : 전체 js 를 처음부터 불러들여서 느리게 화면을 출력하는 과정을 최적화한다.
-  : 필요할 때 컴포넌트를 불러들여서 실행한다.
-
-- /src/components/loading/Loading.js
+### 2.1. index.js 에 Provider 적용
 
 ```js
 import React from "react";
-import { ClipLoader } from "react-spinners";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import { RecoilRoot } from "recoil";
 
-const Loading = () => {
-  const LoadingCss = {
-    position: "fixed",
-    left: 0,
-    top: 0,
-    width: "100%",
-    height: "100%",
-    background: "rgba(0,0,0,0.5)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 999,
-  };
+// ts 에서는 데이터 종류를 구별한다.
+// as 는 강제로 타입지정
+// const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
+
+// js 버전
+const root = ReactDOM.createRoot(document.getElementById("root"));
+
+root.render(
+  <RecoilRoot>
+    <App />
+  </RecoilRoot>,
+);
+```
+
+## 2.2. atoms 만들기
+
+- atom 은 전역 상태변수를 말함.
+- /src/atoms 폴더 생성
+- /src/atoms/counterState.js 폴더 생성
+
+```js
+import { atom } from "recoil";
+
+// atom 만들기
+export const counterState = atom({ key: "counterState", default: 0 });
+```
+
+## 2.3. atoms 활용하기
+
+- /src/pages/Couter.js 생성
+
+```js
+import React from "react";
+import { useRecoilState } from "recoil";
+import { counterState } from "../atoms/counterState";
+
+const Counter = () => {
+  // atom 활용
+  const [count, setCount] = useRecoilState(counterState);
   return (
-    <div style={LoadingCss}>
-      <ClipLoader color="#a518c9" loading size={200} speedMultiplier={1} />
+    <div>
+      <h1>atom 전역변수 숫자</h1>
+      <h2>Counter: {count}</h2>
+      <button
+        onClick={() => {
+          setCount(count + 1);
+        }}
+      >
+        증가
+      </button>
+      <button
+        onClick={() => {
+          setCount(count - 1);
+        }}
+      >
+        감소
+      </button>
     </div>
   );
 };
 
-export default Loading;
+export default Counter;
 ```
 
-## 2.2. Suspense 와 lazy 를 이용한 동적로딩 처리
+# 3. 회원로그인 만들기 및 적용
+
+## 3.1. 회원로그인 정보 atom 만들기
+
+- /src/atoms/formState.js 생성
 
 ```js
-import { Suspense, lazy } from "react";
+import { atom } from "recoil";
+
+export const userNameStae = atom({ key: "userNameStae", default: "" });
+export const userEmailStae = atom({ key: "userEmailStae", default: "" });
+export const userPasswrdStae = atom({ key: "userPasswrdStae", default: "" });
 ```
 
-```js
-const LazyHome = lazy(() => import("../pages/Index"));
-const LazyCompany = lazy(() => import("../pages/company/Index"));
-const LazyGood = lazy(() => import("../pages/good/Good"));
-```
+- /src/pages/LoginForm.js 생성
 
 ```js
-{
-    path: "/",
-    element: (
-      <Suspense fallback={<Loading />}>
-        <LazyHome />
-      </Suspense>
-    ),
-  },
-```
+import React from "react";
+import { useRecoilState } from "recoil";
+import {
+  userEmailStae,
+  userNameStae,
+  userPasswrdStae,
+} from "../atoms/formState";
 
-## 3. companyrouter.js 생성
+const LoginForm = () => {
+  // atoms 활용
+  const [userName, setUserName] = useRecoilState(userNameStae);
+  const [userEmail, setUserEmail] = useRecoilState(userEmailStae);
+  const [userPass, setUserPass] = useRecoilState(userPasswrdStae);
 
-- /src/router/companyrouter.js
-
-```js
-import { Suspense, lazy } from "react";
-import { Navigate } from "react-router-dom";
-import Loading from "../components/loading/Loading";
-
-const LazyCeo = lazy(() => import("../pages/company/Ceo"));
-const LazyHistory = lazy(() => import("../pages/company/History"));
-const LazyPartner = lazy(() => import("../pages/company/Partner"));
-
-const companyrouter = () => {
-  return [
-    { path: "", element: <Navigate to="ceo" /> },
-    {
-      path: "ceo",
-      element: (
-        <Suspense fallback={<Loading />}>
-          <LazyCeo />
-        </Suspense>
-      ),
-    },
-    {
-      path: "history",
-      element: (
-        <Suspense fallback={<Loading />}>
-          <LazyHistory />
-        </Suspense>
-      ),
-    },
-    {
-      path: "partner",
-      element: (
-        <Suspense fallback={<Loading />}>
-          <LazyPartner />
-        </Suspense>
-      ),
-    },
-    {
-      path: "location",
-      element: (
-        <Suspense fallback={<Loading />}>
-          <h1>회사 위치</h1>
-        </Suspense>
-      ),
-    },
-  ];
+  const handleSubmit = e => {
+    e.preventDefault();
+    console.log("전송 : ", userName, userEmail, userPass);
+  };
+  return (
+    <div>
+      <h1>로그인입력폼</h1>
+      <form
+        onSubmit={e => {
+          handleSubmit(e);
+        }}
+      >
+        <div>
+          <label>Name</label>
+          <input
+            type="text"
+            value={userName}
+            onChange={e => setUserName(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>Email</label>
+          <input
+            type="email"
+            value={userEmail}
+            onChange={e => setUserEmail(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>Password</label>
+          <input
+            type="password"
+            value={userPass}
+            onChange={e => setUserPass(e.target.value)}
+          />
+        </div>
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  );
 };
-export default companyrouter;
+
+export default LoginForm;
 ```
-
-## 4. goodrouter.js 생성
-
-- /src/router/goodrouter.js
-
-```js
-import { Suspense, lazy } from "react";
-import Loading from "../components/loading/Loading";
-
-const LazyGoodDetail = lazy(() => import("../pages/good/Detail"));
-
-const goodrouter = () => {
-  return [
-    {
-      path: ":id",
-      element: (
-        <Suspense fallback={<Loading />}>
-          <LazyGoodDetail />
-        </Suspense>
-      ),
-    },
-    { path: "delete/:id", element: <h1>제품 삭제</h1> },
-    { path: "modify/:id", element: <h1>제품 수정</h1> },
-  ];
-};
-export default goodrouter;
-```
-
-## 5. 주의 사항 (V6 이상인 경우)
-
-- 모든 React Router Dom 에서의 기능은 BrowserRoute 안쪽에 배치
-  : Link, NavLink 등..
