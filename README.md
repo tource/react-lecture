@@ -1,5 +1,7 @@
 # Router (라우터를 파일로 관리하자.)
 
+- React Router Dom 의 버전 6 인 경우에 해당
+- 하위 버전은 적용안됨.
 - https://www.npmjs.com/package/react-spinners
   : 활용
   : `npm i react-spinners`
@@ -15,6 +17,10 @@
 - 서브 라우터들은 별도의 파일로 관리
 
 ### 2.1. Loading 컴포넌트 만들기(react-spinners)
+
+- 동적 컴포넌트 로딩을 구현한다.
+  : 전체 js 를 처음부터 불러들여서 느리게 화면을 출력하는 과정을 최적화한다.
+  : 필요할 때 컴포넌트를 불러들여서 실행한다.
 
 - /src/components/loading/Loading.js
 
@@ -147,3 +153,8 @@ const goodrouter = () => {
 };
 export default goodrouter;
 ```
+
+## 5. 주의 사항 (V6 이상인 경우)
+
+- 모든 React Router Dom 에서의 기능은 BrowserRoute 안쪽에 배치
+  : Link, NavLink 등..
