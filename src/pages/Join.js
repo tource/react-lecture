@@ -1,14 +1,18 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+// 우편번호
+import DaumPostcodeEmbed from "react-daum-postcode";
+import { useDaumPostcodePopup } from "react-daum-postcode";
 
 // 폼의 초기값
 const initState = {
-  userid: "hong",
-  email: "a@a.net",
-  pass: "12345678",
-  phone: "010-0000-0000",
-  address1: "080",
+  userid: "",
+  email: "",
+  pass: "",
+  phone: "",
+  address1: "",
+  address2: "",
 };
 
 // yup schema 셋팅
@@ -23,14 +27,39 @@ const schema = yup.object().shape({
     .required("비밀번호를 입력해주세요")
     .min(8, "비밀번호는 최소 8자입니다.")
     .max(16, "비밀번호는 최대 16자입니다"),
-  phone: yup
-    .string()
-    .required("전화번호를 입력해주세요")
-    .matches(/^[0-9]{3}-[0-9]{3,4}-[0-9]{4}$/, "유효한 전화번로를 입력하세요."),
+  phone: yup.string().required("전화번호를 입력해주세요"),
   address1: yup.string().required("우편번호를 입력해주세요"),
+  address2: yup.string().required("상세주소를 입력해주세요"),
 });
 
 const Join = () => {
+  // Daum Post 팝업
+  const scriptUrl =
+    "https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
+  const open = useDaumPostcodePopup(scriptUrl);
+
+  const handleComplete = data => {
+    let fullAddress = data.address;
+    let extraAddress = "";
+
+    if (data.addressType === "R") {
+      if (data.bname !== "") {
+        extraAddress += data.bname;
+      }
+      if (data.buildingName !== "") {
+        extraAddress +=
+          extraAddress !== "" ? `, ${data.buildingName}` : data.buildingName;
+      }
+      fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
+    }
+
+    setValue("address1", fullAddress); // e.g. '서울 성동구 왕십리로2길 20 (성수동1가)'
+  };
+
+  const handleClick = () => {
+    open({ onComplete: handleComplete });
+  };
+
   // form 의 상태를 관리하는 기능
   // register : 각 항목의 데이터를 등록한다.
   // handleSubmit : 전송 이벤트 처리
@@ -70,6 +99,7 @@ const Join = () => {
     const sendData = { ...data, phone: data.phone.replaceAll("-", "") };
     console.log("전송시 데이터 sendData ", sendData);
   };
+
   return (
     <div>
       <h1>회원가입</h1>
@@ -103,7 +133,15 @@ const Join = () => {
         <div>
           <label>주소</label>
           <input type="text" {...register("address1")} />
+          <button type="button" onClick={handleClick}>
+            우편번호검색
+          </button>
           {errors.address1 && <span>{errors.address1.message}</span>}
+        </div>
+        <div>
+          <label>상세주소</label>
+          <input type="text" {...register("address2")} />
+          {errors.address2 && <span>{errors.address2.message}</span>}
         </div>
         <button type="submit">회원가입</button>
         <button type="reset">재작성</button>
