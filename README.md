@@ -1,317 +1,248 @@
-# daum post 활용
+# React 용 Editor
 
-- https://www.npmjs.com/package/react-daum-postcode
-- `npm i react-daum-postcode`
-- 참고블로그: `https://evan6-6.tistory.com/77`
+- React Quill
+  : https://github.com/zenoamaro/react-quill
+- Toast Editor
+  : https://ui.toast.com/tui-editor
+- CKEditor
+  :https://ckeditor.com/
 
-## 1. 일반형태
+# React Quill
 
-- 값을 담는 경우
-  : React Hook Form을 사용시
-  : `setValue("zip",fullAddress)`
-  : useState를 사용시
-  : `setZip(fullAddress)`
+- https://quilljs.com/docs/quickstart
+- `npm i react-quill`
+
+## 1. page 생성
+
+- /src/pages/Write.js 생성
 
 ```js
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-// 우편번호
-import DaumPostcodeEmbed from "react-daum-postcode";
-
-// 폼의 초기값
-const initState = {
-  userid: "hong",
-  email: "a@a.net",
-  pass: "12345678",
-  phone: "010-0000-0000",
-  address1: "080",
-};
-
-// yup schema 셋팅
-const schema = yup.object().shape({
-  userid: yup.string().required("아이디는 필수 입니다."),
-  email: yup
-    .string()
-    .required("이메일은 필수 항목입니다.")
-    .email("유효한 이메일 주소를 입력하세요."),
-  pass: yup
-    .string()
-    .required("비밀번호를 입력해주세요")
-    .min(8, "비밀번호는 최소 8자입니다.")
-    .max(16, "비밀번호는 최대 16자입니다"),
-  phone: yup
-    .string()
-    .required("전화번호를 입력해주세요")
-    .matches(/^[0-9]{3}-[0-9]{3,4}-[0-9]{4}$/, "유효한 전화번로를 입력하세요."),
-  address1: yup.string().required("우편번호를 입력해주세요"),
-});
-
-const Join = () => {
-  // form 의 상태를 관리하는 기능
-  // register : 각 항목의 데이터를 등록한다.
-  // handleSubmit : 전송 이벤트 처리
-  // formState : 폼의 데이터
-  // setValue :  강제로 값을 셋팅 처리
-  // formState : {errors}  폼에 형식에 맞지 않으면 에러출력
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm({
-    defaultValues: initState,
-    resolver: yupResolver(schema),
-    mode: "onChange",
-  });
-
-  //   전화번호 자동 변경
-  const handleChangePhone = e => {
-    const phoneNumber = formatPhoneNumber(e.target.value);
-    console.log(phoneNumber);
-    setValue("phone", phoneNumber);
+import React, { useState } from "react";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+const Write = () => {
+  const Wrap = {
+    width: "80%",
+    margin: "0 auto",
   };
-  const formatPhoneNumber = value => {
-    if (!value) return value;
-    const phoneNumber = value.replace(/[^\d]/g, "");
-    const phoneNumberLength = phoneNumber.length;
-    if (phoneNumberLength < 4) return phoneNumber;
-    if (phoneNumberLength < 8) {
-      return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`;
-    }
-    return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 7)}-${phoneNumber.slice(7, 11)}`;
-  };
-
-  const onSubmit = data => {
-    console.log("전송시 데이터 ", data);
-    const sendData = { ...data, phone: data.phone.replaceAll("-", "") };
-    console.log("전송시 데이터 sendData ", sendData);
-  };
-
-  // 우편번호 선택시 실행
-  const handleCompleteZip = data => {
-    console.log(data);
-
-    let fullAddress = data.address;
-    let extraAddress = "";
-
-    if (data.addressType === "R") {
-      if (data.bname !== "") {
-        extraAddress += data.bname;
-      }
-      if (data.buildingName !== "") {
-        extraAddress +=
-          extraAddress !== "" ? `, ${data.buildingName}` : data.buildingName;
-      }
-      fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
-    }
-
-    setValue("zip", fullAddress);
-    console.log(fullAddress); // e.g. '서울 성동구 왕십리로2길 20 (성수동1가)'
-  };
+  const [value, setValue] = useState("");
   return (
     <div>
-      <h1>회원가입</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label>아이디</label>
-          <input type="text" {...register("userid")} />
-          {errors.userid && <span>{errors.userid.message}</span>}
-        </div>
-        <div>
-          <label>이메일</label>
-          <input type="email" {...register("email")} />
-          {errors.email && <span>{errors.email.message}</span>}
-        </div>
-        <div>
-          <label>비밀번호</label>
-          <input type="password" {...register("pass")} />
-          {errors.pass && <span>{errors.pass.message}</span>}
-        </div>
-        <div>
-          <label>전화번호</label>
-          <input
-            type="text"
-            {...register("phone")}
-            onChange={e => {
-              handleChangePhone(e);
-            }}
-          />
-          {errors.phone && <span>{errors.phone.message}</span>}
-        </div>
-        <div>
-          <label>주소</label>
-          <input type="text" {...register("address1")} />
-          {errors.address1 && <span>{errors.address1.message}</span>}
-        </div>
-        <div>
-          <label>우편번호</label>
-          <DaumPostcodeEmbed onComplete={handleCompleteZip} />
-        </div>
-        <button type="submit">회원가입</button>
-        <button type="reset">재작성</button>
-      </form>
+      <h1>글작성</h1>
+      <div style={Wrap}>
+        <form>
+          <ReactQuill onChange={setValue} />
+          <div>{value}</div>
+        </form>
+      </div>
     </div>
   );
 };
 
-export default Join;
+export default Write;
 ```
 
-## 2. 팝업형태
+## 2. 위의 코드는 크로스 사이트 스크립트 공격 가능성이 있다.
+
+- XSS 위험이 존재함.
+- 이를 방지하기 위한 라이브러리 설치 필요.
+  : https://www.npmjs.com/package/dompurify
+  : `npm i dompurify`
 
 ```js
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-// 우편번호
-import DaumPostcodeEmbed from "react-daum-postcode";
-import { useDaumPostcodePopup } from "react-daum-postcode";
+import React, { useState } from "react";
 
-// 폼의 초기값
-const initState = {
-  userid: "",
-  email: "",
-  pass: "",
-  phone: "",
-  address1: "",
-  address2: "",
-};
+import DOMPurify from "dompurify";
 
-// yup schema 셋팅
-const schema = yup.object().shape({
-  userid: yup.string().required("아이디는 필수 입니다."),
-  email: yup
-    .string()
-    .required("이메일은 필수 항목입니다.")
-    .email("유효한 이메일 주소를 입력하세요."),
-  pass: yup
-    .string()
-    .required("비밀번호를 입력해주세요")
-    .min(8, "비밀번호는 최소 8자입니다.")
-    .max(16, "비밀번호는 최대 16자입니다"),
-  phone: yup.string().required("전화번호를 입력해주세요"),
-  address1: yup.string().required("우편번호를 입력해주세요"),
-  address2: yup.string().required("상세주소를 입력해주세요"),
-});
-
-const Join = () => {
-  // Daum Post 팝업
-  const scriptUrl =
-    "https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
-  const open = useDaumPostcodePopup(scriptUrl);
-
-  const handleComplete = data => {
-    let fullAddress = data.address;
-    let extraAddress = "";
-
-    if (data.addressType === "R") {
-      if (data.bname !== "") {
-        extraAddress += data.bname;
-      }
-      if (data.buildingName !== "") {
-        extraAddress +=
-          extraAddress !== "" ? `, ${data.buildingName}` : data.buildingName;
-      }
-      fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
-    }
-
-    setValue("address1", fullAddress); // e.g. '서울 성동구 왕십리로2길 20 (성수동1가)'
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+const Write = () => {
+  const Wrap = {
+    width: "80%",
+    margin: "0 auto",
   };
-
-  const handleClick = () => {
-    open({ onComplete: handleComplete });
-  };
-
-  // form 의 상태를 관리하는 기능
-  // register : 각 항목의 데이터를 등록한다.
-  // handleSubmit : 전송 이벤트 처리
-  // formState : 폼의 데이터
-  // setValue :  강제로 값을 셋팅 처리
-  // formState : {errors}  폼에 형식에 맞지 않으면 에러출력
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm({
-    defaultValues: initState,
-    resolver: yupResolver(schema),
-    mode: "onChange",
-  });
-
-  //   전화번호 자동 변경
-  const handleChangePhone = e => {
-    const phoneNumber = formatPhoneNumber(e.target.value);
-    console.log(phoneNumber);
-    setValue("phone", phoneNumber);
-  };
-  const formatPhoneNumber = value => {
-    if (!value) return value;
-    const phoneNumber = value.replace(/[^\d]/g, "");
-    const phoneNumberLength = phoneNumber.length;
-    if (phoneNumberLength < 4) return phoneNumber;
-    if (phoneNumberLength < 8) {
-      return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`;
-    }
-    return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 7)}-${phoneNumber.slice(7, 11)}`;
-  };
-
-  const onSubmit = data => {
-    console.log("전송시 데이터 ", data);
-    const sendData = { ...data, phone: data.phone.replaceAll("-", "") };
-    console.log("전송시 데이터 sendData ", sendData);
-  };
-
+  const [value, setValue] = useState("");
   return (
     <div>
-      <h1>회원가입</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label>아이디</label>
-          <input type="text" {...register("userid")} />
-          {errors.userid && <span>{errors.userid.message}</span>}
-        </div>
-        <div>
-          <label>이메일</label>
-          <input type="email" {...register("email")} />
-          {errors.email && <span>{errors.email.message}</span>}
-        </div>
-        <div>
-          <label>비밀번호</label>
-          <input type="password" {...register("pass")} />
-          {errors.pass && <span>{errors.pass.message}</span>}
-        </div>
-        <div>
-          <label>전화번호</label>
-          <input
-            type="text"
-            {...register("phone")}
-            onChange={e => {
-              handleChangePhone(e);
-            }}
+      <h1>글작성</h1>
+      <div style={Wrap}>
+        <form>
+          <ReactQuill onChange={setValue} />
+          <div>{value}</div>
+          <div dangerouslySetInnerHTML={{ __html: value }} />
+          {/* 올바르게 HTML을 출력하는 법 */}
+          <div
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(value) }}
           />
-          {errors.phone && <span>{errors.phone.message}</span>}
-        </div>
-        <div>
-          <label>주소</label>
-          <input type="text" {...register("address1")} />
-          <button type="button" onClick={handleClick}>
-            우편번호검색
-          </button>
-          {errors.address1 && <span>{errors.address1.message}</span>}
-        </div>
-        <div>
-          <label>상세주소</label>
-          <input type="text" {...register("address2")} />
-          {errors.address2 && <span>{errors.address2.message}</span>}
-        </div>
-        <button type="submit">회원가입</button>
-        <button type="reset">재작성</button>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };
 
-export default Join;
+export default Write;
+```
+
+## 3. toolbar 옵션 활용
+
+```js
+import React, { useState } from "react";
+
+import DOMPurify from "dompurify";
+
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+const Write = () => {
+  const Wrap = {
+    width: "80%",
+    margin: "0 auto",
+  };
+  const [value, setValue] = useState("");
+  // 모듈 활용
+  const modules = {
+    toolbar: {
+      container: [
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        [{ font: [] }],
+        [{ align: [] }],
+        ["bold", "italic", "underline", "strike", "blockquote"],
+        [{ list: "ordered" }, { list: "bullet" }, "link"],
+        [
+          {
+            color: [
+              "#000000",
+              "#e60000",
+              "#ff9900",
+              "#ffff00",
+              "#008a00",
+              "#0066cc",
+              "#9933ff",
+              "#ffffff",
+              "#facccc",
+              "#ffebcc",
+              "#ffffcc",
+              "#cce8cc",
+              "#cce0f5",
+              "#ebd6ff",
+              "#bbbbbb",
+              "#f06666",
+              "#ffc266",
+              "#ffff66",
+              "#66b966",
+              "#66a3e0",
+              "#c285ff",
+              "#888888",
+              "#a10000",
+              "#b26b00",
+              "#b2b200",
+              "#006100",
+              "#0047b2",
+              "#6b24b2",
+              "#444444",
+              "#5c0000",
+              "#663d00",
+              "#666600",
+              "#003700",
+              "#002966",
+              "#3d1466",
+              "custom-color",
+            ],
+          },
+          { background: [] },
+        ],
+        ["image", "video"],
+        ["clean"],
+      ],
+    },
+  };
+
+  return (
+    <div>
+      <h1>글작성</h1>
+      <div style={Wrap}>
+        <form>
+          <ReactQuill onChange={setValue} modules={modules} />
+          <div>{value}</div>
+          <div dangerouslySetInnerHTML={{ __html: value }} />
+          {/* 올바르게 HTML을 출력하는 법 */}
+          <div
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(value) }}
+          />
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default Write;
+```
+
+## 4. 이미지 처리
+
+- 이미지는 직접 처리한다.
+
+```js
+// 이미지 핸들러
+const imageHandler = () => {
+  console.log("이미지 처리하기");
+};
+```
+
+```js
+handlers: {
+    image: imageHandler,
+},
+```
+
+## 4.1. handler 처리
+
+- 1. React Quill 참조를 보관한다.
+     : const quillRef = useRef(null);
+- 2.  useRef 참조
+      : <ReactQuill ref={quillRef} onChange={setValue} modules={modules} />
+
+## 4.2. 이미지 처리
+
+```js
+const imageHandler = () => {
+  const editor = quillRef.current.getEditor();
+  // 1. 이미지 업로드를 위한 응용
+  const input = document.createElement("input");
+  input.setAttribute("type", "file");
+  input.setAttribute("accept", "image/*");
+  // <input type="file" accept="image/*" />
+  input.click(); // 강제클릭
+  input.addEventListener("change", async () => {
+    try {
+      // 가장 정석적인 방법은 아래와 같습니다.
+      /*
+         1. 화면에 선택된 이미지를 보여주기 전에
+         2. 백엔드로 이미지를 전송한다.
+         3. 전송이 완료되면, 결과 즉, 파일위치를 문자열로 받는다.
+         4. 받은 문자열로 <img src="받은문자열" /> 을 생성한다.
+         5. 최종 <img src="받은문자열" /> 을 Quill 에 작성한다.
+        */
+
+      const file = input.files[0];
+      //const tempUrl = URL.createObjectURL(file);
+      //setImgUrl(tempUrl);
+
+      console.log(file);
+      const formData = new FormData();
+      formData.append("pics", file);
+      formData.append("data", JSON.stringify({ age: 1 }));
+      const header = { headers: { "Content-Type": "multipart/form-data" } };
+      const res = await axios.post("백엔드주소", formData, header);
+      const imgUrl = "서버주소" + res.data;
+
+      // editor 에 배치한다.
+      const range = editor.getSelection();
+      editor.insertEmbed(range.index, "image", tempUrl);
+      // 강제로 마우스 커서 위치를 이동한다.
+      editor.setSelection(range.index + 1);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+};
 ```
