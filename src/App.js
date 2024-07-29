@@ -13,6 +13,7 @@ import Partner from "./pages/company/Partner";
 import Good from "./pages/good/Good";
 import { useState } from "react";
 import router from "./router/root";
+import Join from "./pages/Join";
 
 function App() {
   // 복잡한 데이터
@@ -25,20 +26,10 @@ function App() {
   const [isLogin, setIsLogin] = useState(true);
 
   return (
-    <>
-      {/* 공통레이아웃 적용 */}
-      <div className="wrap">
-        <Header>
-          {isLogin ? (
-            <div>정보수정/로그아웃</div>
-          ) : (
-            <div>회원가입/회원로그인</div>
-          )}
-        </Header>
-        <RouterProvider router={router} />
-        <Footer></Footer>
-      </div>
-    </>
+    <div>
+      <h1> APP 컴포넌트</h1>
+      <Join />
+    </div>
   );
 }
 
