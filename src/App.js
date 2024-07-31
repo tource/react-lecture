@@ -1,19 +1,16 @@
-import { useState } from "react";
-import "./App.css";
-import PostAdd from "./pages/PostAdd";
-import PostList from "./pages/PostList";
-import PostUpdate from "./pages/PostUpdate";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Login from "./pages/Login";
+import After from "./pages/member/After";
 
-function App() {
-  const [item, setItem] = useState(null);
+const App = () => {
   return (
-    <div>
-      <h1> APP 컴포넌트</h1>
-      <PostList setItem={setItem} />
-      <PostUpdate item={item} />
-      <PostAdd />
-    </div>
+    <BrowserRouter>
+      <Login />
+      <Routes>
+        <Route path="/member/kko" element={<After />} />
+      </Routes>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
