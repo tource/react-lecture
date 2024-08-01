@@ -1,26 +1,3 @@
-# Anime.js
-
-- Anime.js
-  : https://animejs.com/
-- Framer Motion
-  : 레퍼런스 (https://nykim.work/114)
-  : https://www.framer.com/motion/
-- GSAP
-  : Tween Max 로 검색
-  : 레퍼런스 (https://webkimsora.tistory.com/30)
-  : https://gsap.com/
--
-
-## 1. 설치
-
-- https://www.npmjs.com/package/animejs
-- `npm i animejs`
-
-## 2. 샘플
-
-- /src/pages/AniPage.js
-
-```js
 import React, { useEffect, useRef } from "react";
 import anime from "animejs/lib/anime.es.js";
 const AniPage = () => {
@@ -109,4 +86,3 @@ const AniPage = () => {
 };
 
 export default AniPage;
-```
