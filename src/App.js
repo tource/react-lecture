@@ -1,7 +1,7 @@
-import MyMap from "./kko/MyMap";
+import JoinForm from "./pages/JoinForm";
 
 const App = () => {
-  return <MyMap />;
+  return <JoinForm />;
 };
 
 export default App;
