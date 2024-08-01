@@ -3,8 +3,9 @@ import { Navigate } from "react-router-dom";
 import Loading from "../components/loading/Loading";
 
 const LazyCeo = lazy(() => import("../pages/company/Ceo"));
-const Lazyhistory = lazy(() => import("../pages/company/History"));
+const LazyHistory = lazy(() => import("../pages/company/History"));
 const LazyPartner = lazy(() => import("../pages/company/Partner"));
+
 const companyrouter = () => {
   return [
     { path: "", element: <Navigate to="ceo" /> },
@@ -20,7 +21,7 @@ const companyrouter = () => {
       path: "history",
       element: (
         <Suspense fallback={<Loading />}>
-          <Lazyhistory />
+          <LazyHistory />
         </Suspense>
       ),
     },

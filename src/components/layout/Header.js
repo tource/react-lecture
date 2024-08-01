@@ -69,14 +69,6 @@ const Header = ({ children }) => {
             제품소개
           </NavLink>
         </li>
-        <li>
-          <NavLink
-            to="/schedule"
-            className={({ isActive }) => (isActive ? "active-link" : "")}
-          >
-            일정
-          </NavLink>
-        </li>
       </ul>
 
       {children}

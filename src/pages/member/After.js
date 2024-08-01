@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getAccessToken, getMemberWithAccessToken } from "../../kko/kkoapi";
-import { Kakao } from "https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js";
 
 const After = () => {
   // 사용자 정보 관리
@@ -14,9 +13,10 @@ const After = () => {
   // 인가 키를 받아서 액세스 토큰을 요청한다.
   const getAccessTokenCall = async () => {
     const accessKey = await getAccessToken(authCode);
-    console.log("accessKey : ", accessKey);
+    // console.log("accessKey : ", accessKey);
     // 사용자 정보 호출
     const info = await getMemberWithAccessToken(accessKey);
+    console.log(info);
     setUserInfo(info);
   };
 
@@ -27,8 +27,8 @@ const After = () => {
     <div>
       <h1>KKO 로그인 후 </h1>
       <h2>{authCode}</h2>
-      <div>닉네임: {userInfo?.kakao_account.profile.nickname}</div>
-      <div>이메일: {userInfo?.kakao_account.email}</div>
+      <div>닉네임 : {userInfo?.kakao_account.profile.nickname}</div>
+      <div>이메일 : {userInfo?.kakao_account.email}</div>
       <div>
         <img src={userInfo?.kakao_account.profile.thumbnail_image_url} />
       </div>

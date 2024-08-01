@@ -10,23 +10,22 @@
       }
     </style>
     <script>
-    window.addEventListener("load", function () {
-      const infoForm = document.querySelector(".info-form");
-      const inputList = document.querySelector(".main-top-info");
-      console.log(inputList);
-      // infoForm.addEventListener("submit", function (e) {    
-      //   // e.preventDefault();
-      //   // const list = inputList.value;
-      //   // console.log(list);
-      // });
-    });
+      document.addEventListener("DOMContentLoaded", function () {
+        const uId = document.querySelector(".uid");
+        console.log(uId);
+        uId.addEventListener("focus", function () {
+          this.classList.add("active");
+        });
+        uId.addEventListener("blur", function () {
+          this.classList.remove("active");
+        });
+        uId.addEventListener("keyup", function (e) {
+          console.log(e.target.value);
+        });
+      });
     </script>
   </head>
   <body>
-    <form name="info-form" class="info-form" action="a.jsp" method="get">
-      <input class="main-top-info" name="gogo"></input>
-      <input class="main-top-info2" name="age"></input>
-      <button type="button">전송</button>
-    </form>
+    <input type="text" class="uid" />
   </body>
 </html>

@@ -1,7 +1,16 @@
 import { Button, Form, Input } from "antd";
+import { useState } from "react";
 
-const initialValues = {};
+const initState = {
+  userid: "",
+  userpass: "",
+  nickname: "",
+  email: "",
+};
 const JoinForm = () => {
+  // form 의 기본값
+  const [initialValues, setInitialValues] = useState(initState);
+
   // 각 필드의 입력 중인값 알아내기
   const onChangeFiled = _fileld => {
     //console.log(_fileld);
@@ -9,11 +18,13 @@ const JoinForm = () => {
   // 확인 버튼시 최종 입력값
   const onFinished = values => {
     console.log(values);
+    setInitialValues({ ...values });
   };
 
   // 사용자 입력시 변경된 값 출력
   const onValuesChanged = _fileld => {
     console.log(_fileld);
+    setInitialValues({ ..._fileld });
   };
 
   return (
@@ -32,7 +43,9 @@ const JoinForm = () => {
           console.log("onFinishFailed", values, errorFields, outOfDate);
         }}
         onValuesChange={(changedValues, allValues) => {
-          onValuesChanged(changedValues);
+          // changedValues :  각 필드의 현재값
+          // allValues : 전체 필드의 현재값
+          onValuesChanged(allValues);
           // console.log(changedValues);
           // console.log(allValues);
         }}

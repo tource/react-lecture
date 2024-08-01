@@ -25,8 +25,8 @@ const PostAdd = () => {
     mutationKey: ["addpost"],
     mutationFn: data => postAddPost(data),
     onSuccess: () => {
-      console.log("성공이에요"),
-        queryClient.invalidateQueries({ queryKey: ["posts"] });
+      console.log("성공이에요");
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
     onError: error => console.log(error.message),
   });

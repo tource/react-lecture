@@ -1,5 +1,5 @@
 import React from "react";
-import { MoonLoader } from "react-spinners";
+import { ClipLoader } from "react-spinners";
 
 const Loading = () => {
   const LoadingCss = {
@@ -16,7 +16,7 @@ const Loading = () => {
   };
   return (
     <div style={LoadingCss}>
-      <MoonLoader size={60} speedMultiplier={0.5} />
+      <ClipLoader color="#a518c9" loading size={200} speedMultiplier={1} />
     </div>
   );
 };
