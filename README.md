@@ -1,207 +1,246 @@
-# Memoization(메모이제이션)
+# Firebase
 
-- 면접볼때 물어봅니다.
-  : 기본문법을 물어보지는 않습니다.
-  : 프로젝트의 성능최적화를 어떻게 하셨습니까?
-  : `Memoization을 적용하였습니다.`
-  : `useMemo, useCallback, memo 를 활용하여서 불필요한 리랜더링을 줄였습니다`
-  : `Suspense` 를 활용해서 동적 로딩을 했다.
-  : useMemo 는 `값`을 리랜더링 되더라도 보관해한다.
-  : useCallback 은 함수를 리랜더링 되더라도 보관해둔다.
-  : memo 는 컴포넌트를 조건에 따라서 리랜더링 또는 제외한다.
+- https://firebase.google.com/?hl=ko
 
-## useMemo()
+## 1. 프로젝트 관련 활용 npm
 
-- 기본형 ( useEffect 처럼 )
-  : 값을 연산에 의해서 하나만 만들어내고 보관(갱신 X)
+- react-router-dom
+- react-icon
+- tailwind
+- firebase
+- recoil
+
+## 2. 배포
+
+- firebase Hosting
+
+## 3. 기능
+
+- 회원 기능
+  : Authentication(이메일필수)
+  : Storage(이미지 저장)
+  : 닉네임, 이메일, 비밀번호, 사용자이미지
+  : CRUD
+
+- 할일 기능
+  : Cloud Firestore
+  : Storage(이미지 저장)
+  : 제목, 내용, 이미지, 날짜
+  : CRUD
+
+## 4. 프로젝트 생성
+
+- Go to console 메뉴 선택
+- Firebase 프로젝트 시작하기 또는 프로젝트 추가 선택
+- 프로젝트 만들기 > Google 애널리틱스 제외 > 생성
+- 프로젝트 설정 1.
+  : Authentication (이메일/비밀번호 선택)
+  : Cloud Storage 설정 (테스트모드 > Cloud Storage 위치 northeast3)
+  : Cloud Firestore
+  : Hosting
+- 프로젝트 설정 2.
+  : 프로젝트에 앱 설정
+  : 웹 앱에 Firebase 추가 (닉네임: 나의 할일)
+  : 아래 키는 외부 즉, gitHub 에 오픈되면 안됨.
 
 ```js
-const 변수 = useMemo(() => {
-  return 값;
-}, []);
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "XXXXXXXXXXXXXXXXXXX",
+  authDomain: "XXXXXXXXXXXXXXXXXXX",
+  projectId: "XXXXXXXXXXXXXXXXXXX",
+  storageBucket: "XXXXXXXXXXXXXXXXXXX",
+  messagingSenderId: "XXXXXXXXXXXXXXXXXXX",
+  appId: "XXXXXXXXXXXXXXXXXXX",
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 ```
 
-- 필요한 경우 복잡한 연산 진행 결과보관 (갱신)
+## 5. firebase 설치
+
+- `npm i firebase`
+
+## 6. 기본 firebase 작업
+
+- fb 연동을 위한 API 키 파일 생성
+  : /src/firebaseConfig.js 생성
+  : 기본 KEY 파악하기 (프로젝트설정>SDK 확인)
+
+  ```js
+  import firebase from "firebase/compat/app";
+  // 인증
+  import "firebase/compat/auth";
+  // DB
+  import "firebase/compat/firestore";
+  // 파일공간
+  import "firebase/compat/storage";
+  // API 키
+  const firebaseConfig = {
+    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+    authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  };
+  // 기본 Key 셋팅
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  const storage = firebase.storage();
+  export { auth, db, storage };
+  ```
+
+  : .env 파일 생성 또는 내용 추가
+
+  ```js
+  REACT_APP_FIREBASE_API_KEY = XXXXXXXXXXXX;
+  REACT_APP_FIREBASE_AUTH_DOMAIN = XXXXXXXXXXXX;
+  REACT_APP_FIREBASE_PROJECT_ID = XXXXXXXXXXXX;
+  REACT_APP_FIREBASE_STORAGE_BUCKET = XXXXXXXXXXXX;
+  REACT_APP_FIREBASE_MESSAGING_SENDER_ID = XXXXXXXXXXXX;
+  REACT_APP_FIREBASE_APP_ID = XXXXXXXXXXXX;
+  ```
+
+  : .gitignore 파일 내용 확인
+
+  ```txt
+  # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+  # dependencies
+  /node_modules
+  /.pnp
+  .pnp.js
+
+  # testing
+  /coverage
+
+  # production
+  /build
+
+  # misc
+  .DS_Store
+  .env.local
+  .env.development.local
+  .env.test.local
+  .env.production.local
+
+  npm-debug.log*
+  yarn-debug.log*
+  yarn-error.log*
+
+  .env
+  ```
+
+## 7. 기본 폴더 작업
+
+- /src/components 폴더
+- /src/hooks 폴더
+- /src/atoms 폴더
+
+## 8. 기본 파일 작업
+
+### 8.1. 회원가입 및 로그인, 정보수정 관련
+
+- /src/components/Login.js 파일생성
+- /src/components/Profile.js 파일생성
+- /src/components/EditProfile.js 파일생성
+
+### 8.2. 상단메뉴관련
+
+- /src/components/Navbar.js 파일생성
+
+### 8.3. 할일 관련 파일
+
+- /src/components/Todo.js
+
+### 8.4. 로그인 상태 체크 라우터 파일
+
+: 첫 화면은 로그인 보여줌
+: 로그인이 되면 라우터 이동시킴
+
+- /src/components/ProtectedRoute.js
+
+### 8.5. hooks 를 이용해서 자주 사용할 기능은 모아둔다.
+
+: hook 은 리액트 컴포넌트에서 활용할 함수 모음
+: hook 의 장점은 하나의 기능을 만들고 여러 컴포넌트에서 활용가능
+: hook 을 함수로 만들면 기능 업데이트가 수월하다.
+: 파일명은 use 로 시작해야 리액트에서 체크한다.
+
+- /src/hooks/useAuth.js
 
 ```js
-const 변수 = useMemo(() => {
-  return 값;
-}, [state변수, useParam 등등등]);
+const useAuth = () => {};
+export default useAuth;
 ```
 
-- 리액트에서는 state 가 바뀌면 다시 컴포넌트 내부 코드를 재실행한다.
-- 필요에 의해서 복잡한 연산을 하는 코드도 무조건 다시 실행된다.
-- 복잡한 연산이 일어나면 컴포넌트를 그리는데 시간이 걸린다.
-- 느리게 작동하는 서비스는 사용자가 꺼린다.
-- 필요로 한 경우에만 새로 연산을 하도록 하는 방안이 useMemo 이다.
-- 더불어서, 초기화의 대상에서 제외하는 방안이 useMemo 이다.
+## 9. 라우터 설정
 
-- use 즉 Hook 은 메모를 하고 있었다.
-- 변수를 메모한다. (새로 만들지 않고 보관해 둔다.)
-- /src/pages/UseMemoPage.js 생성
-- 아래코드는 복잡한 연산을 하는 경우의 샘플
+- /src/App.js
 
 ```js
-import React, { useState } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Login from "./components/Login";
+import Profile from "./components/Profile";
+import EditProfile from "./components/EditProfile";
+import Navbar from "./components/Navbar";
+import Todo from "./components/Todo";
 
-const UseMemoPage = () => {
-  console.log("화면이 랜더링 되었습니다.");
-  const [count, setCount] = useState(0);
-  const [value, setValue] = useState("");
-
-  // 아주 복잡한 연산을 해서 결과를 받는 일반변수
-  let normalValue = 0;
-  let result = 0;
-  for (let i = 0; i < 1000000000000; i++) {
-    result = normalValue + 1;
-  }
-
-  const handleChange = e => {
-    setValue(e.target.value);
-  };
-  const handleAdd = () => {
-    normalValue = normalValue + result;
-    console.log("일반변수 : ", normalValue);
-    setCount(pre => pre + 1);
-  };
-
+const App = () => {
   return (
-    <div>
-      <h1>useMemo샘플</h1>
-      <input
-        type="text"
-        value={value}
-        onChange={e => {
-          handleChange(e);
-        }}
-      />
-      <button
-        onClick={() => {
-          handleAdd();
-        }}
-      >
-        증가
-      </button>
-      <p>Count: {count}</p>
-    </div>
+    <BrowserRouter>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Login />}></Route>
+        <Route path="/profile" element={<Profile />}></Route>
+        <Route path="/edit-profile" element={<EditProfile />}></Route>
+        <Route path="/todo" element={<Todo />}></Route>
+        <Route path="*" element={<h1>경로가 잘못되었습니다.</h1>}></Route>
+      </Routes>
+    </BrowserRouter>
   );
 };
 
-export default UseMemoPage;
+export default App;
 ```
 
-```js
-import React, { useMemo, useState } from "react";
+## 10. FB 에 배포하기
 
-const UseMemoPage = () => {
-  console.log("화면이 랜더링 되었습니다.");
-  const [count, setCount] = useState(0);
-  const [value, setValue] = useState("");
-  // 하나의 값을 연산하고 보관하고 싶다.
-  const age = useMemo(() => {
-    const nowAge = 20;
-    return nowAge + 10;
-  }, []);
+- firebase-tools 설치
+  : `npm install -g firebase-tools`
 
-  // 아주 복잡한 연산을 해서 결과를 받는 일반변수
-  const complexFn = useMemo(() => {
-    console.log("복잡한 연산");
-    let result = 0;
-    for (let i = 0; i < 100000000; i++) {
-      result = result + 1;
-    }
-    return result + count;
-  }, [count]);
+- 로그인하기
+  : `firebase login` (터미널)
+  : Allow Firebase to collect CLI and Emulator Suite usage and error reporting information? (Y/n)
+  : Y
+  : Success CLI 확인
 
-  const handleChange = e => {
-    setValue(e.target.value);
-  };
-  const handleAdd = () => {
-    setCount(pre => pre + 1);
-  };
-
-  return (
-    <div>
-      <h1>useMemo샘플</h1>
-      <input
-        type="text"
-        value={value}
-        onChange={e => {
-          handleChange(e);
-        }}
-      />
-      <button
-        onClick={() => {
-          handleAdd();
-        }}
-      >
-        증가
-      </button>
-      <p>Count: {count}</p>
-      <p>복잡한 연산값: {complexFn}</p>
-    </div>
-  );
-};
-
-export default UseMemoPage;
-```
-
-## useCallback()
-
-- 함수를 리랜더링시 다시 만들지 않겠다.
-- 기본형
-
-```js
-const 함수변수 = useCallback(() => {
-  // 하고 싶은 일을 작성함.
-}, []);
-```
-
-```js
-const handleChange = useCallback(e => {
-  setValue(e.target.value);
-}, []);
-
-const handleAdd = useCallback(() => {
-  setCount(pre => pre + 1);
-}, []);
-```
-
-- useState 용 변수는 다르게 판단하자.
-
-```js
-// 아래의 코드는 주의해야 한다.
-// const onClickState = useCallback(() => {
-//   setCountState(countState + 1);
-//   console.log("====> countState ", countState);
-// }, []);
-
-// 해결책.(state 값이 바뀌면 함수 다시 생성)
-const onClickState = useCallback(() => {
-  // setCountState(countState + 1);
-  // state 갱신 함수 적용
-  setCountState(prev => prev + 1);
-  console.log("====> countState ", countState);
-}, [countState]);
-```
-
-## React.memo(컴포넌트)
-
-- 자식 컴포넌트 리랜더링 최적화
-- 부모가 props를 전달하는 경우라면 리랜더링 된다.
-- /src/pages/Child.js 생성
-
-```js
-import React, { memo } from "react";
-
-const Child = () => {
-  console.log("===> 자식 컴포넌트 입니다.");
-  return (
-    <div style={{ border: "5px solid #000" }}>
-      <h3>자식컴포넌트</h3>
-    </div>
-  );
-};
-
-export default memo(Child);
-```
+- 초기화
+  : `firebase init`
+  : Are you ready to proceed? (Y/n)
+  : Y
+  : Which Firebase features do you want to set up for this directory? Press Space to select features, then Enter to confirm your choices. (Press <space> to select, <a> to toggle all, <i> to invert
+  selection, and <enter> to proceed)
+  : 키보드 상하방향키 이동후 Hosting 항목 Space 바를 선택
+  : (\*) Hosting: Configure files for Firebase Hosting and (optionally) set up GitHub Action deploys
+  : Please select an option: (Use arrow keys)
+  : Use an existing project
+  : 프로젝트 항목 선택
+  : 아래는 주의하세요. (리액트에서 npm run build 하시면 build 폴더에 배포)
+  : What do you want to use as your public directory? (public)
+  : 반드시 build 라고 작성해서 엔터키 입력해야 합니다.
+  : Configure as a single-page app (rewrite all urls to /index.html)? (y/N)
+  : Y 엔터
+  : Set up automatic builds and deploys with GitHub? (y/N)
+  : N 엔터
+  : firebase.json 과 .firebaserc 파일 생성 확인
+  : `npm run build`
+  : `firebase deploy`
