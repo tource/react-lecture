@@ -1,203 +1,47 @@
-# Firebase
+# Firebase 인증
 
-- https://firebase.google.com/?hl=ko
+- [인증도움말](https://firebase.google.com/docs/auth/web/start?authuser=0&hl=ko&_gl=1*1feq5n7*_up*MQ..*_ga*MjA5MTY0NzU2Mi4xNzIyODE5NzQw*_ga_CW55HF8NVT*MTcyMjgyNjg0OC4zLjEuMTcyMjgyNjg3My4zNS4wLjA.)
 
-## 1. 프로젝트 관련 활용 npm
+## 1. 인증의 구조 만들기
 
-- react-router-dom
-- react-icon
-- tailwind
-- firebase
-- recoil
+- 인증을 한번 하고 나면 사용자 정보를 전체 컴포넌트에서 수시로 활용
+- 로그인 정보를 hook을 이용해서 수시로 사용하는 구조 구성
 
-## 2. 배포
-
-- firebase Hosting
-
-## 3. 기능
-
-- 회원 기능
-  : Authentication(이메일필수)
-  : Storage(이미지 저장)
-  : 닉네임, 이메일, 비밀번호, 사용자이미지
-  : CRUD
-
-- 할일 기능
-  : Cloud Firestore
-  : Storage(이미지 저장)
-  : 제목, 내용, 이미지, 날짜
-  : CRUD
-
-## 4. 프로젝트 생성
-
-- Go to console 메뉴 선택
-- Firebase 프로젝트 시작하기 또는 프로젝트 추가 선택
-- 프로젝트 만들기 > Google 애널리틱스 제외 > 생성
-- 프로젝트 설정 1.
-  : Authentication (이메일/비밀번호 선택)
-  : Cloud Storage 설정 (테스트모드 > Cloud Storage 위치 northeast3)
-  : Cloud Firestore
-  : Hosting
-- 프로젝트 설정 2.
-  : 프로젝트에 앱 설정
-  : 웹 앱에 Firebase 추가 (닉네임: 나의 할일)
-  : 아래 키는 외부 즉, gitHub 에 오픈되면 안됨.
-
-```js
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "XXXXXXXXXXXXXXXXXXX",
-  authDomain: "XXXXXXXXXXXXXXXXXXX",
-  projectId: "XXXXXXXXXXXXXXXXXXX",
-  storageBucket: "XXXXXXXXXXXXXXXXXXX",
-  messagingSenderId: "XXXXXXXXXXXXXXXXXXX",
-  appId: "XXXXXXXXXXXXXXXXXXX",
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-```
-
-## 5. firebase 설치
-
-- `npm i firebase`
-
-## 6. 기본 firebase 작업
-
-- fb 연동을 위한 API 키 파일 생성
-  : /src/firebaseConfig.js 생성
-  : 기본 KEY 파악하기 (프로젝트설정>SDK 확인)
-
-  ```js
-  import firebase from "firebase/compat/app";
-  // 인증
-  import "firebase/compat/auth";
-  // DB
-  import "firebase/compat/firestore";
-  // 파일공간
-  import "firebase/compat/storage";
-  // API 키
-  const firebaseConfig = {
-    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-    authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-    storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.REACT_APP_FIREBASE_APP_ID,
-  };
-  // 기본 Key 셋팅
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
-  const storage = firebase.storage();
-  export { auth, db, storage };
-  ```
-
-  : .env 파일 생성 또는 내용 추가
-
-  ```js
-  REACT_APP_FIREBASE_API_KEY = XXXXXXXXXXXX;
-  REACT_APP_FIREBASE_AUTH_DOMAIN = XXXXXXXXXXXX;
-  REACT_APP_FIREBASE_PROJECT_ID = XXXXXXXXXXXX;
-  REACT_APP_FIREBASE_STORAGE_BUCKET = XXXXXXXXXXXX;
-  REACT_APP_FIREBASE_MESSAGING_SENDER_ID = XXXXXXXXXXXX;
-  REACT_APP_FIREBASE_APP_ID = XXXXXXXXXXXX;
-  ```
-
-  : .gitignore 파일 내용 확인
-
-  ```txt
-  # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-  # dependencies
-  /node_modules
-  /.pnp
-  .pnp.js
-
-  # testing
-  /coverage
-
-  # production
-  /build
-
-  # misc
-  .DS_Store
-  .env.local
-  .env.development.local
-  .env.test.local
-  .env.production.local
-
-  npm-debug.log*
-  yarn-debug.log*
-  yarn-error.log*
-
-  .env
-  ```
-
-## 7. 기본 폴더 작업
-
-- /src/components 폴더
-- /src/hooks 폴더
-- /src/atoms 폴더
-
-## 8. 기본 파일 작업
-
-### 8.1. 회원가입 및 로그인, 정보수정 관련
-
-- /src/components/Login.js 파일생성
-- /src/components/Profile.js 파일생성
-- /src/components/EditProfile.js 파일생성
-
-### 8.2. 상단메뉴관련
-
-- /src/components/Navbar.js 파일생성
-
-### 8.3. 할일 관련 파일
-
-- /src/components/Todo.js
-
-### 8.4. 로그인 상태 체크 라우터 파일
-
-: 첫 화면은 로그인 보여줌
-: 로그인이 되면 라우터 이동시킴
-
-- /src/components/ProtectedRoute.js
-
-### 8.5. hooks 를 이용해서 자주 사용할 기능은 모아둔다.
-
-: hook 은 리액트 컴포넌트에서 활용할 함수 모음
-: hook 의 장점은 하나의 기능을 만들고 여러 컴포넌트에서 활용가능
-: hook 을 함수로 만들면 기능 업데이트가 수월하다.
-: 파일명은 use 로 시작해야 리액트에서 체크한다.
+## 2. 로그인 정보를 위한 hook 작업
 
 - /src/hooks/useAuth.js
 
 ```js
-const useAuth = () => {};
+import { useState } from "react";
+
+const useAuth = () => {
+  const [user, setUser] = useState(null);
+
+  return { user };
+};
 export default useAuth;
 ```
 
-## 9. 라우터 설정
+## 3. 로그인 안되면 Navbar 안보이기
 
 - /src/App.js
 
 ```js
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Login from "./components/Login";
-import Profile from "./components/Profile";
 import EditProfile from "./components/EditProfile";
+import Login from "./components/Login";
 import Navbar from "./components/Navbar";
+import Profile from "./components/Profile";
 import Todo from "./components/Todo";
+import useAuth from "./hooks/useAuth";
 
 const App = () => {
+  // 커스텀 훅에서 user State 가져와서 활용
+  const { user } = useAuth();
   return (
     <BrowserRouter>
-      <Navbar />
+      // 사용자 정보가 있으면 메뉴 보여주기
+      {user && <Navbar />}
       <Routes>
         <Route path="/" element={<Login />}></Route>
         <Route path="/profile" element={<Profile />}></Route>
@@ -212,35 +56,306 @@ const App = () => {
 export default App;
 ```
 
-## 10. FB 에 배포하기
+## 4. 로그인 된 경우에만 출력할 컴포넌트처리
 
-- firebase-tools 설치
-  : `npm install -g firebase-tools`
+- user 라는 State가 있다면, 메뉴 보임
 
-- 로그인하기
-  : `firebase login` (터미널)
-  : Allow Firebase to collect CLI and Emulator Suite usage and error reporting information? (Y/n)
-  : Y
-  : Success CLI 확인
+```js
+{
+  user && <Navbar />;
+}
+```
 
-- 초기화
-  : `firebase init`
-  : Are you ready to proceed? (Y/n)
-  : Y
-  : Which Firebase features do you want to set up for this directory? Press Space to select features, then Enter to confirm your choices. (Press <space> to select, <a> to toggle all, <i> to invert
-  selection, and <enter> to proceed)
-  : 키보드 상하방향키 이동후 Hosting 항목 Space 바를 선택
-  : (\*) Hosting: Configure files for Firebase Hosting and (optionally) set up GitHub Action deploys
-  : Please select an option: (Use arrow keys)
-  : Use an existing project
-  : 프로젝트 항목 선택
-  : 아래는 주의하세요. (리액트에서 npm run build 하시면 build 폴더에 배포)
-  : What do you want to use as your public directory? (public)
-  : 반드시 build 라고 작성해서 엔터키 입력해야 합니다.
-  : Configure as a single-page app (rewrite all urls to /index.html)? (y/N)
-  : Y 엔터
-  : Set up automatic builds and deploys with GitHub? (y/N)
-  : N 엔터
-  : firebase.json 과 .firebaserc 파일 생성 확인
-  : `npm run build`
-  : `firebase deploy`
+- user 라는 State가 있다면, 패스에 따라서
+  : Profile, EditProfile, Todo 컴포넌트를 보여줌.
+  : user 정보가 있느냐 없느냐에 따라서 children으로 보여줄 처리 진행
+  : ProtectedRouter 컴포넌트를 이용하고, children으로
+- /src/components/
+
+```js
+import { Navigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
+
+const ProtectedRoute = ({ children }) => {
+  const { user } = useAuth();
+  return user ? children : <Navigate to="/" />;
+};
+
+export default ProtectedRoute;
+```
+
+- /src/App.js
+
+```js
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import EditProfile from "./components/EditProfile";
+import Login from "./components/Login";
+import Navbar from "./components/Navbar";
+import Profile from "./components/Profile";
+import Todo from "./components/Todo";
+import useAuth from "./hooks/useAuth";
+import ProtectedRoute from "./components/ProtectedRoute";
+
+const App = () => {
+  const { user } = useAuth();
+  return (
+    <BrowserRouter>
+      {user && <Navbar />}
+      <Routes>
+        <Route path="/" element={<Login />}></Route>
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        ></Route>
+        <Route
+          path="/edit-profile"
+          element={
+            <ProtectedRoute>
+              <EditProfile />
+            </ProtectedRoute>
+          }
+        ></Route>
+        <Route
+          path="/todo"
+          element={
+            <ProtectedRoute>
+              <Todo />
+            </ProtectedRoute>
+          }
+        ></Route>
+        <Route path="*" element={<h1>경로가 잘못되었습니다.</h1>}></Route>
+      </Routes>
+    </BrowserRouter>
+  );
+};
+
+export default App;
+```
+
+## 5. 로그인 및 회원가입 구성하기
+
+- /src/components/Login.js
+
+```js
+import React, { useState } from "react";
+
+const Login = () => {
+  // 현재 화면 상태 관리
+  const [isScene, setIsScene] = useState("login");
+  // 입력 항목 상태관리
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [pw, setPw] = useState("");
+  const [image, setImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
+  // 입력 에러 상태관리
+  const [error, setError] = useState("");
+  // 미리보기 이미지 상태관리
+  const handleImageChange = e => {
+    // input type="file"
+    const file = e.target.files[0];
+    if (file) {
+      // file 원본을 보관한다.
+      setImage(file);
+      // file 을 미리보기로 만든다.
+      // FileReader 사용해 보기 (Blob 처리)
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        console.log(reader);
+        setPreviewImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  // 로그인 시도시 처리
+  const handleKeyPress = e => {
+    if (e.code === "Enter") {
+      handleAuth();
+    }
+  };
+  const handleAuth = () => {
+    if (!email) {
+      setError("이메일을 입력하세요.");
+      return;
+    }
+    if (!pw) {
+      setError("비밀번호를 입력하세요.");
+      return;
+    }
+    console.log("FB 로그인 시도 처리");
+  };
+  // 회원가입시 처리
+  const handleJoin = () => {
+    if (!name) {
+      setError("닉네임을 입력하세요.");
+      return;
+    }
+    if (!email) {
+      setError("이메일을 입력하세요.");
+      return;
+    }
+    if (!pw) {
+      setError("비밀번호를 입력하세요.");
+      return;
+    }
+    console.log("FB 회원정보 등록 시도 처리");
+    setError("");
+    setName("");
+    setEmail("");
+    setPw("");
+    setPreviewImage(null);
+    setImage(null);
+    setIsScene("login");
+  };
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <h1 className="text-2xl font-bold mb-4">
+        {isScene == "login" ? "로그인" : "회원가입"}
+      </h1>
+      {/* FB 에 로그인 또는 회원가입시 에러메시지 출력 */}
+      {error && <p className="text-red-500 mb-4">{error}</p>}
+      {isScene == "login" ? (
+        <>
+          <div className="mb-2 w-80">
+            <label className="block text-gray-700">이메일</label>
+            <input
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              onKeyDown={e => {
+                handleKeyPress(e);
+              }}
+              type="email"
+              placeholder="이메일"
+              className="mt-1 p-2 border border-gray-300 rounded w-full"
+            />
+          </div>
+          <div className="mb-2 w-80">
+            <label className="block text-gray-700">비밀번호</label>
+            <input
+              value={pw}
+              onChange={e => setPw(e.target.value)}
+              onKeyDown={e => {
+                handleKeyPress(e);
+              }}
+              type="password"
+              placeholder="비밀번호"
+              className="mt-1 p-2 border border-gray-300 rounded w-full"
+            />
+          </div>
+          <button
+            className="mb-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-600 w-80"
+            onClick={() => {
+              handleAuth();
+            }}
+          >
+            로그인
+          </button>
+          <button
+            className="text-blue-500 hover:underline"
+            onClick={() => {
+              setIsScene("join");
+              setError("");
+              setEmail("");
+              setPw("");
+            }}
+          >
+            계정만들기
+          </button>
+        </>
+      ) : (
+        <>
+          <div className="mb-2 w-80">
+            <label className="block text-gray-700">이름</label>
+            <input
+              value={name}
+              onChange={e => setName(e.target.value)}
+              type="text"
+              placeholder="이름"
+              className="mt-1 p-2 border border-gray-300 rounded w-full"
+            />
+          </div>
+
+          <div className="mb-2 w-80">
+            <label className="block text-gray-700">이메일</label>
+            <input
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              type="email"
+              placeholder="이메일"
+              className="mt-1 p-2 border border-gray-300 rounded w-full"
+            />
+          </div>
+
+          <div className="mb-2 w-80">
+            <label className="block text-gray-700">비밀번호</label>
+            <input
+              value={pw}
+              onChange={e => setPw(e.target.value)}
+              type="password"
+              placeholder="비밀번호"
+              className="mt-1 p-2 border border-gray-300 rounded w-full"
+            />
+            <p className="text-xs text-red-500 mt-1">
+              비밀번호는 최소 6자입니다.
+            </p>
+          </div>
+
+          <div className="mb-2 w-80">
+            <label className="block text-gray-700">프로필 이미지</label>
+            <div className="flex items-center mt-1">
+              <label className="cursor-pointer p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                파일선택
+                <input
+                  onChange={e => {
+                    // 파일 선택시 이미지 미리보기도 작성해야 함.
+                    // 파일도 보관해야 함.
+                    handleImageChange(e);
+                  }}
+                  type="file"
+                  placeholder="이름"
+                  className="hidden"
+                />
+              </label>
+
+              {/* 이미지가 선태된 경우는 미리보기 아니면 일반 */}
+              {previewImage && (
+                <img
+                  src={previewImage}
+                  className="ml-4 w-16 h-16 object-cover rounded-full"
+                />
+              )}
+            </div>
+          </div>
+
+          <button
+            className="mb-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-600 w-80"
+            onClick={() => handleJoin()}
+          >
+            회원가입
+          </button>
+          <button
+            className="text-blue-500 hover:underline"
+            onClick={() => {
+              setError("");
+              setName("");
+              setEmail("");
+              setPw("");
+              setPreviewImage(null);
+              setImage(null);
+              setIsScene("login");
+            }}
+          >
+            이미 계정이 있습니까?
+          </button>
+        </>
+      )}
+    </div>
+  );
+};
+
+export default Login;
+```

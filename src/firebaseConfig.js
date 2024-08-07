@@ -1,5 +1,4 @@
 import firebase from "firebase/compat/app";
-
 // 인증
 import "firebase/compat/auth";
 // DB
