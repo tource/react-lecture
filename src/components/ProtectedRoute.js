@@ -1,7 +1,9 @@
-import React from "react";
+import { Navigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
-const ProtectedRoute = () => {
-  return <div>로그인 처리</div>;
+const ProtectedRoute = ({ children }) => {
+  const user = useAuth();
+  return user ? children : <Navigate to="/" />;
 };
 
 export default ProtectedRoute;
