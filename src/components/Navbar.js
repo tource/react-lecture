@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import useAuth from "../hooks/useAuth";
 import { Link, useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
@@ -6,20 +6,26 @@ import { signOut } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 
 const Navbar = () => {
-  const { user, setUser, userData, setUserData } = useAuth();
+  const { userCurrent, userData, setUserCurrent } = useAuth();
+  console.log("Navbar refreshUserData : ", userData);
   const navigate = useNavigate();
   const handleLogout = async () => {
     // FB 에서 로그아웃
     await signOut(auth);
-    setUserData(null);
-    setUser(false);
+    setUserCurrent(null);
     // 로그인으로 이동
     navigate("/");
   };
+  console.log("리랜더링이 되요..");
+  useEffect(() => {
+    console.log("Navbar userData :  ", userData);
+  }, [userData]);
+
   // 사용자가 로그인을 안 했다면 Navbar 출력하지 않는다.
-  if (!user) {
-    return null;
-  }
+  // if (!userCurrent) {
+  //   return null;
+  // }
+
   return (
     <nav className="bg-gray-400 p-4">
       <ul className="flex justify-around items-center">

@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import EditProfile from "./components/EditProfile";
 import Login from "./components/Login";
 import Navbar from "./components/Navbar";
@@ -6,12 +6,28 @@ import Profile from "./components/Profile";
 import Todo from "./components/Todo";
 import useAuth from "./hooks/useAuth";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { useEffect } from "react";
+import { auth } from "./firebaseConfig";
 
 const App = () => {
-  const { user } = useAuth();
+  const { userCurrent, userData } = useAuth();
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log("초기진입시 한번만 실행된다.");
+    console.log(auth);
+
+    navigate("/todo");
+  }, []);
+
+  useEffect(() => {
+    // console.log("App userData ", userData);
+  }, [userData]);
+
   return (
-    <BrowserRouter>
-      {user && <Navbar />}
+    <>
+      {userCurrent && <Navbar />}
       <Routes>
         <Route path="/" element={<Login />}></Route>
         <Route
@@ -40,7 +56,7 @@ const App = () => {
         ></Route>
         <Route path="*" element={<h1>경로가 잘못되었습니다.</h1>}></Route>
       </Routes>
-    </BrowserRouter>
+    </>
   );
 };
 
