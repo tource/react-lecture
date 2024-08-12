@@ -4,10 +4,17 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebaseConfig";
+import { useRecoilState } from "recoil";
+import { recoil_UserCurrent, recoil_UserData } from "../atoms/userAtom";
 
 const Navbar = () => {
-  const { userCurrent, userData, setUserCurrent } = useAuth();
-  console.log("Navbar refreshUserData : ", userData);
+  const { userCurrent, setUserCurrent } = useAuth();
+
+  // FB 사용자 인증 정보
+  // const [rUserCurrent, setRUserCurrent] = useRecoilState(recoil_UserCurrent);
+  // 사용자 정보를 저장함
+  const [rUserData, setRUserData] = useRecoilState(recoil_UserData);
+
   const navigate = useNavigate();
   const handleLogout = async () => {
     // FB 에서 로그아웃
@@ -16,10 +23,6 @@ const Navbar = () => {
     // 로그인으로 이동
     navigate("/");
   };
-  console.log("리랜더링이 되요..");
-  useEffect(() => {
-    console.log("Navbar userData :  ", userData);
-  }, [userData]);
 
   // 사용자가 로그인을 안 했다면 Navbar 출력하지 않는다.
   // if (!userCurrent) {
@@ -34,22 +37,22 @@ const Navbar = () => {
             할일 목록
           </Link>
         </li>
-        {userData && (
+        {rUserData && (
           <li className="text-white ml-4 flex items-center">
             <Link
               to={"/profile"}
               className="flex items-center mr-4 hover:underline"
             >
-              {userData.imageUrl ? (
+              {rUserData.imageUrl ? (
                 <img
-                  src={userData.imageUrl}
+                  src={rUserData.imageUrl}
                   alt="Profile Image"
                   className="w-8 h-8 rounded-full mr-2"
                 />
               ) : (
                 <FaUserCircle className="w-8 h-8 text-gray-200 mr-2" />
               )}
-              {userData.name} {userData.email}
+              {rUserData.name} {rUserData.email}
             </Link>
             <button
               onClick={() => {

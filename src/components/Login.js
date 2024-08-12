@@ -10,9 +10,16 @@ import { doc, setDoc } from "firebase/firestore";
 import { auth, storage, db } from "../firebaseConfig";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import { useRecoilState } from "recoil";
+import { recoil_UserCurrent, recoil_UserData } from "../atoms/userAtom";
 
 const Login = () => {
   const { userCurrent, setUserCurrent } = useAuth();
+  // FB 사용자 인증 정보
+  // const [rUserCurrent, setRUserCurrent] = useRecoilState(recoil_UserCurrent);
+  // 사용자 정보를 저장함
+  const [rUserData, setRUserData] = useRecoilState(recoil_UserData);
+
   // 패스이동하기
   const navigate = useNavigate();
   // 현재 화면 상태 관리
@@ -117,25 +124,34 @@ const Login = () => {
         email,
         pw,
       );
+      // useState 는 실시간 갱신이 안되고, 함수종료되어야 갱신
       setUserCurrent(userCredential.user);
+      // setRUserCurrent(userCredential.user);
       // storage : 이미지 파일 업로드
       let imageUrl = "";
       // 사용자가 이미지를 업로드 한다면
       if (image) {
         // Storage 에 보관
         // users폴더 / 사용자폴더 / profile.png
-        const imageRef = ref(storage, `users/${userCurrent.uid}/profile.png`);
+        const imageRef = ref(
+          storage,
+          `users/${userCredential.user.uid}/profile.png`,
+        );
         await uploadBytes(imageRef, image);
         // db 에 저장하려고 파일의 URL 파악한다.
         imageUrl = await getDownloadURL(imageRef);
         console.log("업로드된 이미지의 경로 ", imageUrl);
       }
       // database : 사용자 닉네임, 이메일, 사용자 이미지 URL 추가
-      const userDoc = doc(db, "users", userCurrent.uid);
+      const userDoc = doc(db, "users", userCredential.user.uid);
       await setDoc(userDoc, { name, email, imageUrl });
       // 사용자 등록을 하면 즉시 FB 는 로그인 상태로 처리.
       // UI 와 흐름이 맞지 않으므로 강제로 로그아웃을 시킨다.
       await signOut(auth);
+
+      setUserCurrent(null); // 인증정보삭제
+
+      setRUserData(null);
 
       setError("");
       setName("");

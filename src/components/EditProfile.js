@@ -5,13 +5,19 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { updatePassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { recoil_UserCurrent, recoil_UserData } from "../atoms/userAtom";
 
 const EditProfile = () => {
   const navigate = useNavigate();
   // 커스텀 훅 사용
-  const { userData, userCurrent, setUserData } = useAuth();
-  // console.log("EditProfile userData : ", userData);
+  const { userCurrent } = useAuth();
   // console.log("EditProfile userCurrent : ", userCurrent);
+
+  // FB 사용자 인증 정보
+  // const [rUserCurrent, setRUserCurrent] = useRecoilState(recoil_UserCurrent);
+  // 사용자 정보를 저장함
+  const [rUserData, setRUserData] = useRecoilState(recoil_UserData);
 
   // 변경해야할 변수
   const [name, setName] = useState("");
@@ -77,9 +83,10 @@ const EditProfile = () => {
       // 문서 만들고 업데이트 실행
       const userDoc = doc(db, "users", userCurrent?.uid);
       await updateDoc(userDoc, update);
-      // console.log("업데이트된 문서내용 : ", update);
-      const nowData = { ...userData, ...update };
-      setUserData(nowData);
+      const nowData = { ...rUserData, ...update };
+      console.log("업데이트된 문서내용 : ", nowData);
+      // setUserData(nowData);
+      setRUserData(nowData);
     }
 
     // 사용자 인증 중 비밀번호 업데이트
@@ -97,20 +104,21 @@ const EditProfile = () => {
 
   // 초기값 설정
   useEffect(() => {
-    if (userData) {
-      setName(userData.name);
+    if (rUserData) {
+      setName(rUserData.name);
       // 기존 이름을 보관
-      setOriginName(userData.name);
-      setEmail(userData.email);
-      setPreviewImage(userData.imageUrl || "");
+      setOriginName(rUserData.name);
+      setEmail(rUserData.email);
+      setPreviewImage(rUserData.imageUrl || "");
       // 이미지 변경을 고려해서 기존 내용 보관
-      setOriginImage(userData.imageUrl || "");
+      setOriginImage(rUserData.imageUrl || "");
     }
-  }, [userData]);
+  }, [rUserData]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <h1 className="text-2xl font-bold mb-4">프로필 수정</h1>
+
       <div className="p-4 bg-white shadow-md rounded w-80">
         <div className="mb-2">
           <label className="block text-gray-700">이름</label>

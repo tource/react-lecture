@@ -6,9 +6,16 @@ import { deleteDoc, doc } from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
 import { deleteUser } from "firebase/auth";
 import useAuth from "../hooks/useAuth";
+import { useRecoilState } from "recoil";
+import { recoil_UserCurrent, recoil_UserData } from "../atoms/userAtom";
 
 const Profile = () => {
-  const { userCurrent, userData } = useAuth();
+  const { userCurrent } = useAuth();
+
+  // FB 사용자 인증 정보
+  // const [rUserCurrent, setRUserCurrent] = useRecoilState(recoil_UserCurrent);
+  // 사용자 정보를 저장함
+  const [rUserData, setRUserData] = useRecoilState(recoil_UserData);
 
   const navigate = useNavigate();
   const handleClickEdit = () => {
@@ -29,7 +36,7 @@ const Profile = () => {
         const userDocRef = doc(db, "users", userCurrent?.uid);
         await deleteDoc(userDocRef);
         // 2. image 파일 삭제
-        if (userData?.imageUrl) {
+        if (rUserData?.imageUrl) {
           const imageRef = ref(
             storage,
             `users/${userCurrent?.uid}/profile.png`,
@@ -40,6 +47,9 @@ const Profile = () => {
         await deleteUser(userCurrent);
         // 4. 안내창
         alert("회원탈퇴가 완료되었습니다.");
+
+        setRUserData(null);
+
         // 5. 패스이동("/")
         navigate("/");
       } catch (error) {
@@ -52,19 +62,19 @@ const Profile = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <h1 className="text-2xl font-bold mb-4">프로필</h1>
-      {userData && (
+      {rUserData && (
         <div className="flex flex-col items-center">
-          {userData?.imageUrl ? (
+          {rUserData?.imageUrl ? (
             <img
-              src={userData?.imageUrl}
+              src={rUserData?.imageUrl}
               alt="Profile Image"
               className="w-32 h-32 rounded-full mr-2"
             />
           ) : (
             <FaUserCircle className="w-32 h-32 text-gray-400 mr-2" />
           )}
-          <p className="text-lg mb-2">이름 : {userData?.name}</p>
-          <p className="text-lg mb-4">이메일 : {userData?.email}</p>
+          <p className="text-lg mb-2">이름 : {rUserData?.name}</p>
+          <p className="text-lg mb-4">이메일 : {rUserData?.email}</p>
           <div className="flex space-x-4">
             <button
               onClick={() => {
