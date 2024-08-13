@@ -7,6 +7,7 @@ import Navbar from "./components/Navbar";
 import Profile from "./components/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Todo from "./components/Todo";
+import FindPass from "./components/FindPass";
 
 const App = () => {
   const [rUserData, setRUserData] = useRecoilState(recoil_UserData);
@@ -44,7 +45,12 @@ const App = () => {
           </Routes>
         </>
       ) : (
-        <Login />
+        <>
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/findpass" element={<FindPass />} />
+          </Routes>
+        </>
       )}
     </>
   );

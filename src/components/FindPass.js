@@ -1,15 +1,3 @@
-# Firebase 비밀번호 찾기
-
-- email 찾기는 지원하지 않습니다.
-- 만약, 구현하시려면 별도의 서버와 DB 로 구축을 하셔야 합니다.
-- 이메일 템플릿 설정
-  : Console > 인증 > 템플릿 수정(HTML 작업)
-- 보안정책 관련으로 설정을 별도로 진행필요.
-  : Console > 인증 > 설정 > 사용자 작업 > 이메일 열거 보호(권장) 해제
-
-## 1. /src/components/FindPass.js
-
-```js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 // React Hook Form
@@ -112,4 +100,3 @@ const FindPass = () => {
 };
 
 export default FindPass;
-```
