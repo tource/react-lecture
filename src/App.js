@@ -8,9 +8,21 @@ import Profile from "./components/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Todo from "./components/Todo";
 import FindPass from "./components/FindPass";
+import Loading from "./components/Loading";
+import useAuth from "./hooks/useAuth";
+import TodoList from "./components/TodoList";
+import TodoAdd from "./components/TodoAdd";
 
 const App = () => {
+  const { isLoading } = useAuth();
   const [rUserData, setRUserData] = useRecoilState(recoil_UserData);
+
+  // 로그인이 되어 있는 경우인지, 아니면 로그인이 필요한지
+  // 체크를 하는 동안 보여줄 컴포넌트를 배치하자.
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <>
       {rUserData ? (
@@ -38,7 +50,15 @@ const App = () => {
               path="/todo"
               element={
                 <ProtectedRoute>
-                  <Todo />
+                  <TodoList />
+                </ProtectedRoute>
+              }
+            ></Route>
+            <Route
+              path="/add-todo"
+              element={
+                <ProtectedRoute>
+                  <TodoAdd />
                 </ProtectedRoute>
               }
             ></Route>
@@ -49,6 +69,8 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/findpass" element={<FindPass />} />
+            {/* 모든 경로는 로그인으로 이동 */}
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </>
       )}
