@@ -56,6 +56,7 @@ const useAuth = () => {
     userCurrent,
     setUserCurrent,
     isLoading,
+    uid,
   };
 };
 export default useAuth;

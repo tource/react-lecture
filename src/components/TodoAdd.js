@@ -20,10 +20,6 @@ const TodoAdd = () => {
   useEffect(() => {
     if (isLoading) return; // 데이터 불러들이는 중...
     if (!rUserData) return; // 로그인 사용자 데이터가 없다.
-    console.log("목록을 보여준다.");
-    console.log("수정버튼을 보여준다.");
-    console.log("삭제버튼을 보여준다.");
-    console.log("입력창 이동 버튼을 보여준다.");
   }, [isLoading, rUserData]);
 
   const handleSubmit = e => {
@@ -62,13 +58,14 @@ const TodoAdd = () => {
     try {
       // Add a new document with a generated id.
       const docRef = await addDoc(collection(db, "todos"), {
-        id: uuid(),
+        // id: uuid(),
         title,
         description,
         // FB 컴퓨터의 시간을 활용한다.
         createdAt: Timestamp.now(),
         uid: uid,
       });
+
       setTitle("");
       setDescription("");
       alert("할일이 추가되었습니다.");

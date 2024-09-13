@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 const Loading = () => {
   const LoadingCss = {
@@ -13,6 +13,9 @@ const Loading = () => {
     zIndex: 9999,
     background: "rgba(0,0,0,0.5)",
   };
+
+  useEffect(() => {}, []);
+
   return <div style={LoadingCss}>로딩장면</div>;
 };
 

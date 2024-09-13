@@ -1,19 +1,15 @@
-import React from "react";
-import { FaUserCircle } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import { db, storage } from "../firebaseConfig";
+import { deleteUser } from "firebase/auth";
 import { deleteDoc, doc } from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
-import { deleteUser } from "firebase/auth";
-import useAuth from "../hooks/useAuth";
+import { FaUserCircle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { recoil_UserCurrent, recoil_UserData } from "../atoms/userAtom";
+import { recoil_UserData } from "../atoms/userAtom";
+import { db, storage } from "../firebaseConfig";
+import useAuth from "../hooks/useAuth";
 
 const Profile = () => {
   const { userCurrent } = useAuth();
-
-  // FB 사용자 인증 정보
-  // const [rUserCurrent, setRUserCurrent] = useRecoilState(recoil_UserCurrent);
   // 사용자 정보를 저장함
   const [rUserData, setRUserData] = useRecoilState(recoil_UserData);
 
@@ -24,7 +20,6 @@ const Profile = () => {
 
   const handleClickDeleteUser = async () => {
     // console.log(userObject.userCurrent);
-
     // 탈퇴 여부 확인
     const flag = window.confirm(
       "정말 탈퇴 하시겠습니까? \n이 작업은 되돌릴 수 없습니다.",

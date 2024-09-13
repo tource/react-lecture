@@ -3,7 +3,14 @@ import useAuth from "../hooks/useAuth";
 import { useRecoilState } from "recoil";
 import { recoil_UserData } from "../atoms/userAtom";
 import { useNavigate } from "react-router-dom";
-import { collection, deleteDoc, doc, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import { db } from "../firebaseConfig";
 
 const TodoList = () => {
@@ -24,7 +31,11 @@ const TodoList = () => {
 
   const getTodoList = async () => {
     try {
-      const unsub = await onSnapshot(collection(db, "todos"), snapshot => {
+      // FB 에도 Query가 있다. Query 는 질의문, 조건요청등 을 말한다.
+      const q = query(collection(db, "todos"), orderBy("createdAt", "desc"));
+
+      // const unsub = await onSnapshot(collection(db, "todos"), snapshot => {
+      const unsub = await onSnapshot(q, snapshot => {
         // 데이터 배열의 내용들
         const dataArr = snapshot.docs;
         // json 형태의 데이터 추출
@@ -54,7 +65,6 @@ const TodoList = () => {
   const handClickDelete = item => {
     // 삭제를 하기 위한 구분 용도의 데이터가 필요함.
     // 일반적으로  id 항목을 비교하는 게 관례임
-    console.log(item.id);
     deleteTodo(item.id);
   };
 
@@ -65,6 +75,11 @@ const TodoList = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleClickEditTodo = item => {
+    // 수정을 위해서 문서의 id 를 param 전달
+    navigate(`/edit-todo/${item.id}`);
   };
   return (
     <div className="flex flex-col items-center justify-center h-full bg-gray-100 py-10">
@@ -86,7 +101,10 @@ const TodoList = () => {
                   {item.createdAt?.toLocaleTimeString()}
                 </p>
                 <div className="flex space-x-2">
-                  <button className="p-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">
+                  <button
+                    onClick={() => handleClickEditTodo(item)}
+                    className="p-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+                  >
                     Edit
                   </button>
                   <button

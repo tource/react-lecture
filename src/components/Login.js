@@ -58,7 +58,7 @@ const joinSchema = yup.object().shape({
     .min(8, "비밀번호는 최소 8자이상입니다.")
     .max(16, "비밀번호는 최대 16자입니다.")
     .matches(
-      /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\\[\]{};':"\\|,.<>\\/?]).{8,}[^\s]*$/,
+      /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}[^\s]*$/,
       "알파벳, 숫자, 공백을 제외한 특수문자를 모두 포함한 8자리 이상 입력해주세요",
     ),
 });
@@ -257,15 +257,27 @@ const Login = () => {
             >
               로그인
             </button>
-            <button
-              className="text-blue-500 hover:underline"
-              onClick={() => {
-                setIsScene("join");
-                setError("");
-              }}
-            >
-              계정만들기
-            </button>
+
+            <div className="flex justify-center items-center gap-4 w-80">
+              <button
+                className="text-blue-500 hover:underline"
+                onClick={() => {
+                  setIsScene("join");
+                  setError("");
+                }}
+              >
+                계정만들기
+              </button>
+
+              <button
+                className="text-blue-500 hover:underline"
+                onClick={() => {
+                  handleClickPass();
+                }}
+              >
+                비밀번호찾기
+              </button>
+            </div>
           </form>
         </>
       ) : (
@@ -362,16 +374,6 @@ const Login = () => {
           </button>
         </form>
       )}
-
-      <div>
-        <button
-          onClick={() => {
-            handleClickPass();
-          }}
-        >
-          비밀번호찾기
-        </button>
-      </div>
     </div>
   );
 };

@@ -12,6 +12,7 @@ import Loading from "./components/Loading";
 import useAuth from "./hooks/useAuth";
 import TodoList from "./components/TodoList";
 import TodoAdd from "./components/TodoAdd";
+import TodoEdit from "./components/TodoEdit";
 
 const App = () => {
   const { isLoading } = useAuth();
@@ -59,6 +60,15 @@ const App = () => {
               element={
                 <ProtectedRoute>
                   <TodoAdd />
+                </ProtectedRoute>
+              }
+            ></Route>
+
+            <Route
+              path="/edit-todo/:id"
+              element={
+                <ProtectedRoute>
+                  <TodoEdit />
                 </ProtectedRoute>
               }
             ></Route>

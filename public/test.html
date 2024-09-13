@@ -3,29 +3,77 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Scrollable Table</title>
     <style>
-      .active {
-        background-color: red;
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+      }
+
+      .table-container {
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 12px;
+        text-align: left;
+        border: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #f4f4f4;
       }
     </style>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const uId = document.querySelector(".uid");
-        console.log(uId);
-        uId.addEventListener("focus", function () {
-          this.classList.add("active");
-        });
-        uId.addEventListener("blur", function () {
-          this.classList.remove("active");
-        });
-        uId.addEventListener("keyup", function (e) {
-          console.log(e.target.value);
-        });
-      });
-    </script>
   </head>
   <body>
-    <input type="text" class="uid" />
+    <h2>Scrollable Table Example</h2>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Header 1</th>
+            <th>Header 2</th>
+            <th>Header 3</th>
+            <th>Header 4</th>
+            <th>Header 5</th>
+            <th>Header 6</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Row 1, Cell 1</td>
+            <td>Row 1, Cell 2</td>
+            <td>Row 1, Cell 3</td>
+            <td>Row 1, Cell 4</td>
+            <td>Row 1, Cell 5</td>
+            <td>Row 1, Cell 6</td>
+          </tr>
+          <tr>
+            <td>Row 2, Cell 1</td>
+            <td>Row 2, Cell 2</td>
+            <td>Row 2, Cell 3</td>
+            <td>Row 2, Cell 4</td>
+            <td>Row 2, Cell 5</td>
+            <td>Row 2, Cell 6</td>
+          </tr>
+          <tr>
+            <td>Row 3, Cell 1</td>
+            <td>Row 3, Cell 2</td>
+            <td>Row 3, Cell 3</td>
+            <td>Row 3, Cell 4</td>
+            <td>Row 3, Cell 5</td>
+            <td>Row 3, Cell 6</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </body>
 </html>
